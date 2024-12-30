@@ -8,13 +8,13 @@ End-to-end testing of the TROOV project.
 ```bash
 $ git clone https://mahefa1@bitbucket.org/troov/troov-test-integration.git
 $ npm install
-$ create and configure .env file (".env.development" for development configuration, and .env.production for production)
+$ Create and configure the .env file (use .env.development for development settings and .env.production for production settings).
 ```
 
 ## Running the test
 
-1) First, run all TROOV services.
-2) Run test:
+1. First, run all TROOV services.
+2. Run test:
 
 ```bash
 # development
