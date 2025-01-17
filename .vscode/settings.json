@@ -1,0 +1,25 @@
+{
+    "cucumber.features": [
+        "src/test/**/features/*.feature",
+        "src/test/**/*.feature",
+        "features/**/*.feature",
+        "tests/**/*.feature",
+        "*specs*/**/*.feature"
+    ],
+    "cucumber.glue": [
+        "src/test/**/steps/*.js",
+        "*specs*/**/*.cs",
+        "features/**/*.js",
+        "features/**/*.jsx",
+        "features/**/*.php",
+        "features/**/*.py",
+        "features/**/*.rs",
+        "features/**/*.rb",
+        "features/**/*.ts",
+        "features/**/*.tsx",
+        "features/**/*_test.go",
+        "src/test/**/*.java",
+        "tests/**/*.py",
+        "tests/**/*.rs"
+    ]
+}
