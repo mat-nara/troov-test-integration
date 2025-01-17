@@ -47,11 +47,6 @@ The result will be saved as an HTML file named: cucumber-report.html.
 ## Configuration
 The configuration for running tests is stored in the `.env` file
 
-- **BROWSER**: Specifies the browser to use for testing.
-  - Example: chromium, firefox, webkit (Safari)
-
+- **BROWSER**: Specifies the browser to use for testing. Example: chromium, firefox, webkit (Safari)
 - **HEADLESS**: Specifies whether the browser should run in headless mode (true/false)
-
-- **MOBILE_DEVICE**: Specifies the mobile device to emulate during tests.
-  - Example: 'Galaxy S5', 'iPhone 12', 'Pixel 5'
-  - If not set, tests will run on a desktop browser.
+- **MOBILE_DEVICE**: Specifies the mobile device to emulate during tests. Example: 'Galaxy S5', 'iPhone 12', 'Pixel 5'. If not set, tests will run on a desktop browser.
