@@ -1,7 +1,11 @@
 {
   "default": {
     "paths": ["src/test/**/features/"],
-    "require": ["src/test/**/steps/*.js"],
+    "require": [
+      "src/test/**/support/*.js",
+      "src/test/**/pages/*.js",
+      "src/test/**/steps/*.js"
+    ],
     "formatOptions": {
       "snippetInterface": "async-await"
     },
