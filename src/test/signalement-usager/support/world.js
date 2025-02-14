@@ -1,7 +1,8 @@
 const { setWorldConstructor, setDefaultTimeout } = require('@cucumber/cucumber');
-const LoginPage = require('../pages/LoginPage');
 const { chromium, firefox, webkit, devices } = require('@playwright/test');
 const config = require('../../../../config/env.js');
+const LoginPage = require('../pages/LoginPage');
+const CalendarPage = require('../pages/CalendarPage');
 
 setDefaultTimeout(60 * 1000);
 
@@ -48,6 +49,7 @@ class CustomWorld {
     this.terminalPage = await this.context.newPage();
     this.backofficePage = await this.context.newPage();
     this.loginPage = new LoginPage(this.backofficePage);  // Page de connexion dans le backoffice
+    this.calendarPage = new CalendarPage(this.backofficePage);
   }
 
   // Méthode de nettoyage (fermer le navigateur après chaque test)
