@@ -65,7 +65,7 @@ Given("que un signalement d'arrivée sans rendez-vous est confirmé", async func
   motif = match[1].trim()
 });
 
-When("la page de la file d'attente du backoffice est ouverte", async function() {
+When("la page de la file d'attente du backoffice est ouverte à côté de la page du signalement usagé sans rendez-vous", async function() {
   await this.backofficePage.locator('i[title="File d\'attente"]').click();
   const element = await this.backofficePage.getByText("Usagers en attente:");
   await expect(element).toBeVisible();
@@ -82,7 +82,7 @@ Then("le ticket doit s'afficher dans la file d'attente sans rendez-vous", async 
 });
 
 
-Then("le numéro et le motif du ticket confirmé doivent correspondre à ceux présents dans la file d'attente", async function() {
+Then("Le numéro et le motif du ticket confirmé dans le signalement sans rendez-vous doivent être identiques à ceux présents dans la file d'attente.", async function() {
   const attenteSansRDVHeader = this.backofficePage.getByText(/Attente sans RDV \(\d+\)/);
   const parentBlock = attenteSansRDVHeader.locator('xpath=..//..//..'); 
   const ticketBlock = parentBlock.locator('div.font-size-large.w-25:has-text("' + ticket + '")');
