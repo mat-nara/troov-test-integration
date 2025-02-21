@@ -36,6 +36,6 @@ Feature: Signalement d'une arrivée sans RDV (usager): Enregistrement
   
   Scenario: Boutton quitter de la page d'enregistrement: On revient sur la page initiale pour le signalement d'une arrivée
     When Cliquer sur 'Quitter' de la page d'enregistrement 
-    Then Revient sur la page initiale depuis un signalement sans rendez-vous: "Je signale mon arrivée" s'affiche sur la page
+    Then Revient sur la page initiale depuis la page d'enregistrement, signalement sans rendez-vous: "Je signale mon arrivée" s'affiche sur la page
 
   

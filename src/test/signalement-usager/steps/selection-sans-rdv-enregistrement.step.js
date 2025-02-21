@@ -92,7 +92,7 @@ Then("Message d'erreur s'affiche", async () => {
   await expect(heading).toBeVisible();
 });
 
-Then("Revient sur la page initiale depuis un signalement sans rendez-vous: \"Je signale mon arrivée\" s'affiche sur la page", async () => {
+Then("Revient sur la page initiale depuis la page d'enregistrement, signalement sans rendez-vous: \"Je signale mon arrivée\" s'affiche sur la page", async () => {
   const heading = await page.getByText("Je signale mon arrivée");
   await expect(heading).toBeVisible();
 });
