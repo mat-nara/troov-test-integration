@@ -30,10 +30,10 @@ class CalendarPage {
       await firstItemService.click();
 
       // Select physique (1st item)
-      const selectorModeDuRDV = this.page.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-      await selectorModeDuRDV.selectOption({ index: 0 });  
+      //const selectorModeDuRDV = this.page.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+      //await selectorModeDuRDV.selectOption({ index: 0 });  
 
-      await this.page.waitForTimeout(1000);  
+      //await this.page.waitForTimeout(1000);  
 
       // Create new user
       const selectorButtonCreerUser = this.page.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
