@@ -13,6 +13,9 @@ if (!process.env.BROWSER) {
 
 module.exports =  {
   troovCafUserArrivalURL: process.env.TROOV_CAF_USER_ARRIVAL_URL || 'https://lib.dev.caf.troovrdv.com/troovrdv-front/cnaf/enrollment', 
+  troovCafUserBackofficeURL: process.env.TROOV_CAF_BACKOFFICE_URL || 'https://dev.caf.troovrdv.com/fr/login', 
+  troovCafUserBackofficeUsername: process.env.TROOV_CAF_BACKOFFICE_USERNAME || 'admin@troov.com', 
+  troovCafUserBackofficePassword: process.env.TROOV_CAF_BACKOFFICE_PASSWORD || 'T&C-Oe4cMol4e!', 
   browserName: process.env.BROWSER || 'chromium', 
   headless: process.env.HEADLESS === "true" || false, 
   mobileDevice: process.env.MOBILE_DEVICE, 
