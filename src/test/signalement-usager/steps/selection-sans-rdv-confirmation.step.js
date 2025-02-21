@@ -12,7 +12,7 @@ BeforeAll(async function () {
   ({ browser, context, page } = await initializeBrowser());
 });
 
-Given("La page de confirmation est ouverte", async () => {
+Given("La page de confirmation de la création de ticket sans rendez-vous est ouverte", async () => {
 
   // Page principale
   await page.goto(config.troovCafUserArrivalURL);
@@ -51,20 +51,46 @@ Given("La page de confirmation est ouverte", async () => {
   // Page de confirmation
 });
 
+// Téléchargement du ticket digital
+When("L'utilisateur clique sur le bouton \"Télécharger mon ticket\" de la page confirmation signalement sans rendez-vous", async () => {
+  await page.getByText('Télécharger mon ticket').click();
+});
+
 // La page de confirmation sans rendez-vous s'affiche correctement 
-Then("Le titre \"Vous êtes bien enregistré !\" s'affiche sur la page", async () => {
+Then("Le titre \"Vous êtes bien enregistré !\" s'affiche sur la page de confirmation signalement sans rendez-vous", async () => {
   const heading = await page.getByText("Vous êtes bien enregistré !");
   await expect(heading).toBeVisible();
 });
 
-Then("Le titre \"Votre numéro d’appel est le suivant :\" s'affiche sur la page", async () => {
-  const heading = await page.getByText("Votre numéro d’appel est le suivant :");
-  await expect(heading).toBeVisible();
+Then("Tous les informations sur le signalement sans rendez-vous s'affiche correctement sur la page", async function() {
+
+	//***** */ Date/Heure de l'enregistrement
+	const dateTextLocator = this.terminalPage.getByText('Enregistré le');
+  const dateEnregistrementLocator = dateTextLocator.locator('b:nth-of-type(1)');
+  const timeEnregistrementLocator = dateTextLocator.locator('b:nth-of-type(2)');
+  
+  const recordedDate = await dateEnregistrementLocator.textContent();
+  const recordedTime = await timeEnregistrementLocator.textContent();
+
+  // Vérifier que la date est au format "DD/MM/YYYY"
+  expect(recordedDate).toMatch(/^\d{2}\/\d{2}\/\d{4}$/);
+
+  // Vérifier que l'heure est au format "HHhMM"
+  expect(recordedTime).toMatch(/^\d{2}h\d{2}$/);
+
+	 //***** */ Motif
+		const motifTextLocator = this.terminalPage.getByText('Motif :');
+		const motifLocator = motifTextLocator.locator('b');
+		const motif = await motifLocator.textContent();
+		expect(motif).toBeTruthy();
 });
 
-// Téléchargement du ticket digital
-Then("Cliquer sur le ticket digital à télécharger sur page de confirmation", async () => {
-  await page.getByText('Télécharger mon ticket').click();
+Then("Le fichier ticket digital sur page de confirmation sans rendez-vous doit être téléchargé", async () => {
+  const download = await this.terminalPage.waitForEvent('download');
+	expect(download.suggestedFilename()).toBe("ticket.pdf");
+	const filePath = await download.path();
+	expect(filePath).toBeTruthy();
+	await download.delete();
 });
 
 AfterAll(async function () {
