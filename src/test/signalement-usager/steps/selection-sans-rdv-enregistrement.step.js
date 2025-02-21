@@ -49,7 +49,7 @@ Given("NIR et Téléphone sont saisie", async () => {
 });
 
 // Scenario NIR saisie au mauvais format
-Given("NIR saisie au mauvais format", async () => {
+Given("que le NIR est saisi au mauvais format dans un signalement sans rendez-vous", async () => {
   const inputNIRLocator = page.locator('label[for="social-security-number"] + input');
   await inputNIRLocator.fill('123456789111'); // 12 caracter au lieu de 13
 
@@ -61,7 +61,7 @@ Given("NIR saisie au mauvais format", async () => {
 });
 
 // Scenario Téléphone saisie au mauvais format
-Given("Téléphone saisie au mauvais format", async () => {
+Given("que le téléphone est saisi au mauvais format dans un signalement sans rendez-vous", async () => {
   const inputNIRLocator = page.locator('label[for="social-security-number"] + input');
   await inputNIRLocator.fill('1234567891111'); 
 
@@ -92,7 +92,7 @@ Then("Message d'erreur s'affiche", async () => {
   await expect(heading).toBeVisible();
 });
 
-Then("Revient sur la page initiale: \"Je signale mon arrivée\" s'affiche sur la page", async () => {
+Then("Revient sur la page initiale depuis un signalement sans rendez-vous: \"Je signale mon arrivée\" s'affiche sur la page", async () => {
   const heading = await page.getByText("Je signale mon arrivée");
   await expect(heading).toBeVisible();
 });

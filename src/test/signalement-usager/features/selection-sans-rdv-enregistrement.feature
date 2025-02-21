@@ -20,12 +20,12 @@ Feature: Signalement d'une arrivée sans RDV (usager): Enregistrement
     Then Passe à l'etape suivant: "Je choisis mon motif de visite" s'affiche sur la page
 
   Scenario: NIR dans un mauvais format: Un message d'erreur s'affiche
-		Given NIR saisie au mauvais format
+		Given que le NIR est saisi au mauvais format dans un signalement sans rendez-vous
     When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
     Then Message d'erreur s'affiche
 
   Scenario: Téléphone dans un mauvais format: Un message d'erreur s'affiche
-		Given Téléphone saisie au mauvais format
+		Given que le téléphone est saisi au mauvais format dans un signalement sans rendez-vous
     When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
     Then Message d'erreur s'affiche
 
@@ -35,7 +35,7 @@ Feature: Signalement d'une arrivée sans RDV (usager): Enregistrement
     Then Passe à l'etape suivant: "Je choisis mon motif de visite" s'affiche sur la page
   
   Scenario: Boutton quitter de la page d'enregistrement: On revient sur la page initiale pour le signalement d'une arrivée
-    When Cliquer sur 'Quitter' de la page d'enregistrement
-    Then Revient sur la page initiale: "Je signale mon arrivée" s'affiche sur la page
+    When Cliquer sur 'Quitter' de la page d'enregistrement 
+    Then Revient sur la page initiale depuis un signalement sans rendez-vous: "Je signale mon arrivée" s'affiche sur la page
 
   
