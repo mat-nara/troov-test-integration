@@ -1,5 +1,5 @@
-@authenticated @SignalementAgentSansRdvEnregistrement
-Feature: Signalement d'une arrivée sans RDV (usager): Enregistrement 
+@authenticated @SignalementAgentSansRdvInfoUsager
+Feature: Signalement d'une arrivée sans RDV (agent): Information usager 
 
   Background:
     Given La fenêtre "Informations de l'usager" sans rendez-vous est ouverte
