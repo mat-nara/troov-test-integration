@@ -2,6 +2,8 @@ const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const config = require('../../../../config/env.js')
 const { fakerFR } = require('@faker-js/faker');
+const { generateRandomNIR, generateRandomPhone } = require('../utils/helper');
+
 
 
 setDefaultTimeout(60 * 1000);
@@ -60,6 +62,12 @@ Given("Le nom et le prénom sont saisis | signalement sans rendez-vous", async f
 	await this.backofficePage.locator('#firstname').fill(prenom);
 });
 
+// Scenario NIR uniquement
+Given("Le NIR uniquement est saisi | signalement sans rendez-vous", async function() {
+	const NIR = generateRandomNIR()
+	await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
+});
+
 // Scenario Nom saisie au mauvais format
 Given("que le nom est saisi au mauvais format dans un signalement sans rendez-vous", async function() {
 
@@ -78,6 +86,19 @@ Given("que le prénom est saisi dans un mauvais format dans un signalement sans 
 
 	prenom = fakerFR.person.firstName() + '21' // Ajouter un nombre au prenom
 	await this.backofficePage.locator('#firstname').fill(prenom);
+});
+
+// Scenario Prénom saisie au mauvais format
+Given("que le NIR est saisi au mauvais format dans un signalement sans rendez-vous", async function() {
+
+	nom = fakerFR.person.lastName()
+	await this.backofficePage.locator('#lastname').fill(nom);
+
+	prenom = fakerFR.person.firstName() // Ajouter un nombre au prenom
+	await this.backofficePage.locator('#firstname').fill(prenom);
+
+	const NIR = generateRandomNIR().slice(0, -1);
+	await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
 });
 
 // ------------------------------------------------------------------------
@@ -125,6 +146,11 @@ Then("un message d'erreur relatif au nom s'affiche", async function() {
 Then("un message d'erreur relatif au prénom s'affiche", async function() {
   const message = await this.backofficePage.locator("#lastname-invalid-feedback");
   await expect(message).toBeVisible();
+});
+
+Then("un message d'erreur relatif au NIR s'affiche", async function() {
+	const message = await this.backofficePage.locator("#NIR-invalid-feedback");
+	await expect(message).toBeVisible();
 });
 
 Then("L'utilisateur revient sur la page de choix du service pour un signalement sans rendez-vous : \"Je choisis le service pour lequel l’usager souhaite prendre un RDV\" s'affiche sur la page", async function() {

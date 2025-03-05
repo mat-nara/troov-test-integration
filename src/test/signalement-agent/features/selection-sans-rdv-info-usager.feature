@@ -15,12 +15,18 @@ Feature: Signalement d'une arrivée sans RDV (agent): Information usager
       When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
       Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
         *  Le prénom saisi récemment s'affiche sur la page de confirmation
-
+      
 		Scenario: Nom et prénom saisi : On peut passer à l'étape suivante
 			Given Le nom et le prénom sont saisis | signalement sans rendez-vous
       When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
       Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
         *  Le nom et le prénom saisi récemment s'affiche sur la page de confirmation
+    
+    Scenario: NIR uniquement saisi : On peut passer à l'étape suivante
+			Given Le NIR uniquement est saisi | signalement sans rendez-vous
+      When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
+      Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
+
 		
 		Scenario: Nom dans un mauvais format: Un message d'erreur s'affiche
 			Given que le nom est saisi au mauvais format dans un signalement sans rendez-vous
@@ -29,6 +35,10 @@ Feature: Signalement d'une arrivée sans RDV (agent): Information usager
 		Scenario: Prénom dans un mauvais format: Un message d'erreur s'affiche
 			Given que le prénom est saisi dans un mauvais format dans un signalement sans rendez-vous
       Then un message d'erreur relatif au prénom s'affiche
+    
+    Scenario: NIR dans un mauvais format: Un message d'erreur s'affiche
+			Given que le NIR est saisi au mauvais format dans un signalement sans rendez-vous
+      Then un message d'erreur relatif au NIR s'affiche
 
 		Scenario: Bouton Valider : On peut passer à l'étape suivante
 			Given Le nom et le prénom sont saisis | signalement sans rendez-vous
