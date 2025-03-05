@@ -2,7 +2,7 @@ const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const config = require('../../../../config/env.js')
 const { fakerFR } = require('@faker-js/faker');
-const { generateRandomNIR, generateRandomPhone } = require('../utils/helper');
+const { generateRandomNIR, generateRandomPhone } = require('../../signalement-usager/utils/helper');
 
 
 
