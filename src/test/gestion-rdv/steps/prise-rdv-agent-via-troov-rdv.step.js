@@ -100,7 +100,13 @@ Given("Un utilisateur a été créé lors d'une prise de rendez-vous précédent
     await this.tempPage.locator('button[title="Confirmer"]').click()
 
     // Mode de prise du rendez-vous
-    await this.tempPage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    //await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    // Choix du Service (1st item)
+    const selectorPriseRdv = this.backofficePage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+    await selectorPriseRdv.click();
+    const selectorPriseRdvLegend = this.backofficePage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+    const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+    await firstItemPriseRdv.click();
 
     // Bloquer le créneau
     await this.tempPage.locator('button[title="Bloquer ce créneau"]').click()
@@ -171,7 +177,13 @@ Given("L'utilisateur a renseigné toutes les informations du RDV", async functio
     await this.backofficePage.locator('button[title="Confirmer"]').click()
 
     // Mode de prise du rendez-vous
-    await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    //await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    // Choix du Service (1st item)
+    const selectorPriseRdv = this.backofficePage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+    await selectorPriseRdv.click();
+    const selectorPriseRdvLegend = this.backofficePage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+    const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+    await firstItemPriseRdv.click();
 });
 
 Given("Un rendez-vous avec un guichet spécifique est confirmé", async function() {
@@ -238,7 +250,13 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     await this.backofficePage.locator('button[title="Confirmer"]').click();
 
     // Mode de prise du rendez-vous
-    await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    //await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    // Choix du Service (1st item)
+    const selectorPriseRdv = this.backofficePage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+    await selectorPriseRdv.click();
+    const selectorPriseRdvLegend = this.backofficePage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+    const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+    await firstItemPriseRdv.click();
 
     // Récuperer l'heure
     const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
@@ -336,7 +354,13 @@ Given("Un rendez-vous a été confirmé", async function() {
     await this.backofficePage.locator('button[title="Confirmer"]').click()
 
     // Mode de prise du rendez-vous
-    await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    //await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    // Choix du Service (1st item)
+    const selectorPriseRdv = this.backofficePage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+    await selectorPriseRdv.click();
+    const selectorPriseRdvLegend = this.backofficePage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+    const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+    await firstItemPriseRdv.click();
 
     // -------------------------  Confirmation du rendez-vous ----------------------- //
     // Bloquer le créneau
@@ -407,7 +431,13 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.locator('button[title="Confirmer"]').click()
 
     // Mode de prise du rendez-vous
-    await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    //await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    // Choix du Service (1st item)
+    const selectorPriseRdv = this.backofficePage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+    await selectorPriseRdv.click();
+    const selectorPriseRdvLegend = this.backofficePage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+    const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+    await firstItemPriseRdv.click();
 
     // Save value for next except
     this.waitingReason          = await this.backofficePage.getByPlaceholder('Choisir un service').locator('xpath=following-sibling::span').textContent();
@@ -585,7 +615,13 @@ When("L'utilisateur crée un rendez-vous et y ajoute des notes internes", async 
     await this.backofficePage.getByPlaceholder('Notes').fill(this.note);
 
     // Mode de prise du rendez-vous
-    await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    //await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
+    // Choix du Service (1st item)
+    const selectorPriseRdv = this.backofficePage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+    await selectorPriseRdv.click();
+    const selectorPriseRdvLegend = this.backofficePage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+    const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+    await firstItemPriseRdv.click();
 
     // Bloquer le créneau
     await this.backofficePage.locator('button[title="Bloquer ce créneau"]').click()
