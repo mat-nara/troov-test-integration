@@ -1,4 +1,4 @@
-@StatistiquesRdv
+@AccessProfileInterfaceNational
 Feature: Vérification des accès: Profile Interface National 
 
     Background:
@@ -65,7 +65,7 @@ Feature: Vérification des accès: Profile Interface National
         Given La fiche de paramétrage d’un guichet est ouverte
         When L'utilisateur clique sur "Affichez tout"
         Then Toutes les zones de paramétrage du guichet sont dépliées
-        
+
     Scenario: Intervention sur chaque zone du guichet
         Given La fiche de paramétrage d’un guichet est ouverte
         When L'utilisateur clique sur "Affichez tout"
