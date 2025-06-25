@@ -13,7 +13,7 @@ const { text } = require('stream/consumers');
 Given("L'utilisateur est connecté à l'application Troov", async function() {
     this.loginPageAlt = new LoginPage(this.backofficePage);
     await this.loginPageAlt.navigate();
-    await this.loginPageAlt.login(config.troovCafUserBackofficeUsername, config.troovCafUserBackofficePassword);
+    await this.loginPageAlt.login(config.usernameProfileInterfaceNational, config.passwordProfileInterfaceNational);
 
     // wait for backoffice loaded
     await this.backofficePage.waitForSelector('#page-topbar', { state: 'visible' }); 
