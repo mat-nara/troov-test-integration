@@ -13,7 +13,7 @@ const { text } = require('stream/consumers');
 Given("L'utilisateur est connecté à l'application Troov", async function() {
     this.loginPageAlt = new LoginPage(this.backofficePage);
     await this.loginPageAlt.navigate();
-    await this.loginPageAlt.login(config.troovCafUserBackofficeUsername, config.troovCafUserBackofficePassword);
+    await this.loginPageAlt.login(config.usernameProfileUtilisateurAcceuil, config.passwordProfileUtilisateurAcceuil);
 
     // wait for backoffice loaded
     await this.backofficePage.waitForSelector('#page-topbar', { state: 'visible' }); 
@@ -160,17 +160,17 @@ When("L'utilisateur crée un signalement d'arrivée sans rendez-vous", async fun
 });
 
 When("L'utilisateur clique sur \"Statistiques\" puis sur \"Statistiques RDV\"", async function() {
-    await this.backofficePage.locator('i[title="Statistiques"]').click();
+    await this.backofficePage.locator('i[title="Pilotage file d\'attente"]').click();
     await this.backofficePage.locator('i[title="Statistiques RDV"]').click();
 });
 
 When("L'utilisateur clique sur \"Statistiques\" puis sur \"Statistiques file d'attente\"", async function() {
-    await this.backofficePage.locator('i[title="Statistiques"]').click();
+    await this.backofficePage.locator('i[title="Pilotage file d\'attente"]').click();
     await this.backofficePage.locator('i[title="Statistiques file d\'attente"]').click();
 });
 
 When("L'utilisateur clique sur \"Statistiques\"", async function() {
-    await this.backofficePage.locator('i[title="Statistiques"]').click();
+    await this.backofficePage.locator('i[title="Pilotage file d\'attente"]').click();
 });
 
 
