@@ -19,11 +19,17 @@ Feature: Gestion des membres d’équipe dans Troov
         When L'utilisateur clique sur la croix d'une équipe affichée
         Then L’équipe est retirée de l’affichage
 
-    
+
     Scenario: Rechercher un membre de l’équipe
         When L'utilisateur saisit le nom ou prénom dans la barre de recherche
         Then Le membre correspondant s'affiche dans la liste
-    
+        When L'utilisateur saisit l'email du membre
+        Then Le membre correspondant s'affiche dans la liste
+        When L'utilisateur saisit le nom complet du membre
+        Then Le membre correspondant s'affiche dans la liste
+        Then Les données de test sont supprimées
+        
+
     Scenario: Modifier un utilisateur existant
         Given Un utilisateur est affiché dans les résultats
         When L'utilisateur clique sur le nom dans le tableau des résultats

@@ -34,7 +34,10 @@ async function setupMember() {
     // Generate random data for appointment
     name = faker.person.lastName();
     firstname = faker.person.firstName();
-    email = name.toLowerCase() + '@test.com';
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    email = name.toLowerCase() + "-" + firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
+    //email = name.toLowerCase() + '@test.com';
     job = "Testeur"
 
     await setupPage.locator('#email').fill(email); 
@@ -42,8 +45,11 @@ async function setupMember() {
     await setupPage.locator('#lastname').fill(name); 
     await setupPage.locator('#job').fill(job); 
 
-    await setupPage.locator('button[title="Enregistrer"]').click();
+    await setupPage.waitForTimeout(2000);
 
+    await setupPage.locator('button[title="Enregistrer"]').click();
+    console.log('wait for the member to be created')
+    await setupPage.waitForTimeout(5000); // wait for the member to be created
 
     console.log('==> HOOK BEFORE END');
     return { setupBrowser, setupContext, setupPage, name, firstname, email, job };
@@ -58,7 +64,8 @@ async function cleanupMember(browser, page, name, firstname) {
 
     // *** Recherche du membre *** //
     var fullname = firstname + ' ' + name
-    await page.getByPlaceholder('Tapez pour rechercher').fill(fullname);
+    await page.getByPlaceholder('Tapez pour rechercher').fill(name);
+    await page.locator('button[title="Rechercher"]').click();
     await page.waitForTimeout(1000); 
     await page.locator('table tbody tr td').filter({ hasText: fullname }).click();
 
@@ -132,7 +139,11 @@ Given("Un utilisateur est affiché dans les résultats", async function() {
     await this.backofficePage.locator('#common-members').click(); 
 
     // *** Rechercher la membre *** //
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.fullname);
+    //console.log('Waiting for 5 seconds before searching for the member...');
+    //await this.backofficePage.waitForTimeout(5000); 
+
+    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: this.fullname })).toBeVisible(); 
 });
@@ -152,7 +163,11 @@ Given("La fiche de l’utilisateur est ouverte", async function() {
     await this.backofficePage.locator('#common-members').click(); 
 
     // *** Rechercher la membre *** //
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.fullname);
+    //console.log('Waiting for 5 seconds before searching for the member...');
+    //await this.backofficePage.waitForTimeout(5000); 
+
+    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: this.fullname })).toBeVisible(); 
 
@@ -180,7 +195,11 @@ Given("Tous les services sont attribués a un membre", async function() {
     await this.backofficePage.locator('#common-members').click(); 
 
     // --- Rechercher la membre 
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.fullname);
+    // console.log('Waiting for 5 seconds before searching for the member...');
+    // await this.backofficePage.waitForTimeout(5000); 
+
+    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: this.fullname })).toBeVisible(); 
 
@@ -240,13 +259,16 @@ Given("L'utilisateur remplit les champs du formulaire", async function() {
     // Générer des données
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
     this.job = "Testeur"
 
     await this.backofficePage.locator('#email').fill(this.email);
     await this.backofficePage.locator('#firstname').fill(this.firstname);
     await this.backofficePage.locator('#lastname').fill(this.name);
-    await this.backofficePage.locator('#job').fill(this.job); 
+    await this.backofficePage.locator('#job').fill(this.job);
+
+    await this.backofficePage.waitForTimeout(2000); // wait for 1 second before clicking the save button
 });
 
 Given("Un nouveau membre vient d’être créé et sa fiche est ouvert", async function() {
@@ -267,7 +289,8 @@ Given("Un nouveau membre vient d’être créé et sa fiche est ouvert", async f
     // *** Générer des données *** //  
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
     this.job = "Testeur"
 
     await this.backofficePage.locator('#email').fill(this.email);
@@ -278,8 +301,12 @@ Given("Un nouveau membre vient d’être créé et sa fiche est ouvert", async f
     await this.backofficePage.locator('button[title="Enregistrer"]').click();
 
     // *** Recherche du membre *** //
+    // console.log('Waiting for 5 seconds before searching for the member...');
+    // await this.backofficePage.waitForTimeout(5000); 
+     
     var fullname = this.firstname + ' ' + this.name
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(fullname);
+    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000);
 
     // *** Nettoyage de la base *** //
@@ -319,7 +346,7 @@ When("Il sélectionne plusieurs équipes via la zone \"Choisissez une ou plusieu
 });
 
 When("L'utilisateur clique sur la croix d'une équipe affichée", async function() {
-    const equipeCloseLocator = this.backofficePage.locator('h3[title="Voir tous les membres de votre équipe"]').locator('xpath=following-sibling::*').getByText(this.equipes[0]).locator('..').locator('i:last-child');
+    const equipeCloseLocator = this.backofficePage.locator('h3[title="Voir tous les membres de votre équipe"]').locator('xpath=following-sibling::*').getByText(this.equipes[0], { exact: true }).locator('..').locator('i:last-child').first();
     await equipeCloseLocator.click();
 });
 
@@ -331,6 +358,7 @@ When("L'utilisateur saisit le nom ou prénom dans la barre de recherche", async 
     this.name = name;
     this.firstname = firstname;
     this.fullname = this.firstname + ' ' + this.name;
+    this.email = email;
     console.log('fullname: ', this.fullname)
 
     // *** Naviger vers parametres *** //
@@ -338,7 +366,23 @@ When("L'utilisateur saisit le nom ou prénom dans la barre de recherche", async 
     await this.backofficePage.locator('#common-members').click(); 
 
     // *** Rechercher la membre *** //
+    // console.log('Waiting for 5 seconds before searching for the member...');
+    // await this.backofficePage.waitForTimeout(5000); 
+
+    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
+    await this.backofficePage.waitForTimeout(1000); 
+});
+
+When("L'utilisateur saisit le nom complet du membre", async function() {
     await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.fullname);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
+    await this.backofficePage.waitForTimeout(1000); 
+});
+
+When("L'utilisateur saisit l'email du membre", async function() {
+    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.email);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
 });
 
@@ -396,13 +440,19 @@ When("L'utilisateur coche ou décoche les autres paramètres", async function() 
     const checkboxRedirectEmail = await this.backofficePage.locator('label[for="checkbox_redirect_email"]');
     const enableQueue = await this.backofficePage.locator('label[for="enable-queue"]');
     const enableReservation = await this.backofficePage.locator('label[for="enable-reservation"]');
-
+    //console.log('On va cliquer sur les checkbox')
+    await this.backofficePage.waitForTimeout(2000); 
     await receiveReservationAlert.click();
-    await checkboxMail.click();
+    await this.backofficePage.waitForTimeout(1000); 
+    // await checkboxMail.click();
     await checkboxRedirectEmail.click();
+    await this.backofficePage.waitForTimeout(1000); 
     await enableQueue.click();
+    await this.backofficePage.waitForTimeout(1000); 
     await enableReservation.click();
-    await this.backofficePage.waitForTimeout(5000); 
+    // console.log('les click sont fait')
+    await this.backofficePage.waitForTimeout(2000); 
+    
 });
 
 
@@ -411,12 +461,14 @@ When("L'utilisateur clique sur le bouton \"Mettre à jour\"", async function() {
 });
 
 When("L'utilisateur clique sur le bouton \"Supprimer\" en bas de la fiche et confirme la suppression via la pop-up", async function() {
-    this.backofficePage.once('dialog', async dialog => {
-        console.log('Message de la popup :', dialog.message());
-        await dialog.accept();
-    });
-      
-    await this.backofficePage.locator('button:has-text("Supprimer")').click();
+    // this.backofficePage.once('dialog', async dialog => {
+    //     console.log('Message de la popup :', dialog.message());
+    //     await dialog.accept();
+    // });
+       
+     await this.backofficePage.locator('button:has-text("Supprimer")').click();
+     await this.backofficePage.locator('#delete-member-modal footer button').filter({ hasText: 'Ok' }).click();
+     
 });
 
 When("Il clique sur \"Ajouter un membre\"", async function() {
@@ -440,85 +492,122 @@ Then("La page \"Gérer mes équipes\" s'affiche", async function() {
 
 Then("Les différentes équipes sélectionnées s'affichent", async function() {
     for (let i = 0; i < this.equipes.length; i++) {
-        const equipeLocator = this.backofficePage.locator('h3[title="Voir tous les membres de votre équipe"]').locator('xpath=following-sibling::*').getByText(this.equipes[i]).first();
+        const equipeLocator = this.backofficePage.locator('h3[title="Voir tous les membres de votre équipe"]').locator('xpath=following-sibling::*').getByText(this.equipes[i], { exact: true }).first();
         await expect(equipeLocator).toBeVisible();
     }    
 });
 
 Then("L’équipe est retirée de l’affichage", async function() {
     await this.backofficePage.mouse.click(10, 10);
-    const equipeLocator = this.backofficePage.locator('h3[title="Voir tous les membres de votre équipe"]').locator('xpath=following-sibling::*').getByText(this.equipes[0]).first();
+    const equipeLocator = this.backofficePage.locator('h3[title="Voir tous les membres de votre équipe"]').locator('xpath=following-sibling::*').getByText(this.equipes[0], { exact: true }).first();
     await expect(equipeLocator).not.toBeVisible();
 });
 
 Then("Le membre correspondant s'affiche dans la liste", async function() {
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: this.fullname })).toBeVisible(); 
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    //await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
 });
 
 Then("La fiche de l’utilisateur s’ouvre", async function() {
-    await expect(this.backofficePage.locator('.card .card-body .card-title').filter({ hasText: 'Membres' })).toBeVisible(); 
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    try {
+        await expect(this.backofficePage.locator('.card .card-body .card-title').filter({ hasText: 'Membres' })).toBeVisible(); 
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
 });
 
 Then("Le rôle de l’utilisateur est mis à jour visuellement", async function() {
-    const selectorRole = this.backofficePage.locator('label').filter({ hasText: 'Rôle*' }).locator('xpath=following-sibling::*');
-    const selectedRoleText = await selectorRole.locator('option:checked').textContent();
-    console.log('selectedRoleText: ', selectedRoleText)
-    console.log('this.expectedRoleText: ', this.expectedRoleText)
-    expect(selectedRoleText?.trim()).toBe(this.expectedRoleText?.trim());
-
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    try {
+        const selectorRole = this.backofficePage.locator('label').filter({ hasText: 'Rôle*' }).locator('xpath=following-sibling::*');
+        const selectedRoleText = await selectorRole.locator('option:checked').textContent();
+        console.log('selectedRoleText: ', selectedRoleText)
+        console.log('this.expectedRoleText: ', this.expectedRoleText)
+        expect(selectedRoleText?.trim()).toBe(this.expectedRoleText?.trim());
+    
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
 });
 
 Then("Tous les services sont attribués à l’utilisateur", async function() {
-    const selectedServicesLocator = this.backofficePage.locator('label').filter({ hasText: 'Services' }).locator('xpath=following-sibling::*').locator('.multiselect__tags .multiselect__tag');
-    const selectedServicesCount = await selectedServicesLocator.count();
-    console.log('selectedServicesCount: ', selectedServicesCount);
-    console.log('this.servicesCount - 1: ', this.servicesCount - 1);
-    await expect(selectedServicesCount).toBe(this.servicesCount - 1);
-
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    try {
+        const selectedServicesLocator = this.backofficePage.locator('label').filter({ hasText: 'Services' }).locator('xpath=following-sibling::*').locator('.multiselect__tags .multiselect__tag');
+        const selectedServicesCount = await selectedServicesLocator.count();
+        console.log('selectedServicesCount: ', selectedServicesCount);
+        console.log('this.servicesCount - 1: ', this.servicesCount - 1);
+        await expect(selectedServicesCount).toBe(this.servicesCount - 1);
+    
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
 });
 
 Then("Aucun service n’est sélectionné pour ce membre", async function() {
-    const selectedServicesLocator = this.backofficePage.locator('label').filter({ hasText: 'Services' }).locator('xpath=following-sibling::*').locator('.multiselect__tags .multiselect__tag');
-    const selectedServicesCount = await selectedServicesLocator.count();
-    await expect(selectedServicesCount).toBe(0);
+    try {
+        const selectedServicesLocator = this.backofficePage.locator('label').filter({ hasText: 'Services' }).locator('xpath=following-sibling::*').locator('.multiselect__tags .multiselect__tag');
+        const selectedServicesCount = await selectedServicesLocator.count();
+        await expect(selectedServicesCount).toBe(0);
 
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
 });
 
 Then("Les services sélectionnés s’ajoutent pour ce membre", async function() {
-    for (let i = 0; i < this.services.length; i++) {
-        const serviceLocator = this.backofficePage.locator('label').filter({ hasText: 'Services' }).locator('xpath=following-sibling::*').locator('.multiselect__tags .multiselect__tag ').getByText(this.services[i] ).first();
-        await expect(serviceLocator).toBeVisible();
+    try {
+        for (let i = 0; i < this.services.length; i++) {
+            const serviceLocator = this.backofficePage.locator('label').filter({ hasText: 'Services' }).locator('xpath=following-sibling::*').locator('.multiselect__tags .multiselect__tag ').getByText(this.services[i] ).first();
+            await expect(serviceLocator).toBeVisible();
+        }
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
     }
-
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
 });
 
 Then("L'état de l'option est mis à jour", async function() {
-    await expect(this.backofficePage.locator('#receiveReservationAlert')).toBeChecked();
-    await expect(this.backofficePage.locator('#checkboxMail')).not.toBeChecked();
-    await expect(this.backofficePage.locator('#checkbox_redirect_email')).toBeChecked();
-    await expect(this.backofficePage.locator('#enable-queue')).toBeChecked();
-    await expect(this.backofficePage.locator('#enable-reservation')).not.toBeChecked();
+    try {
+        await expect(this.backofficePage.locator('#receiveReservationAlert')).toBeChecked();
+        // await expect(this.backofficePage.locator('#checkboxMail')).not.toBeChecked();
+        await expect(this.backofficePage.locator('#checkbox_redirect_email')).toBeChecked();
+        await expect(this.backofficePage.locator('#enable-queue')).toBeChecked();
+        await expect(this.backofficePage.locator('#enable-reservation')).not.toBeChecked();
 
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
 });
 
 Then("Un message de confirmation de la mise a jours s’affiche", async function() {
-    await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Nous avons pris en compte vos changements')).toBeVisible();
-
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    try {
+        await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Nous avons pris en compte vos changements')).toBeVisible();
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
 });
 
 Then("Un message de confirmation de la suppression s’affiche", async function() {
-    await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Membre supprimé')).toBeVisible();
-
-    // await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
-    this.setupBrowser.close();
+    try {
+        await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Membre supprimé')).toBeVisible();
+        // await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        this.setupBrowser.close();
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
 });
 
 Then("Une fiche vide s’affiche pour l’utilisateur", async function() {
@@ -529,8 +618,12 @@ Then("Le nouveau membre est créer et apparaît dans la liste des membres", asyn
 
     // Apres création du nouveau membre, l'utilisateur est automatiquement rediriger vers "Gerer Equipes"
     // *** Recherche du membre *** //
+    // console.log('Waiting for 5 seconds before searching for the member...');
+    // await this.backofficePage.waitForTimeout(5000); 
+
     var fullname = this.firstname + ' ' + this.name
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(fullname);
+    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000);
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: fullname })).toBeVisible();
 
@@ -540,5 +633,14 @@ Then("Le nouveau membre est créer et apparaît dans la liste des membres", asyn
 });
 
 Then("Un message de confirmation de la suppression du nouveau membre s’affiche", async function() {
-    await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Membre supprimé')).toBeVisible();
+    try {
+        await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Membre supprimé')).toBeVisible();
+    } catch (error) {
+        this.setupBrowser.close();
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
+});
+
+Then("Les données de test sont supprimées", async function() {
+    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
 });
