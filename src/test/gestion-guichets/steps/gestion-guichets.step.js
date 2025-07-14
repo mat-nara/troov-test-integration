@@ -65,10 +65,10 @@ When("L'utilisateur clique sur \"Affichez tout\"", async function() {
 
 When("L'utilisateur complète le nom et le nom public du guichet", async function() {
     const companyName = fakerFR.company.name();
-    const guichetName = "Guichet " + companyName;
-    const guichetPublicName = "Guichet Public" + companyName;
-    await this.backofficePage.locator('#accordion-infos #name').first().fill(guichetName);
-    await this.backofficePage.locator('#accordion-infos #name').first().fill(guichetPublicName);
+    this.guichetName = "Guichet " + companyName;
+    this.guichetPublicName = "Guichet Public " + companyName;
+    await this.backofficePage.locator('#accordion-infos #name').first().fill(this.guichetName);
+    await this.backofficePage.locator('#accordion-infos #name').nth(1).fill(this.guichetPublicName);
 });
 
 When("Il compléte les dates d'ouverture du nouveau Guichet et cliquer sur \"Activer le calendrier glissant\"", async function() {
@@ -85,7 +85,12 @@ When("L'utilisateur clique dans la zone Bleue du nouveau jour de fermeture crée
 });
 
 When("Il sélectionne une date du pour le jour de fermeture sur le calendrier qui apparait", async function() {
-    await this.backofficePage.locator('.vc-popover-content-wrapper .vc-day .vc-highlights').locator('..').locator('xpath=following-sibling::*').first().click(); 
+    // await this.backofficePage.locator('.vc-popover-content-wrapper .vc-day .vc-highlights').locator('..').locator('xpath=following-sibling::*').first().click(); 
+    const jour = this.backofficePage.locator('.vc-popover-content-wrapper .vc-day .vc-highlights').locator('..').locator('xpath=following-sibling::*').locator('span').first();
+
+    await jour.waitFor({ state: 'visible' });
+    await this.backofficePage.waitForTimeout(500); // attendre que l’animation finisse
+    await jour.click();
 });
 
 When("Il cliquer sur \"Ajouter une plage de fermeture\"", async function() {
@@ -211,6 +216,11 @@ When("Il clique sur un membre dans la liste des membres", async function() {
 When("Il clique sur l'icone corbeille pour supprimer le membre", async function() {
    
 });
+
+When("L'utilisateur clique sur \"Sauvegarder les changements\"", async function() {
+    await this.backofficePage.locator('button').filter({ hasText: "Sauvegarder les changements" }).click();
+});
+
 
 
 
@@ -385,3 +395,21 @@ Then("Le champ \"Autoriser les réservations en interne\" est visible", async fu
     await expect(this.backofficePage.locator('#accordion-activate span').filter({ hasText: "Autoriser les réservations en interne" })).toBeEnabled();
 });
 
+Then("Le guichet est créé et le message de confirmation s'affiche", async function() {
+    // await expect(this.backofficePage.locator('#accordion-activate span').filter({ hasText: "Autoriser les réservations en interne" })).toBeEnabled();
+    try {
+        await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Nous avons pris en compte vos changements')).toBeVisible();
+        await expect(this.backofficePage.locator('.desks-card table > tbody > tr > td').filter({ hasText: this.guichetName }) ).toBeVisible();
+
+        // Néttoyage de la base de données
+        this.backofficePage.locator('.desks-card table > tbody > tr > td').filter({ hasText: this.guichetName }).locator('..').locator('i[title="Supprimer un guichet: attention, en supprimant ce guichet, vous supprimez les RDV affectés à ce guichet."]').click();
+        await this.backofficePage.waitForTimeout(1000); 
+        await this.backofficePage.locator('#delete-desk-modal button').filter({ hasText: "Oui" }).click();
+        await this.backofficePage.locator('#confirm-to-save-modal button[aria-label="Close"]').click();
+        await this.backofficePage.waitForTimeout(1000); 
+        await this.backofficePage.locator('button[title="Enregistrer"]').click();
+        await this.backofficePage.waitForTimeout(2000); 
+    } catch (error) {
+        throw error; // Rejeter l'erreur pour que le test échoue toujours
+    }
+});

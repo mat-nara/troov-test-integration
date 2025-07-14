@@ -79,3 +79,7 @@ Feature: Gestion Service: Guichets
         #Then La section "Activation" s'affiche 
         Then Les champ "Autoriser les réservations par vos usagers" est visible et modifiable
            * Le champ "Autoriser les réservations en interne" est visible 
+
+        #Sauvegarde
+        When L'utilisateur clique sur "Sauvegarder les changements"
+        Then Le guichet est créé et le message de confirmation s'affiche
