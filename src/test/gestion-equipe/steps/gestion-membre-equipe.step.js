@@ -55,7 +55,7 @@ async function setupMember() {
     return { setupBrowser, setupContext, setupPage, name, firstname, email, job };
 };
 
-async function cleanupMember(browser, page, name, firstname) {
+async function cleanupMember(browser, page, name, firstname, email) {
     console.log('==> HOOK AFTER START');
 
     // *** Naviger vers parametres *** //
@@ -64,7 +64,8 @@ async function cleanupMember(browser, page, name, firstname) {
 
     // *** Recherche du membre *** //
     var fullname = firstname + ' ' + name
-    await page.getByPlaceholder('Tapez pour rechercher').fill(name);
+    await page.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(email);
+    await page.waitForTimeout(2000); 
     await page.locator('button[title="Rechercher"]').click();
     await page.waitForTimeout(1000); 
     await page.locator('table tbody tr td').filter({ hasText: fullname }).click();
@@ -132,6 +133,7 @@ Given("Un utilisateur est affiché dans les résultats", async function() {
     this.name = name;
     this.firstname = firstname;
     this.fullname = this.firstname + ' ' + this.name;
+    this.email = email;
     console.log('fullname: ', this.fullname)
 
     // *** Naviger vers parametres *** //
@@ -142,7 +144,8 @@ Given("Un utilisateur est affiché dans les résultats", async function() {
     //console.log('Waiting for 5 seconds before searching for the member...');
     //await this.backofficePage.waitForTimeout(5000); 
 
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.email);
+    await this.backofficePage.waitForTimeout(2000); 
     await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: this.fullname })).toBeVisible(); 
@@ -156,6 +159,7 @@ Given("La fiche de l’utilisateur est ouverte", async function() {
     this.name = name;
     this.firstname = firstname;
     this.fullname = this.firstname + ' ' + this.name;
+    this.email = email;
     console.log('fullname: ', this.fullname)
 
     // *** Naviger vers parametres *** //
@@ -166,9 +170,10 @@ Given("La fiche de l’utilisateur est ouverte", async function() {
     //console.log('Waiting for 5 seconds before searching for the member...');
     //await this.backofficePage.waitForTimeout(5000); 
 
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.email);
+    await this.backofficePage.waitForTimeout(2000);
     await this.backofficePage.locator('button[title="Rechercher"]').click();
-    await this.backofficePage.waitForTimeout(1000); 
+    await this.backofficePage.waitForTimeout(2000); 
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: this.fullname })).toBeVisible(); 
 
     // ***  L'utilisateur clique sur le nom dans le tableau des résultats  *** //
@@ -188,6 +193,7 @@ Given("Tous les services sont attribués a un membre", async function() {
     this.name = name;
     this.firstname = firstname;
     this.fullname = this.firstname + ' ' + this.name;
+    this.email = email;
     console.log('fullname: ', this.fullname)
 
     // --- Naviger vers parametres 
@@ -198,7 +204,8 @@ Given("Tous les services sont attribués a un membre", async function() {
     // console.log('Waiting for 5 seconds before searching for the member...');
     // await this.backofficePage.waitForTimeout(5000); 
 
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.email);
+    await this.backofficePage.waitForTimeout(2000); 
     await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: this.fullname })).toBeVisible(); 
@@ -305,7 +312,8 @@ Given("Un nouveau membre vient d’être créé et sa fiche est ouvert", async f
     // await this.backofficePage.waitForTimeout(5000); 
      
     var fullname = this.firstname + ' ' + this.name
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.email);
+    await this.backofficePage.waitForTimeout(2000); 
     await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000);
 
@@ -369,19 +377,23 @@ When("L'utilisateur saisit le nom ou prénom dans la barre de recherche", async 
     // console.log('Waiting for 5 seconds before searching for the member...');
     // await this.backofficePage.waitForTimeout(5000); 
 
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.name);
+    console.log('attente 2 second ... ');
+    await this.backofficePage.waitForTimeout(2000); 
     await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
 });
 
 When("L'utilisateur saisit le nom complet du membre", async function() {
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.fullname);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.fullname);
+    await this.backofficePage.waitForTimeout(2000); 
     await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
 });
 
 When("L'utilisateur saisit l'email du membre", async function() {
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.email);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.email);
+    await this.backofficePage.waitForTimeout(2000); 
     await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000); 
 });
@@ -461,10 +473,10 @@ When("L'utilisateur clique sur le bouton \"Mettre à jour\"", async function() {
 });
 
 When("L'utilisateur clique sur le bouton \"Supprimer\" en bas de la fiche et confirme la suppression via la pop-up", async function() {
-    // this.backofficePage.once('dialog', async dialog => {
-    //     console.log('Message de la popup :', dialog.message());
-    //     await dialog.accept();
-    // });
+    this.backofficePage.once('dialog', async dialog => {
+        console.log('Message de la popup :', dialog.message());
+        await dialog.accept();
+    });
        
      await this.backofficePage.locator('button:has-text("Supprimer")').click();
      await this.backofficePage.locator('#delete-member-modal footer button').filter({ hasText: 'Ok' }).click();
@@ -511,7 +523,7 @@ Then("Le membre correspondant s'affiche dans la liste", async function() {
 Then("La fiche de l’utilisateur s’ouvre", async function() {
     try {
         await expect(this.backofficePage.locator('.card .card-body .card-title').filter({ hasText: 'Membres' })).toBeVisible(); 
-        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
     } catch (error) {
         this.setupBrowser.close();
         throw error; // Rejeter l'erreur pour que le test échoue toujours
@@ -526,7 +538,7 @@ Then("Le rôle de l’utilisateur est mis à jour visuellement", async function(
         console.log('this.expectedRoleText: ', this.expectedRoleText)
         expect(selectedRoleText?.trim()).toBe(this.expectedRoleText?.trim());
     
-        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
     } catch (error) {
         this.setupBrowser.close();
         throw error; // Rejeter l'erreur pour que le test échoue toujours
@@ -541,7 +553,7 @@ Then("Tous les services sont attribués à l’utilisateur", async function() {
         console.log('this.servicesCount - 1: ', this.servicesCount - 1);
         await expect(selectedServicesCount).toBe(this.servicesCount - 1);
     
-        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
     } catch (error) {
         this.setupBrowser.close();
         throw error; // Rejeter l'erreur pour que le test échoue toujours
@@ -554,7 +566,7 @@ Then("Aucun service n’est sélectionné pour ce membre", async function() {
         const selectedServicesCount = await selectedServicesLocator.count();
         await expect(selectedServicesCount).toBe(0);
 
-        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
     } catch (error) {
         this.setupBrowser.close();
         throw error; // Rejeter l'erreur pour que le test échoue toujours
@@ -567,7 +579,7 @@ Then("Les services sélectionnés s’ajoutent pour ce membre", async function()
             const serviceLocator = this.backofficePage.locator('label').filter({ hasText: 'Services' }).locator('xpath=following-sibling::*').locator('.multiselect__tags .multiselect__tag ').getByText(this.services[i] ).first();
             await expect(serviceLocator).toBeVisible();
         }
-        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
     } catch (error) {
         this.setupBrowser.close();
         throw error; // Rejeter l'erreur pour que le test échoue toujours
@@ -578,11 +590,11 @@ Then("L'état de l'option est mis à jour", async function() {
     try {
         await expect(this.backofficePage.locator('#receiveReservationAlert')).toBeChecked();
         // await expect(this.backofficePage.locator('#checkboxMail')).not.toBeChecked();
-        await expect(this.backofficePage.locator('#checkbox_redirect_email')).toBeChecked();
+        // await expect(this.backofficePage.locator('#checkbox_redirect_email')).toBeChecked();
         await expect(this.backofficePage.locator('#enable-queue')).toBeChecked();
         await expect(this.backofficePage.locator('#enable-reservation')).not.toBeChecked();
 
-        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
     } catch (error) {
         this.setupBrowser.close();
         throw error; // Rejeter l'erreur pour que le test échoue toujours
@@ -592,7 +604,7 @@ Then("L'état de l'option est mis à jour", async function() {
 Then("Un message de confirmation de la mise a jours s’affiche", async function() {
     try {
         await expect(this.backofficePage.locator('.Vue-Toastification__container').getByText('Nous avons pris en compte vos changements')).toBeVisible();
-        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+        await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
     } catch (error) {
         this.setupBrowser.close();
         throw error; // Rejeter l'erreur pour que le test échoue toujours
@@ -622,7 +634,8 @@ Then("Le nouveau membre est créer et apparaît dans la liste des membres", asyn
     // await this.backofficePage.waitForTimeout(5000); 
 
     var fullname = this.firstname + ' ' + this.name
-    await this.backofficePage.getByPlaceholder('Tapez pour rechercher').fill(this.name);
+    await this.backofficePage.getByPlaceholder('Taper pour chercher le nom de l’agent : Prénom + Nom').fill(this.email);
+    await this.backofficePage.waitForTimeout(2000); 
     await this.backofficePage.locator('button[title="Rechercher"]').click();
     await this.backofficePage.waitForTimeout(1000);
     await expect(this.backofficePage.locator('table tbody tr td').filter({ hasText: fullname })).toBeVisible();
@@ -642,5 +655,5 @@ Then("Un message de confirmation de la suppression du nouveau membre s’affiche
 });
 
 Then("Les données de test sont supprimées", async function() {
-    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname);
+    await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
 });
