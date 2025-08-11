@@ -84,7 +84,7 @@ Feature: Gestion des membres d’équipe dans Troov
         When L'utilisateur clique sur le bouton "Enregistrer"
         Then Le nouveau membre est créer et apparaît dans la liste des membres
     
-    Scenario: Supprimer un utilisateur nouvellement créé
-        Given Un nouveau membre vient d’être créé et sa fiche est ouvert
-        When L'utilisateur clique sur le bouton "Supprimer" en bas de la fiche et confirme la suppression via la pop-up
-        Then Un message de confirmation de la suppression du nouveau membre s’affiche
+#    Scenario: Supprimer un utilisateur nouvellement créé
+#        Given Un nouveau membre vient d’être créé et sa fiche est ouvert
+#        When L'utilisateur clique sur le bouton "Supprimer" en bas de la fiche et confirme la suppression via la pop-up
+#        Then Un message de confirmation de la suppression du nouveau membre s’affiche

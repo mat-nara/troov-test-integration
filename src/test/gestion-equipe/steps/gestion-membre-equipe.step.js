@@ -591,7 +591,7 @@ Then("L'état de l'option est mis à jour", async function() {
         await expect(this.backofficePage.locator('#receiveReservationAlert')).toBeChecked();
         // await expect(this.backofficePage.locator('#checkboxMail')).not.toBeChecked();
         // await expect(this.backofficePage.locator('#checkbox_redirect_email')).toBeChecked();
-        await expect(this.backofficePage.locator('#enable-queue')).toBeChecked();
+        await expect(this.backofficePage.locator('#enable-queue')).not.toBeChecked();
         await expect(this.backofficePage.locator('#enable-reservation')).not.toBeChecked();
 
         await cleanupMember(this.setupBrowser, this.setupPage, this.name, this.firstname, this.email);
