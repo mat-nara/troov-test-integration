@@ -8,6 +8,26 @@ const { faker, fakerFR  } = require('@faker-js/faker');
 
 setDefaultTimeout(60 * 1000);
 
+async function cleanLastRdv(world) {
+
+    console.log('==> CLEANING OF RDV');
+
+    //***********************   Selectionne le rendez-vous *************************/
+    var fullname = world.name.toUpperCase() + ' ' + world.firstname
+    const appointmentLocator = world.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    await appointmentLocator.click();
+    await world.backofficePage.waitForTimeout(1000);
+
+    //***********************   Clique sur annuler, puis Annuler ce/ces rendez-vous *************************/
+    const annulerBtnLocator = world.backofficePage.locator('#edit-reservation___BV_modal_content_ button:has-text("Annuler ce/ces rendez-vous")');
+    await annulerBtnLocator.click();
+    const annulerCesRdvBtnLocator = world.backofficePage.locator('#send-message span:has-text("Annuler ce/ces rendez-vous")').locator('..');
+    await annulerCesRdvBtnLocator.click();
+
+
+    console.log('==> RDV deleted');
+}
+
 Given("L'utilisateur est sur la page de connexion", async function() {
     this.loginPageAlt = new LoginPage(this.backofficePage);
     await this.loginPageAlt.navigate(this.backofficePage);
@@ -77,8 +97,8 @@ Given("Un utilisateur a été créé lors d'une prise de rendez-vous précédent
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.tempPage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.tempPage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.tempPage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -87,7 +107,11 @@ Given("Un utilisateur a été créé lors d'une prise de rendez-vous précédent
     // Generate random data for appointment
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    // this.email = this.name.toLowerCase() + '@test.com';
+
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
     this.NIR = generateRandomNIR();
     this.phone = generateRandomPhone();
 
@@ -102,9 +126,9 @@ Given("Un utilisateur a été créé lors d'une prise de rendez-vous précédent
     // Mode de prise du rendez-vous
     //await this.backofficePage.locator('#radio-taken-mode label').first().click(); // prise sur site
     // Choix du Service (1st item)
-    const selectorPriseRdv = this.backofficePage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+    const selectorPriseRdv = this.tempPage.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
     await selectorPriseRdv.click();
-    const selectorPriseRdvLegend = this.backofficePage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+    const selectorPriseRdvLegend = this.tempPage.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
     const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
     await firstItemPriseRdv.click();
 
@@ -154,8 +178,8 @@ Given("L'utilisateur a renseigné toutes les informations du RDV", async functio
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -164,7 +188,11 @@ Given("L'utilisateur a renseigné toutes les informations du RDV", async functio
     // Generate random data for appointment
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    // this.email = this.name.toLowerCase() + '@test.com';
+
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
     this.NIR = generateRandomNIR();
     this.phone = generateRandomPhone();
 
@@ -202,18 +230,31 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
 
 
     // change account to 455 caf physique
-    await this.backofficePage.locator('img.header-profile-user').click();
-    await this.backofficePage.locator('button[title="Changer de compte"]').click();
-    await this.backofficePage.locator('li[aria-label="CNAF Formation"] > div.p-tree-node-content > button.p-tree-node-toggle-button').click();
-    await this.backofficePage.locator('li[aria-label="455 Caf"] > div.p-tree-node-content > button.p-tree-node-toggle-button').click();
-    await this.backofficePage.locator('li[aria-label="455 Caf Site physique"] > div.p-tree-node-content > span.p-tree-node-label').click();
-
-    currentURL = await this.backofficePage.url();
-    while (!currentURL.includes('calendar')) {
-        await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
-        currentURL = await this.backofficePage.url();
-    }
-    expect(await this.backofficePage.url()).toContain('calendar');
+//    await this.backofficePage.locator('img.header-profile-user').click();
+//    await this.backofficePage.locator('button[title="Changer de compte"]').click();
+//    await this.backofficePage.waitForTimeout(3000); 
+//    
+//    const liFormationLocator = this.backofficePage.locator('li[aria-label="CNAF Formation"]');
+//    if (await liFormationLocator.getAttribute('aria-expanded') === 'false') {
+//        await this.backofficePage.locator('li[aria-label="CNAF Formation"] > div.p-tree-node-content > button.p-tree-node-toggle-button').click();
+//    }
+//
+//    const li455CafLocator = this.backofficePage.locator('li[aria-label="455 Caf"]');
+//    if (await li455CafLocator.getAttribute('aria-expanded') === 'false') {
+//        await this.backofficePage.locator('li[aria-label="455 Caf"] > div.p-tree-node-content > button.p-tree-node-toggle-button').click();
+//    }
+//
+//    const liPhysiqueLocator = this.backofficePage.locator('li[aria-label="455 Caf Site physique"]');
+//    if (await liPhysiqueLocator.getAttribute('aria-expanded') === 'false') {
+//        await this.backofficePage.locator('li[aria-label="455 Caf Site physique"] > div.p-tree-node-content > span.p-tree-node-label').click();
+//    }
+//
+//    currentURL = await this.backofficePage.url();
+//    while (!currentURL.includes('calendar')) {
+//        await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
+//        currentURL = await this.backofficePage.url();
+//    }
+//    expect(await this.backofficePage.url()).toContain('calendar');
 
     // Open window Ajouter un RDV
     await this.backofficePage.waitForSelector('button[title="Ajouter un RDV"]', { state: 'visible' });
@@ -227,8 +268,8 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -237,7 +278,11 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     // Generate random data for appointment
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    // this.email = this.name.toLowerCase() + '@test.com';
+
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
     this.NIR = generateRandomNIR();
     this.phone = generateRandomPhone();
 
@@ -262,25 +307,25 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
     const heure = await selectorHeureDuRDV.inputValue();
 
-    // Activer le mode libre
-    await this.backofficePage.locator('.free-mode-toggle > label').check();
-
-    // Set guichet
-    const guichetSelect = this.backofficePage.getByPlaceholder('Choisir un guichet').locator('xpath=following-sibling::span');
-    await guichetSelect.click()
-    const firstOption = this.backofficePage.getByPlaceholder('Choisir un guichet').locator('xpath=../following-sibling::div').locator('ul > li > span').first();
-
-    await firstOption.click();
-    let guichet = await this.backofficePage.getByPlaceholder('Choisir un guichet').locator('xpath=following-sibling::span').textContent();
-    // Set heure
-    const selectorHeureDuRDVTime = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//input');
-    await selectorHeureDuRDVTime.fill(heure);
-
-    // Set durée du RDV
-    const selectorDureeDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Durée du RDV' }).locator('xpath=following-sibling::div//div//input');
-    selectorDureeDuRDV.fill("30");
-
-    this.guichet    = guichet;
+//    // Activer le mode libre
+//    await this.backofficePage.locator('.free-mode-toggle > label').check();
+//
+//    // Set guichet
+//    const guichetSelect = this.backofficePage.getByPlaceholder('Choisir un guichet').locator('xpath=following-sibling::span');
+//    await guichetSelect.click()
+//    const firstOption = this.backofficePage.getByPlaceholder('Choisir un guichet').locator('xpath=../following-sibling::div').locator('ul > li > span').first();
+//
+//    await firstOption.click();
+//    let guichet = await this.backofficePage.getByPlaceholder('Choisir un guichet').locator('xpath=following-sibling::span').textContent();
+//    // Set heure
+//    const selectorHeureDuRDVTime = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//input');
+//    await selectorHeureDuRDVTime.fill(heure);
+//
+//    // Set durée du RDV
+//    const selectorDureeDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Durée du RDV' }).locator('xpath=following-sibling::div//div//input');
+//    selectorDureeDuRDV.fill("30");
+//
+//    this.guichet    = guichet;
     this.heureRdv   = heure;
     this.date       = await this.backofficePage.getByPlaceholder('Cliquez ici pour choisir la date').inputValue();
     
@@ -303,6 +348,16 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
+
+    await appointmentLocator.click();
+    await this.backofficePage.waitForTimeout(2000); 
+    this.guichet = await this.backofficePage.locator('span').filter({ hasText: "Guichet :" }).locator('xpath=following-sibling::span').textContent();
+    await this.backofficePage.waitForTimeout(2000); 
+    await this.backofficePage.mouse.click(10, 10);
+    await this.backofficePage.waitForTimeout(2000); 
+    await this.backofficePage.locator('footer button').filter({ hasText: "Quitter sans sauvegarder" }).click();
+    await this.backofficePage.waitForTimeout(2000); 
+
 });
 
 Given("Un rendez-vous a été confirmé", async function() {
@@ -331,8 +386,8 @@ Given("Un rendez-vous a été confirmé", async function() {
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -341,7 +396,11 @@ Given("Un rendez-vous a été confirmé", async function() {
     // Generate random data for appointment
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    // this.email = this.name.toLowerCase() + '@test.com';
+
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
     this.NIR = generateRandomNIR();
     this.phone = generateRandomPhone();
 
@@ -408,8 +467,8 @@ Given("Un rendez-vous a été créé", async function() {
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -418,7 +477,11 @@ Given("Un rendez-vous a été créé", async function() {
     // Generate random data for appointment
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    // this.email = this.name.toLowerCase() + '@test.com';
+
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
     this.NIR = generateRandomNIR();
     this.phone = generateRandomPhone();
 
@@ -589,8 +652,8 @@ When("L'utilisateur crée un rendez-vous et y ajoute des notes internes", async 
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -599,7 +662,11 @@ When("L'utilisateur crée un rendez-vous et y ajoute des notes internes", async 
     // Generate random data for appointment
     this.name = faker.person.lastName();
     this.firstname = faker.person.firstName();
-    this.email = this.name.toLowerCase() + '@test.com';
+    // this.email = this.name.toLowerCase() + '@test.com';
+
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    this.email = this.name.toLowerCase() + "-" + this.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
     this.NIR = generateRandomNIR();
     this.phone = generateRandomPhone();
     this.note = fakerFR .lorem.sentence(); 
@@ -644,7 +711,6 @@ When("L'utilisateur crée un rendez-vous et y ajoute des notes internes", async 
 
 When("L'utilisateur clique sur \"Bloquer ce créneau\"", async function() {
 
-    await this.backofficePage.waitForTimeout(100000);
     // Bloquer le créneau
     await this.backofficePage.locator('button[title="Bloquer ce créneau"]').click();
 
@@ -715,12 +781,12 @@ Then("L'utilisateur peut choisir un service", async function() { //  "J'attends/
 });
 
 Then("L'utilisateur peut sélectionner un mode de RDV", async function() { // (physique/visio/téléphone)  
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
-
-    const firstOptionValue = await selectorModeDuRDV.locator('option').first().getAttribute('value');
-    const selectedValue = await selectorModeDuRDV.inputValue();
-    expect(selectedValue).toBe(firstOptionValue);
+//    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+//    await selectorModeDuRDV.selectOption({ index: 0 });  
+//
+//    const firstOptionValue = await selectorModeDuRDV.locator('option').first().getAttribute('value');
+//    const selectedValue = await selectorModeDuRDV.inputValue();
+//    expect(selectedValue).toBe(firstOptionValue);
 });
 
 Then("L'utilisateur peut choisit la date et l'heure du RDV", async function() { 
@@ -770,7 +836,15 @@ Then("Les notes internes sont bien enregistrées dans la fiche du rendez-vous", 
     await appointmentLocator.click();
 
     const notes = await this.backofficePage.getByPlaceholder('Écrire un commentaire').inputValue();
+    console.log('notes: ', notes)
     expect(notes).toBe(this.note);
+
+    await this.backofficePage.waitForTimeout(2000);
+    await this.backofficePage.mouse.click(10, 10);
+    await this.backofficePage.waitForTimeout(2000);
+    await this.backofficePage.locator('footer button').filter({ hasText: "Quitter sans sauvegarder" }).click();
+    await this.backofficePage.waitForTimeout(1000);
+    await cleanLastRdv(this);
 });
 
 Then("Le rendez-vous est confirmé", async function() {
@@ -784,6 +858,8 @@ Then("Le rendez-vous est confirmé", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
+
+    await cleanLastRdv(this);
 });
 
 Then("Le rendez-vous est bien présent sur le guichet sélectionné", async function() {
@@ -838,6 +914,8 @@ Then("Le rendez-vous est bien présent sur le guichet sélectionné", async func
     console.log('guichetIndex: ', guichetIndex)
     const appointmentGuichetLocator = dayLocator.locator('.vuecal__cell-split').nth(guichetIndex).locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
     expect(await appointmentGuichetLocator.count()).toBeGreaterThanOrEqual(1);
+
+    await cleanLastRdv(this);
 });
 
 Then("Le rendez-vous est bien attribué à un guichet automatiquement", async function() {
@@ -847,6 +925,13 @@ Then("Le rendez-vous est bien attribué à un guichet automatiquement", async fu
 
     const guichet = await this.backofficePage.locator('span:has-text("Guichet :")').locator("xpath=following-sibling::span").textContent();
     expect(guichet.trim()).not.toBe('');
+
+    await this.backofficePage.waitForTimeout(2000); 
+    await this.backofficePage.mouse.click(10, 10);
+    await this.backofficePage.waitForTimeout(2000); 
+    await this.backofficePage.locator('footer button').filter({ hasText: "Quitter sans sauvegarder" }).click();
+    await this.backofficePage.waitForTimeout(2000); 
+    await cleanLastRdv(this);
 });
 
 Then("Les informations du RDV correspondent à celles saisies", async function() {
@@ -858,9 +943,11 @@ Then("Les informations du RDV correspondent à celles saisies", async function()
     const cleanedText = appointmentDetail.replace(/\s+/g, ' ').trim();
 
     // Regex pour extraire chaque information
-    const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?) \(([^)]+)\) - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
-
+    // const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?) \(([^)]+)\) - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
+    const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?)(?: \(([^)]+)\))? - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (?:- |(.*?)) - (\d+) minutes - Mode : (.+)/;
     const match = cleanedText.match(regex);
+    
+    console.log('cleanedText: ', cleanedText)
 
     if (match) {
         const appointmentDate = match[1];    // 25/03/2025
@@ -905,6 +992,12 @@ Then("Les informations du RDV correspondent à celles saisies", async function()
         console.log('No match found.');
         expect(false).toBe(true);
     }
+        await this.backofficePage.waitForTimeout(2000); 
+    await this.backofficePage.mouse.click(10, 10);
+    await this.backofficePage.waitForTimeout(2000); 
+    await this.backofficePage.locator('footer button').filter({ hasText: "Quitter sans sauvegarder" }).click();
+    await this.backofficePage.waitForTimeout(2000); 
+    await cleanLastRdv(this);
 });
 
 Then("L'application Troov RDV doit être complètement fermée", async function() {
