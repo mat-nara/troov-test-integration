@@ -19,7 +19,8 @@ async function cleanLastRdv(world) {
     await world.backofficePage.waitForTimeout(1000);
 
     //***********************   Clique sur annuler, puis Annuler ce/ces rendez-vous *************************/
-    const annulerBtnLocator = world.backofficePage.locator('#edit-reservation___BV_modal_content_ button:has-text("Annuler ce/ces rendez-vous")');
+    const annulerBtnLocator = world.backofficePage.locator('#reservation-edit-modal button').filter({ hasText: "Annuler ce/ces rendez-vous" });
+    
     await annulerBtnLocator.click();
     const annulerCesRdvBtnLocator = world.backofficePage.locator('#send-message span:has-text("Annuler ce/ces rendez-vous")').locator('..');
     await annulerCesRdvBtnLocator.click();
@@ -535,6 +536,7 @@ Given("Un rendez-vous a été créé", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
+    console.log('fullname', fullname);
 });
  
 Given("L'application Troov RDV est ouverte", async function() {
@@ -936,7 +938,7 @@ Then("Le rendez-vous est bien attribué à un guichet automatiquement", async fu
 
 Then("Les informations du RDV correspondent à celles saisies", async function() {
 
-    const  appointmentDetailLocator = this.backofficePage.locator('#edit-reservation___BV_modal_body_ .tab-content .active ul > li').nth(0);
+    const  appointmentDetailLocator = this.backofficePage.locator('#reservation-edit-modal .tab-content .active ul > li').nth(0);
     const appointmentDetail = await appointmentDetailLocator.textContent();
 
     //console.log(appointmentDetail)
