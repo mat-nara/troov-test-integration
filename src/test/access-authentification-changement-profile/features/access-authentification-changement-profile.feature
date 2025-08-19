@@ -36,7 +36,7 @@ Feature: Vérification des accès, authentification et changement de profil
         Then  La page "Sélection du compte principal" est ouverte
            *  Le compte connecté est celui sélectionné dans le compte principal actuel
         When  L'utilisateur change le compte principal en "455 Caf site visioconférence" puis clique sur "Sauvegarder"
-        #Then  Une notification de mise à jour du compte principal effectuée avec succès est affichée
+        Then  Une notification de mise à jour du compte principal effectuée avec succès est affichée
         When  Il se déconnecte
            *  Il se reconnecte avec le compte admin
         Then  Le nouveau paramétrage du compte principal est pris en compte et il est connecté à ce dernier
