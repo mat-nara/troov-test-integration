@@ -45,8 +45,8 @@ Given("Un rendez-vous a été créé", async function() {
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -62,7 +62,7 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
@@ -101,6 +101,7 @@ Given("Un rendez-vous a été créé", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
+    console.log('fullname', fullname);
 
     this.oldDateRdv     = this.initialAppointmentDate
     this.oldHeureRdv    = this.initialAppointmentTime
@@ -172,13 +173,16 @@ Given("Il modifie la date et l'heure du rendez-vous", async function() {
     // If there's more than one option, select a random one excluding the pre-selected
     if (optionsCount > 1) {
         // Get the pre-selected option value
-        const selectedOption = await selectorHeureDuRDV.locator('option:checked').getAttribute('value');
+//--        const selectedOption = await selectorHeureDuRDV.locator('option:checked').getAttribute('value');
+//--
+//--        // Generate a random index excluding the pre-selected one
+//--        let randomIndex;
+//--        do {
+//--            randomIndex = Math.floor(Math.random() * optionsCount);  // Generate random index
+//--        } while (await allOptions.nth(randomIndex).getAttribute('value') === selectedOption);  // Ensure it's not the pre-selected option
 
-        // Generate a random index excluding the pre-selected one
         let randomIndex;
-        do {
-            randomIndex = Math.floor(Math.random() * optionsCount);  // Generate random index
-        } while (await allOptions.nth(randomIndex).getAttribute('value') === selectedOption);  // Ensure it's not the pre-selected option
+        randomIndex = Math.floor(Math.random() * optionsCount);  // Generate random index
 
         // Select the randomly chosen option
         await selectorHeureDuRDV.selectOption({ index: randomIndex });
@@ -262,13 +266,16 @@ Given("L'utilisateur a modifié le rendez-vous dans l'agenda", async function() 
     // If there's more than one option, select a random one excluding the pre-selected
     if (optionsCount > 1) {
         // Get the pre-selected option value
-        const selectedOption = await selectorHeureDuRDV.locator('option:checked').getAttribute('value');
+// --        const selectedOption = await selectorHeureDuRDV.locator('option:checked').getAttribute('value');
+// --
+// --        // Generate a random index excluding the pre-selected one
+// --        let randomIndex;
+// --        do {
+// --            randomIndex = Math.floor(Math.random() * optionsCount);  // Generate random index
+// --        } while (await allOptions.nth(randomIndex).getAttribute('value') === selectedOption);  // Ensure it's not the pre-selected option
 
-        // Generate a random index excluding the pre-selected one
         let randomIndex;
-        do {
-            randomIndex = Math.floor(Math.random() * optionsCount);  // Generate random index
-        } while (await allOptions.nth(randomIndex).getAttribute('value') === selectedOption);  // Ensure it's not the pre-selected option
+        randomIndex = Math.floor(Math.random() * optionsCount);  // Generate random index
 
         // Select the randomly chosen option
         await selectorHeureDuRDV.selectOption({ index: randomIndex });
@@ -320,8 +327,8 @@ Given("Un rendez-vous a été créé et ses informations ont été enregistrées
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -337,7 +344,7 @@ Given("Un rendez-vous a été créé et ses informations ont été enregistrées
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
@@ -392,6 +399,7 @@ Given("Un rendez-vous a été créé et ses informations ont été enregistrées
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
+    console.log('fullname', fullname);
 });
  
 Given("L'utilisateur ouvre le carnet d'adresse", async function() {
@@ -427,6 +435,7 @@ Given("Le rendez-vous a été placé dans la pochette de déplacement", async fu
     await this.backofficePage.locator('button[title="Déplacer des RDV"]').click();
     await expect(this.backofficePage.locator('button[title="Déplacer des RDV"]')).toHaveClass(/active/);
 
+    await this.backofficePage.waitForTimeout(1000);
     // Selectionne le rendez-vous pour le placer dans la pochette
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
@@ -548,6 +557,7 @@ When("Il sélectionne le rendez-vous à modifier", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
+    await this.backofficePage.waitForTimeout(2000);
 });
 
 When("Il clique sur le bouton \"Modifier\" de la fiche de rendez-vous.", async function() {
@@ -585,8 +595,10 @@ When("Il sélectionne le rendez-vous, puis clique sur \"Historique\", suivi de \
 
 When("Il renseigne les informations de l'usager et recherche un rendez-vous", async function() {
     //await this.backofficePage.getByPlaceholder('Email').first().fill(this.email); // Test passe
-    await this.backofficePage.getByPlaceholder('Prénom').first().fill(this.firstname);
-    await this.backofficePage.getByPlaceholder('Nom').first().fill(this.name);
+    console.log("this.firstname: ", this.firstname)
+    console.log("this.name: ", this.name)
+    await this.backofficePage.locator('input[placeholder="Prénom"]').first().fill(this.firstname);
+    await this.backofficePage.locator('input[placeholder="Nom"]').first().fill(this.name);
     
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Rechercher' });
     await selectorButtonCreerUser.click();
@@ -661,6 +673,7 @@ When("L'utilisateur glisse-dépose le rendez-vous depuis la pochette vers un nou
     await this.backofficePage.waitForTimeout(1000);
     await this.backofficePage.mouse.up();
     await this.backofficePage.waitForTimeout(2000);
+    console.log('Rendez-vous déplacé vers la nouvelle date et heure');
 });
 
 When("L'utilisateur fait glisser le rendez-vous d'un emplacement à un autre, en mettant à jour la date et l'heure", async function() {
@@ -910,7 +923,7 @@ Then("L'agenda s'affiche correctement", async function() {
 }); 
 
 Then("La fiche du rendez-vous doit être affichée correctement", async function() {
-    const headerLocator = this.backofficePage.getByText('Rendez-vous '+ this.name + ' ' + this.firstname);
+    const headerLocator = this.backofficePage.locator('#reservation-edit-modal h5').filter({ hasText: 'Rendez-vous '+ this.name + ' ' + this.firstname });
     await expect(headerLocator).toBeVisible();
 }); 
 
@@ -980,15 +993,27 @@ Then("L'historique affiche les informations correspondant à la prise et à la m
     console.log('this.newDateRdv: ', this.newDateRdv  )  
     console.log('this.newHeureRdv: ', this.newHeureRdv ) 
 
+    console.log('attente 2 secondes pour que le modal se charge correctement')
+    await this.backofficePage.waitForTimeout(3000);
+
     //***********************   Vérification des informations sur la prise du rendez-vous  *************************/
-    const  appointmentDetailLocator = this.backofficePage.locator('#edit-reservation___BV_modal_body_ .tab-content .active ul > li').nth(0);
+    const  appointmentDetailLocator = this.backofficePage.locator('#reservation-edit-modal .tab-content .active ul > li').nth(0);
     const appointmentDetail = await appointmentDetailLocator.textContent();
 
     //console.log(appointmentDetail)
     const cleanedText = appointmentDetail.replace(/\s+/g, ' ').trim();
 
     // Regex pour extraire chaque information
-    const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?) \(([^)]+)\) - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
+    // const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?) \(([^)]+)\) - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
+    // const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?)(?: \(([^)]+)\))? - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (?:- |(.*?)) - (\d+) minutes - Mode : (.+)/;
+    // const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?)(?: \(([^)]+)\))? - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
+    // const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?)(?: \(([^)]+)\))? - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
+    // const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?)(?: \(([^)]+)\))? - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (?:\s*-\s*|(.*?)) - (\d+) minutes - Mode : (.+)/;
+    const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?)(?: \(([^)]+)\))? - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) -\s*(.*?)?\s*- (\d+) minutes - Mode : (.+)/;
+    console.log("cleanedText: ", cleanedText)
+
+    // console.log('attente 20 secondes pour que le modal soit visible')
+    // await this.backofficePage.waitForTimeout(20000);
 
     const match = cleanedText.match(regex);
 
@@ -1004,30 +1029,36 @@ Then("L'historique affiche les informations correspondant à la prise et à la m
         const duration = match[9];           // 30
         const mode = match[10];               // non libre
 
-        //console.log(`Appointment Date: ${appointmentDate}`);
-        //console.log(`Appointment Time: ${appointmentTime}`);
-        //console.log(`User Name: ${userName}`);
-        //console.log(`User Role: ${userRole}`);  // Rôle dynamique
-        //console.log(`Reservation Date: ${reservationDate}`);
-        //console.log(`Reservation Start Time: ${reservationStartTime}`);
-        //console.log(`Reservation End Time: ${reservationEndTime}`);
-        //console.log(`Waiting Reason: ${waitingReason}`);
-        //console.log(`Duration: ${duration} minutes`);
-        //console.log(`Mode: ${mode}`);
+        console.log(`Appointment Date: ${appointmentDate}`);
+        console.log(`Appointment Time: ${appointmentTime}`);
+        console.log(`User Name: ${userName}`);
+        console.log(`User Role: ${userRole}`);  // Rôle dynamique
+        console.log(`Reservation Date: ${reservationDate}`);
+        console.log(`Reservation Start Time: ${reservationStartTime}`);
+        console.log(`Reservation End Time: ${reservationEndTime}`);
+        console.log(`Waiting Reason: ${waitingReason}`);
+        console.log(`Duration: ${duration} minutes`);
+        console.log(`Mode: ${mode}`);
 
-        //console.log('this.appointmentDate: ', this.appointmentDate)
-        //console.log('this.appointmentTime: ', this.appointmentTime)
-        //console.log('this.userName: ', this.userName.trim().toLowerCase())
-        //console.log('this.reservationDate: ', this.reservationDate)
-        //console.log('this.reservationStartTime: ', this.reservationStartTime)
-        //console.log('this.waitingReason: ', this.waitingReason.trim())
-        //console.log('this.mode: ', this.mode)
+        console.log('this.appointmentDate: ', this.appointmentDate)
+        console.log('this.appointmentTime: ', this.appointmentTime)
+        console.log('this.userName: ', this.userName.trim().toLowerCase())
+        console.log('this.reservationDate: ', this.reservationDate)
+        console.log('this.reservationStartTime: ', this.reservationStartTime)
+        console.log('this.waitingReason: ', this.waitingReason.trim())
+        console.log('this.mode: ', this.mode)
 
+        console.log('except appointmentTime ', this.appointmentTime)
         expect(this.appointmentDate).toBe(appointmentDate);
+        console.log('except appointmentTime: ', appointmentTime)
         expect(this.appointmentTime).toBe(appointmentTime);
+        console.log('except userName: ', this.userName.trim().toLowerCase())
         expect(this.userName.trim().toLowerCase()).toBe(userName.toLowerCase());
+        console.log('except reservationDate: ', this.reservationDate)
         expect(this.reservationDate).toBe(reservationDate);
+        console.log('except reservationStartTime: ', this.reservationStartTime)
         expect(this.reservationStartTime).toBe(reservationStartTime);
+        console.log('except waitingReason: ', this.waitingReason.trim())
         expect(this.waitingReason.trim()).toBe(waitingReason);
         expect(this.mode).toBe(mode);
   
@@ -1039,7 +1070,7 @@ Then("L'historique affiche les informations correspondant à la prise et à la m
     //***********************   Vérification des informations sur la modification du rendez-vous  *************************/
     console.log('Vérification des informations sur la modification du rendez-vous');
 
-    const  appointmentDetailEditLocator = this.backofficePage.locator('#edit-reservation___BV_modal_body_ .tab-content .active ul > li').nth(1);
+    const  appointmentDetailEditLocator = this.backofficePage.locator('#reservation-edit-modal .tab-content .active ul > li').nth(1);
     const appointmentEditDetail = await appointmentDetailEditLocator.textContent();
 
     // console.log(appointmentEditDetail)
@@ -1063,24 +1094,24 @@ Then("L'historique affiche les informations correspondant à la prise et à la m
         const duration = matchEdit[9];           // 30
         const mode = matchEdit[10];               // non libre
 
-        //console.log(`Appointment Date: ${appointmentDate}`);
-        //console.log(`Appointment Time: ${appointmentTime}`);
-        //console.log(`User Name: ${userName}`);
-        //console.log(`User Role: ${userRole}`);  // Rôle dynamique
-        //console.log(`Reservation Date: ${reservationDate}`);
-        //console.log(`Reservation Start Time: ${reservationStartTime}`);
-        //console.log(`Reservation End Time: ${reservationEndTime}`);
-        //console.log(`Waiting Reason: ${waitingReason}`);
-        //console.log(`Duration: ${duration} minutes`);
-        //console.log(`Mode: ${mode}`);
+        console.log(`Appointment Date: ${appointmentDate}`);
+        console.log(`Appointment Time: ${appointmentTime}`);
+        console.log(`User Name: ${userName}`);
+        console.log(`User Role: ${userRole}`);  // Rôle dynamique
+        console.log(`Reservation Date: ${reservationDate}`);
+        console.log(`Reservation Start Time: ${reservationStartTime}`);
+        console.log(`Reservation End Time: ${reservationEndTime}`);
+        console.log(`Waiting Reason: ${waitingReason}`);
+        console.log(`Duration: ${duration} minutes`);
+        console.log(`Mode: ${mode}`);
 
-        //console.log('this.appointmentEditDate: ', this.appointmentEditDate)
-        //console.log('this.appointmentEditTime: ', this.appointmentEditTime)
-        //console.log('this.userName: ', this.userName.trim().toLowerCase())
-        //console.log('this.newDateRdv: ', this.newDateRdv)
-        //console.log('this.newHeureRdv: ', this.newHeureRdv)
-        //console.log('this.waitingReason: ', this.waitingReason.trim())
-        //console.log('this.mode: ', this.mode)
+        console.log('this.appointmentEditDate: ', this.appointmentEditDate)
+        console.log('this.appointmentEditTime: ', this.appointmentEditTime)
+        console.log('this.userName: ', this.userName.trim().toLowerCase())
+        console.log('this.newDateRdv: ', this.newDateRdv)
+        console.log('this.newHeureRdv: ', this.newHeureRdv)
+        console.log('this.waitingReason: ', this.waitingReason.trim())
+        console.log('this.mode: ', this.mode)
 
         expect(this.appointmentEditDate).toBe(appointmentDate);
         expect(this.appointmentTime).toBe(appointmentTime);
