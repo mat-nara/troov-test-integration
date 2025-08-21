@@ -34,8 +34,8 @@ Given("Un rendez-vous a été créé", async function() {
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -51,7 +51,7 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
@@ -155,7 +155,7 @@ Given("Le rendez-vous a été annulé", async function() {
     await this.backofficePage.waitForTimeout(1000);
 
     //***********************   Clique sur annuler, puis Annuler ce/ces rendez-vous *************************/
-    const annulerBtnLocator = this.backofficePage.locator('#edit-reservation___BV_modal_content_ button:has-text("Annuler ce/ces rendez-vous")');
+    const annulerBtnLocator = this.backofficePage.locator('#reservation-edit-modal button:has-text("Annuler ce/ces rendez-vous")');
     await annulerBtnLocator.click();
     const annulerCesRdvBtnLocator = this.backofficePage.locator('#send-message span:has-text("Annuler ce/ces rendez-vous")').locator('..');
     await annulerCesRdvBtnLocator.click();
@@ -206,7 +206,7 @@ When("Il sélectionne le rendez-vous", async function() {
 });
 
 When("L'utilisateur clique sur le bouton \"Annuler\" puis sur \"Annuler ce rendez-vous\"", async function() {
-    const annulerBtnLocator = this.backofficePage.locator('#edit-reservation___BV_modal_content_ button:has-text("Annuler ce/ces rendez-vous")');
+    const annulerBtnLocator = this.backofficePage.locator('#reservation-edit-modal button:has-text("Annuler ce/ces rendez-vous")');
     await annulerBtnLocator.click();
     const annulerCesRdvBtnLocator = this.backofficePage.locator('#send-message span:has-text("Annuler ce/ces rendez-vous")').locator('..');
     await annulerCesRdvBtnLocator.click();
@@ -277,6 +277,7 @@ When("Il ouvre la fiche du RDV et clique sur \"Historique\"", async function() {
 // ----------------------------------------------------------
 
 Then("La fiche du rendez-vous s’ouvre correctement", async function() {
+    await this.backofficePage.waitForTimeout(1000);
     const headerLocator = this.backofficePage.getByText('Rendez-vous '+ this.name + ' ' + this.firstname);
     await expect(headerLocator).toBeVisible();
 }); 
