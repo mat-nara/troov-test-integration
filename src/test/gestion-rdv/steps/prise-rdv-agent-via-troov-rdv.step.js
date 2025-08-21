@@ -14,7 +14,7 @@ async function cleanLastRdv(world) {
 
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = world.name.toUpperCase() + ' ' + world.firstname
-    const appointmentLocator = world.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = world.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await world.backofficePage.waitForTimeout(1000);
 
@@ -119,7 +119,7 @@ Given("Un utilisateur a été créé lors d'une prise de rendez-vous précédent
     await this.tempPage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.tempPage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.tempPage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.tempPage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.tempPage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.tempPage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
 
     await this.tempPage.locator('button[title="Confirmer"]').click()
@@ -148,7 +148,7 @@ Given("Un utilisateur a été créé lors d'une prise de rendez-vous précédent
     await this.tempPage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.tempPage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.tempPage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
 
 });
@@ -200,7 +200,7 @@ Given("L'utilisateur a renseigné toutes les informations du RDV", async functio
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
@@ -290,7 +290,7 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click();
@@ -347,7 +347,7 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
 
     await appointmentLocator.click();
@@ -408,7 +408,7 @@ Given("Un rendez-vous a été confirmé", async function() {
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
@@ -438,7 +438,7 @@ Given("Un rendez-vous a été confirmé", async function() {
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
 });
 
@@ -489,7 +489,7 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
@@ -534,7 +534,7 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
     console.log('fullname', fullname);
 });
@@ -676,7 +676,7 @@ When("L'utilisateur crée un rendez-vous et y ajoute des notes internes", async 
     await this.backofficePage.getByPlaceholder('Ajouter un Nom').fill(this.name);
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
-    await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
+    // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
     await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
@@ -707,7 +707,7 @@ When("L'utilisateur crée un rendez-vous et y ajoute des notes internes", async 
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
 });
 
@@ -727,7 +727,7 @@ When("L'utilisateur consulte l'agenda de la Caf à la date et à l'heure sélect
 
 When("L'utilisateur clique sur le RDV et ouvre \"Historique\"", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
 
     await this.backofficePage.locator('span:has-text("Historique")').waitFor({ state: 'visible' });
@@ -834,7 +834,7 @@ Then("Aucun utilisateur n'est trouvé", async function() {
 
 Then("Les notes internes sont bien enregistrées dans la fiche du rendez-vous", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
 
     const notes = await this.backofficePage.getByPlaceholder('Écrire un commentaire').inputValue();
@@ -858,7 +858,7 @@ Then("Le rendez-vous est confirmé", async function() {
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
 
     await cleanLastRdv(this);
@@ -876,7 +876,7 @@ Then("Le rendez-vous est bien présent sur le guichet sélectionné", async func
 
     // Rechercher le rendez-vous
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
 
     // Vérification de l'heure
     const minTop =  parseInt(this.heureRdv.split(":")[0]) * 70;
@@ -897,7 +897,7 @@ Then("Le rendez-vous est bien présent sur le guichet sélectionné", async func
     const dayNumber = date.getDay();
 
     const dayLocator = this.backofficePage.locator('.vuecal__body .vuecal__bg .week-view > div > div').nth(dayNumber - 1);
-    const appointmentDayLocator = dayLocator.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
+    const appointmentDayLocator = dayLocator.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
     expect(await appointmentDayLocator.count()).toBeGreaterThanOrEqual(1);
 
     // Vérification du guichet
@@ -914,7 +914,7 @@ Then("Le rendez-vous est bien présent sur le guichet sélectionné", async func
     }, this.guichet);
 
     console.log('guichetIndex: ', guichetIndex)
-    const appointmentGuichetLocator = dayLocator.locator('.vuecal__cell-split').nth(guichetIndex).locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
+    const appointmentGuichetLocator = dayLocator.locator('.vuecal__cell-split').nth(guichetIndex).locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
     expect(await appointmentGuichetLocator.count()).toBeGreaterThanOrEqual(1);
 
     await cleanLastRdv(this);
@@ -922,7 +922,7 @@ Then("Le rendez-vous est bien présent sur le guichet sélectionné", async func
 
 Then("Le rendez-vous est bien attribué à un guichet automatiquement", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
 
     const guichet = await this.backofficePage.locator('span:has-text("Guichet :")').locator("xpath=following-sibling::span").textContent();
