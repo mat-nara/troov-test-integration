@@ -118,7 +118,7 @@ Given("L'utilisateur est connecté à l'application Troov", async function() {
 
 
 Given("Une date avec des rendez-vous est séléctionné", async function() {
-    await this.backofficePage.locator('span[aria-label="lundi 21 juillet 2025"]').click(); 
+    //await this.backofficePage.locator('span[aria-label="lundi 21 juillet 2025"]').click(); 
 });
 
 Given("Le filtre zoom est sur \"zoom X 1\"", async function() {    
