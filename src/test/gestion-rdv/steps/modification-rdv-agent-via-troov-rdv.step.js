@@ -63,7 +63,7 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
     // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
-    await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
+    // await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
 
@@ -132,6 +132,8 @@ Given("Il modifie la date et l'heure du rendez-vous", async function() {
     // Calculate the next day
     const nextDay = new Date(parsedDate);
     nextDay.setDate(nextDay.getDate() + 1);
+    this.isNextdayfriday = nextDay.getDay() === 6;
+
 
     // Check if it's Friday and set to next Monday
     if (nextDay.getDay() === 6) { // 6 corresponds to Samedi
@@ -224,6 +226,7 @@ Given("L'utilisateur a modifié le rendez-vous dans l'agenda", async function() 
     // Calculate the next day
     const nextDay = new Date(parsedDate);
     nextDay.setDate(nextDay.getDate() + 1);
+    this.isNextdayfriday = nextDay.getDay() === 6;
 
     // Check if it's Friday and set to next Monday
     if (nextDay.getDay() === 6) { // 6 corresponds to Samedi
@@ -345,7 +348,7 @@ Given("Un rendez-vous a été créé et ses informations ont été enregistrées
     await this.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(this.firstname);
     await this.backofficePage.getByPlaceholder('Ajouter un Email').fill(this.email);
     // await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(this.NIR);
-    await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
+    // await this.backofficePage.getByPlaceholder('Numéro de téléphone').fill(this.phone);
     
     await this.backofficePage.locator('button[title="Confirmer"]').click()
 
@@ -574,6 +577,17 @@ When("Il consulte l'agenda", async function() {
     while (!currentURL.includes('calendar')) {
         await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
         currentURL = await this.backofficePage.url();
+    }
+
+    // *************************** Changer selecteur de nombre de jours a afficher *************************** //
+    const filterLocator = this.backofficePage.locator('.calendar-mode-select').nth(1).locator('.multiselect');
+    await filterLocator.click();
+    await filterLocator.locator('.multiselect__content-wrapper ul li').filter({ hasText: "Semaine 5 jours", exact: true }).nth(0).click();
+    await this.backofficePage.waitForTimeout(3000);
+
+    if (this.isNextdayfriday) {
+        // Click on the left arrow to go back one day   
+        await this.backofficePage.locator('#page-topbar .bx-chevron-right').click();
     }
 });
 
@@ -937,9 +951,9 @@ Then("Le rendez-vous doit être déplacé à la date et à l'heure choisies", as
     console.log('this.newHeureRdv: ', this.newHeureRdv)
     
     //// Changer selecteur de nombre de jours a afficher
-    const filterLocator = this.backofficePage.locator('.calendar-mode-select').nth(1).locator('.multiselect');
-    await filterLocator.click();
-    await filterLocator.locator('.multiselect__content-wrapper ul li').filter({ hasText: "Semaine 5 jours (multi guichets)", exact: true }).nth(0).click();
+    // const filterLocator = this.backofficePage.locator('.calendar-mode-select').nth(1).locator('.multiselect');
+    // await filterLocator.click();
+    // await filterLocator.locator('.multiselect__content-wrapper ul li').filter({ hasText: "Semaine 5 jours (multi guichets)", exact: true }).nth(0).click();
 
     // Rechercher le rendez-vous
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
