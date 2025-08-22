@@ -104,8 +104,9 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
+    console.log('Rendez-vous créé pour: ', fullname)
 });
 
 Given("L'utilisateur clique sur \"Calendrier\"", async function() {
@@ -120,7 +121,7 @@ Given("L'utilisateur clique sur \"Calendrier\"", async function() {
 Given("La fiche du rendez-vous est ouverte depuis l’agenda", async function() {
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 });
@@ -150,7 +151,7 @@ Given("Le rendez-vous a été annulé", async function() {
 
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 
@@ -187,8 +188,8 @@ Given("L'utilisateur l’a retrouvé dans \"RDV annulés\"", async function() {
     //*********************  Vérification si elle est dans les rendez-vous annulé ************************/
     await this.backofficePage.waitForTimeout(2000);
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
-    await expect(appointmentLocator).not.toBeVisible();
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    await expect(appointmentLocator).toBeVisible();
 });
 
 
@@ -200,7 +201,7 @@ Given("L'utilisateur l’a retrouvé dans \"RDV annulés\"", async function() {
 When("Il sélectionne le rendez-vous", async function() {
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 });
@@ -210,6 +211,7 @@ When("L'utilisateur clique sur le bouton \"Annuler\" puis sur \"Annuler ce rende
     await annulerBtnLocator.click();
     const annulerCesRdvBtnLocator = this.backofficePage.locator('#send-message span:has-text("Annuler ce/ces rendez-vous")').locator('..');
     await annulerCesRdvBtnLocator.click();
+    await this.backofficePage.waitForTimeout(2000);
 });
 
 When("Il renseigne les informations de l'usager et recherche un rendez-vous", async function() {
@@ -260,7 +262,7 @@ When("Il ouvre la fiche du RDV et clique sur \"Historique\"", async function() {
     await this.backofficePage.waitForTimeout(1000);
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
     console.log('clique sur fullname: ', fullname)
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 
@@ -285,28 +287,30 @@ Then("La fiche du rendez-vous s’ouvre correctement", async function() {
 Then("Le rendez-vous doit disparaître de l'agenda", async function() {
     await this.backofficePage.waitForTimeout(2000);
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await expect(appointmentLocator).not.toBeVisible();
 }); 
 
-Then("Le rendez-vous annulé s'affiche dans la liste", async function() {
+Then("Le rendez-vous annulé doit apparaître dans la liste des rendez-vous annulés", async function() {
     await this.backofficePage.waitForTimeout(2000);
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
-    await expect(appointmentLocator).not.toBeVisible();
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    await expect(appointmentLocator).toBeVisible();
 }); 
 
 Then("Les informations affichées doivent correspondre à la prise initiale puis à l'annulation du rendez-vous", async function() {
 
     //***********************   Vérification des informations sur la prise du rendez-vous  *************************/
-    const  appointmentDetailLocator = this.backofficePage.locator('#edit-reservation___BV_modal_body_ .tab-content .active ul > li').nth(0);
+    const  appointmentDetailLocator = this.backofficePage.locator('#reservation-edit-modal .tab-content .active ul > li').nth(0);
     const appointmentDetail = await appointmentDetailLocator.textContent();
 
     //console.log(appointmentDetail)
     const cleanedText = appointmentDetail.replace(/\s+/g, ' ').trim();
 
     // Regex pour extraire chaque information
-    const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?) \(([^)]+)\) - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
+    // const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?) \(([^)]+)\) - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) - (.*?) - (\d+) minutes - Mode : (.+)/;
+    const regex = /Pris le (\d{2}\/\d{2}\/\d{4}) à (\d{2}:\d{2}) par ([\w\s]+?)(?: \(([^)]+)\))? - Date de réservation : le (\d{2}\/\d{2}\/\d{4}) de (\d{2}:\d{2}) à (\d{2}:\d{2}) -\s*(.*?)?\s*- (\d+) minutes - Mode : (.+)/;
+    
 
     const match = cleanedText.match(regex);
 

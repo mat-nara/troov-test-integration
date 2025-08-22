@@ -39,7 +39,7 @@ Feature: Annulation d'un RDV par un agent via Troov RDV
            * Le filtre des rendez-vous est réglé sur "RDV maintenus"
         Then Le rendez-vous doit disparaître de l'agenda
         When L'utilisateur modifie le filtre et sélectionne "RDV annulés"
-        Then Le rendez-vous annulé s'affiche dans la liste
+        Then Le rendez-vous annulé doit apparaître dans la liste des rendez-vous annulés
 
     Scenario: Consultation de l’historique après annulation d’un rendez-vous
         Given Le rendez-vous a été annulé
