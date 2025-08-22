@@ -99,7 +99,7 @@ Given("Un rendez-vous a été créé", async function() {
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
     console.log('fullname', fullname);
 
@@ -207,7 +207,7 @@ Given("L'utilisateur a modifié le rendez-vous dans l'agenda", async function() 
 
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
 
     await this.backofficePage.waitForTimeout(1000);
@@ -397,7 +397,7 @@ Given("Un rendez-vous a été créé et ses informations ont été enregistrées
     await this.backofficePage.waitForTimeout(1000);
 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
     console.log('fullname', fullname);
 });
@@ -438,7 +438,7 @@ Given("Le rendez-vous a été placé dans la pochette de déplacement", async fu
     await this.backofficePage.waitForTimeout(1000);
     // Selectionne le rendez-vous pour le placer dans la pochette
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 });
@@ -451,7 +451,7 @@ Given("Le rendez-vous a été repositionné via un glisser-déposer", async func
 
     //***********************  Selectionne le rendez-vous pour le placer dans la pochette *************************/ 
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 
@@ -555,7 +555,7 @@ When("Il clique sur \"Calendrier\"", async function() {
 
 When("Il sélectionne le rendez-vous à modifier", async function() {
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(2000);
 });
@@ -581,7 +581,7 @@ When("Il sélectionne le rendez-vous, puis clique sur \"Historique\", suivi de \
         
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 
@@ -611,7 +611,7 @@ When("Il clique sur le bouton \"Déplacer des RDVs\"", async function() {
 When("L'utilisateur clique sur le rendez-vous pour le déplacer", async function() {
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(1000);
 });
@@ -680,7 +680,7 @@ When("L'utilisateur fait glisser le rendez-vous d'un emplacement à un autre, en
     
     //***********************   Selectionne le rendez-vous *************************/
     //var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    //const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    //const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     //await appointmentLocator.click();
     //await this.backofficePage.waitForTimeout(1000);
 
@@ -764,11 +764,11 @@ When("L'utilisateur fait glisser le rendez-vous d'un emplacement à un autre, en
     
     //console.log('attente 5 seconde avant action')
     //await this.backofficePage.waitForTimeout(5000);
-    //await this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0).click();
+    //await this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0).click();
 
-    //await this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0).hover();
+    //await this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0).hover();
     // Attendre que l'élément à déplacer soit visible
-const dragElement = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
+const dragElement = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
 const sourceBox = await dragElement.boundingBox();
 
 /*
@@ -943,7 +943,7 @@ Then("Le rendez-vous doit être déplacé à la date et à l'heure choisies", as
 
     // Rechercher le rendez-vous
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
 
     // Vérification de l'heure
     const minTop =  parseInt(this.newHeureRdv.split(":")[0]) * 70;
@@ -964,7 +964,7 @@ Then("Le rendez-vous doit être déplacé à la date et à l'heure choisies", as
     const dayNumber = date.getDay();
 
     const dayLocator = this.backofficePage.locator('.vuecal__body .vuecal__bg .week-view > div > div').nth(dayNumber - 1);
-    const appointmentDayLocator = dayLocator.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
+    const appointmentDayLocator = dayLocator.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..//..').nth(0);
     expect(await appointmentDayLocator.count()).toBeGreaterThanOrEqual(1);
 }); 
 
@@ -972,7 +972,7 @@ Then("Les modifications de la date et de l'heure du rendez-vous doivent être co
     
     //***********************   Selectionne le rendez-vous *************************/
     var fullname = this.name.toUpperCase() + ' ' + this.firstname
-    const appointmentLocator = this.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
     await this.backofficePage.waitForTimeout(2000);
 
