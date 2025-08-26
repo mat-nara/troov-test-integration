@@ -21,7 +21,7 @@ Given("La page 'Je choisis mon motif de visite' sans rendez-vous est ouverte", a
   await inputNIRLocator.fill('1234567891111');
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill('1234567891');
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
   await buttonLocator.click();
 
@@ -50,7 +50,7 @@ Given("Choisir sous-motif: {string}", async function (sousMotif) {
 
 // --------------------------------------
 When("Cliquer sur 'Continuer' de la page motif", async function() {
-  await this.terminalPage.locator('button[aria-label="Continuer"]').click();
+  await this.terminalPage.locator('button').filter({ hasText: 'Continuer' }).click();
 });
 
 When("Cliquer sur 'Quitter' de la page motif", async function() {
