@@ -19,7 +19,7 @@ Given("La page \"Je m'enregistre\" sans rendez-vous est ouverte", async function
 Given("NIR uniquement est saisie", async function() {
   const inputNIRLocator = this.terminalPage.locator('label[for="social-security-number"] + input');
   await inputNIRLocator.fill('1234567891234');
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
 });
 
@@ -27,7 +27,7 @@ Given("NIR uniquement est saisie", async function() {
 Given("Téléphone uniquement est saisie", async function() {
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill('1234567891');
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
 });
 
@@ -37,7 +37,7 @@ Given("NIR et Téléphone sont saisie", async function() {
   await inputNIRLocator.fill('1234567891234');
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill('1234567891');
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
 });
 
@@ -49,7 +49,7 @@ Given("que le NIR est saisi au mauvais format dans un signalement sans rendez-vo
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill('1234567891');
 
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
 });
 
@@ -61,13 +61,13 @@ Given("que le téléphone est saisi au mauvais format dans un signalement sans r
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill('123456789'); // 9 caracter au lieu de 10
 
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
 });
 // ------------------------------------------------------------------------
 
 When("Cliquer sur le bouton 'Continuer' de la page d'enregistrement", async function() {
-  await this.terminalPage.locator('button[aria-label="Continuer"]').click();
+  await this.terminalPage.locator('button').filter({ hasText: 'Continuer' }).click();
 });
 
 When("Cliquer sur 'Quitter' de la page d'enregistrement", async function() {
