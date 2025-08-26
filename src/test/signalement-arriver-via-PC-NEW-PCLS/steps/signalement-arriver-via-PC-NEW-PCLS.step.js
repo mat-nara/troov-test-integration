@@ -8,6 +8,16 @@ const { faker, fakerFR  } = require('@faker-js/faker');
 const { chromium } = require('@playwright/test');
 const { text } = require('stream/consumers');
 
+function randomNIR() {
+  const sexe = Math.random() < 0.5 ? 1 : 2;          // 1 ou 2
+  const annee = String(Math.floor(Math.random() * 100)).padStart(2, '0'); // 00..99
+  const mois = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0'); // 01..12
+  const dept = String(Math.floor(Math.random() * 96) + 1).padStart(2, '0'); // 01..95
+  const commune = String(Math.floor(Math.random() * 990) + 1).padStart(3, '0');
+  const ordre = String(Math.floor(Math.random() * 990) + 1).padStart(3, '0');
+
+  return `${sexe} ${annee} ${mois} ${dept} ${commune} ${ordre}`;
+}
 
 
 async function setupRdv(world) {
@@ -21,12 +31,14 @@ async function setupRdv(world) {
     const selectorService = world.backofficePage.locator('span').filter({ hasText: 'Choisir un service' })
     await selectorService.click();
     const selectorServiceLegend = world.backofficePage.locator('legend').filter({ hasText: 'Service' })
-    const firstItemService = selectorServiceLegend.locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li').filter({ hasText: "06 - J'ai une demande concernant le handicap ou la dépendance - Je souhaite faire une demande d'allocation journalière de proche aidant (AJPA)" }).first(); 
+    // const firstItemService = selectorServiceLegend.locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li').filter({ hasText: "06 - J'ai une demande concernant le handicap ou la dépendance - Je souhaite faire une demande d'allocation journalière de proche aidant (AJPA)" }).first(); 
+    const firstItemService = selectorServiceLegend.locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li').filter({ hasText: "Demande d'abandon du recouvrement (M1)" }).first(); 
+
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = world.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = world.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = world.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -36,7 +48,8 @@ async function setupRdv(world) {
     world.name = faker.person.lastName();
     world.firstname = faker.person.firstName();
     world.email = world.name.toLowerCase() + '@test.com';
-    world.NIR = generateRandomNIR();
+    // world.NIR = generateRandomNIR();
+    world.NIR = randomNIR()
     world.phone = generateRandomPhone();
 
     await world.backofficePage.getByPlaceholder('Ajouter un Nom').fill(world.name);
@@ -79,7 +92,7 @@ async function setupRdv(world) {
     await world.backofficePage.waitForTimeout(1000);
 
     var fullname = world.name.toUpperCase() + ' ' + world.firstname
-    const appointmentLocator = world.backofficePage.locator('strong').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    const appointmentLocator = world.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.waitFor({ state: 'visible' });
 
     world.oldDateRdv     = world.initialAppointmentDate
@@ -121,6 +134,25 @@ Given("L'utilisateur est connecté à l'application Troov", async function() {
         currentURL = await this.backofficePage.url();
     }
     expect(await this.backofficePage.url()).toContain('calendar');
+
+    // Changer de compte en CNAF Formation
+    await this.backofficePage.locator('img.header-profile-user').click();
+    await this.backofficePage.locator('button[title="Changer de compte"]').click();
+    await this.backofficePage.waitForTimeout(3000); 
+    
+    // const liFormationLocator = this.backofficePage.locator('li[aria-label="CNAF Formation"]');
+    // if (await liFormationLocator.getAttribute('aria-expanded') === 'false') {
+    //     await this.backofficePage.locator('li[aria-label="CNAF Formation"] > div.p-tree-node-content > span.p-tree-node-label').click();
+    // }
+
+    await this.backofficePage.locator('li[aria-label="CNAF Formation"] > div.p-tree-node-content > span.p-tree-node-label').click();
+
+    currentURL = await this.backofficePage.url();
+    while (!currentURL.includes('calendar')) {
+        await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
+        currentURL = await this.backofficePage.url();
+    }
+    expect(await this.backofficePage.url()).toContain('calendar');
 });
 
 
@@ -154,7 +186,7 @@ When("Il saisie le NIR et Téléphone associé aux rendez-vous", async function(
 });
 
 When("Il clique sur le bouton \"Continuer\"", async function() {
-    await this.terminalPage.locator('button[aria-label="Continuer"]').click();
+    await this.terminalPage.locator('button').filter({ hasText: "Continuer" }).click();
 });
 
 When("Il clique sur \"Télécharger mon ticket\"", async function() {
