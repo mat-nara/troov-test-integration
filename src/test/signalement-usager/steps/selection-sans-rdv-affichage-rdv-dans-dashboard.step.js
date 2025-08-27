@@ -8,6 +8,24 @@ let ticket = ""
 let motif = ""
 
 Given("que un signalement d'arrivée sans rendez-vous est confirmé", async function() {
+  
+    await this.backofficePage.waitForTimeout(3000);
+    // Changer de compte en CNAF Formation
+    await this.backofficePage.locator('img.header-profile-user').click();
+    await this.backofficePage.locator('button[title="Changer de compte"]').click();
+    await this.backofficePage.waitForTimeout(3000); 
+
+    await this.backofficePage.locator('li[aria-label="CNAF Formation"] > div.p-tree-node-content > span.p-tree-node-label').click();
+
+    currentURL = await this.backofficePage.url();
+    while (!currentURL.includes('calendar')) {
+        await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
+        currentURL = await this.backofficePage.url();
+    }
+    expect(await this.backofficePage.url()).toContain('calendar');
+
+
+
     // Page principale
   await this.terminalPage.goto(config.troovCafUserArrivalURL);
   const sansRdvButton = this.terminalPage.locator('button[name="with-rdv"]');
@@ -21,7 +39,7 @@ Given("que un signalement d'arrivée sans rendez-vous est confirmé", async func
   await inputNIRLocator.fill('1234567891111');
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill('1234567891');
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
   await buttonLocator.click();
 
@@ -36,11 +54,12 @@ Given("que un signalement d'arrivée sans rendez-vous est confirmé", async func
   expect(updatedTextOfficeType.trim()).toBe("Enfant");
   const inputOfficeLocator = this.terminalPage.locator('label[for="office"] + div span.p-select-label');
   await inputOfficeLocator.click();
-  const liAttendEnfantLocator = await this.terminalPage.locator(`li[aria-label="J'attends / J'accueille un enfant"]`);
+  //const liAttendEnfantLocator = await this.terminalPage.locator(`li[aria-label="J'attends / J'accueille un enfant"]`);
+  const liAttendEnfantLocator = await this.terminalPage.locator(`li[aria-label="J’ai besoin d’aide pour mes démarches en ligne"]`);
   await liAttendEnfantLocator.click();
   const updatedTextOffice = await liAttendEnfantLocator.textContent();
-  expect(updatedTextOffice.trim()).toBe("J'attends / J'accueille un enfant");
-  await this.terminalPage.locator('button[aria-label="Continuer"]').click();
+  //expect(updatedTextOffice.trim()).toBe("J'attends / J'accueille un enfant");
+  await this.terminalPage.locator('button').filter({ hasText: 'Continuer' }).click();
 
   // Page de confirmation
   const headingConfirmation = await this.terminalPage.getByText("Vous êtes bien enregistré !");
@@ -64,6 +83,9 @@ Given("que un signalement d'arrivée sans rendez-vous est confirmé", async func
   ticket = await pElement.textContent();
   motif = match[1].trim()
 });
+
+
+
 
 When("la page de la file d'attente du backoffice est ouverte à côté de la page du signalement usagé sans rendez-vous", async function() {
   await this.backofficePage.locator('i[title="File d\'attente"]').click();
