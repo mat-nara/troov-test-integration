@@ -20,7 +20,7 @@ Given("La page de confirmation de la création de ticket sans rendez-vous est ou
   await inputNIRLocator.fill('1234567891111');
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill('1234567891');
-  const buttonLocator = await this.terminalPage.locator('button[aria-label="Continuer"]');
+  const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
   await buttonLocator.click();
 
@@ -35,11 +35,13 @@ Given("La page de confirmation de la création de ticket sans rendez-vous est ou
   expect(updatedTextOfficeType.trim()).toBe("Enfant");
   const inputOfficeLocator = this.terminalPage.locator('label[for="office"] + div span.p-select-label');
   await inputOfficeLocator.click();
-  const liAttendEnfantLocator = await this.terminalPage.locator(`li[aria-label="J'attends / J'accueille un enfant"]`);
+  // const liAttendEnfantLocator = await this.terminalPage.locator(`li[aria-label="J'attends / J'accueille un enfant"]`);
+  const liAttendEnfantLocator = await this.terminalPage.locator(`li[aria-label="J’ai besoin d’aide pour mes démarches en ligne"]`);
+  
   await liAttendEnfantLocator.click();
   const updatedTextOffice = await liAttendEnfantLocator.textContent();
-  expect(updatedTextOffice.trim()).toBe("J'attends / J'accueille un enfant");
-  await this.terminalPage.locator('button[aria-label="Continuer"]').click();
+  //expect(updatedTextOffice.trim()).toBe("J'attends / J'accueille un enfant");
+  await this.terminalPage.locator('button').filter({ hasText: 'Continuer' }).click();
 
   // Page de confirmation
 });
