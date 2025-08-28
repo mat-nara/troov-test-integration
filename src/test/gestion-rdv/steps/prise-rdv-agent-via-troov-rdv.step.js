@@ -101,6 +101,10 @@ Given("Un utilisateur a été créé lors d'une prise de rendez-vous précédent
     // const selectorModeDuRDV = this.tempPage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
 
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.tempPage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
+
     // Create new user
     const selectorButtonCreerUser = this.tempPage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
     await selectorButtonCreerUser.click();
@@ -181,6 +185,10 @@ Given("L'utilisateur a renseigné toutes les informations du RDV", async functio
     // Choix du mode
     // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
+
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -272,6 +280,10 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
 
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
+
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
     await selectorButtonCreerUser.click();
@@ -305,7 +317,7 @@ Given("Un rendez-vous avec un guichet spécifique est confirmé", async function
     await firstItemPriseRdv.click();
 
     // Récuperer l'heure
-    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    //const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
     const heure = await selectorHeureDuRDV.inputValue();
 
 //    // Activer le mode libre
@@ -390,6 +402,10 @@ Given("Un rendez-vous a été confirmé", async function() {
     // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
 
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
+
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
     await selectorButtonCreerUser.click();
@@ -470,6 +486,10 @@ Given("Un rendez-vous a été créé", async function() {
     // Choix du mode
     // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
+
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -614,6 +634,10 @@ When("L'utilisateur recherche un usager par son nom dans le SI Cnaf", async func
     const firstItemService = selectorServiceLegend.locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
     await firstItemService.click();
 
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
+
     await this.backofficePage.getByPlaceholder('Rechercher un utilisateur').fill(this.name);
 });
 
@@ -656,6 +680,10 @@ When("L'utilisateur crée un rendez-vous et y ajoute des notes internes", async 
     // Choix du mode
     // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
+
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
 
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -837,6 +865,9 @@ Then("Les notes internes sont bien enregistrées dans la fiche du rendez-vous", 
     const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
     await appointmentLocator.click();
 
+    // await expect(this.backofficePage.getByPlaceholder('Ajouter un Nom')).toHaveValue(this.name);
+    await this.backofficePage.waitForTimeout(2000);
+    
     const notes = await this.backofficePage.getByPlaceholder('Écrire un commentaire').inputValue();
     console.log('notes: ', notes)
     expect(notes).toBe(this.note);
