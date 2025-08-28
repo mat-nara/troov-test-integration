@@ -5,17 +5,20 @@ Feature: Signalement d'une arrivée avec RDV (usager): Recherche
         Given La page "Je m'enregistre" avec rendez-vous est ouverte
 
     Scenario: NIR uniquement saisie: Le RDV est retrouvé
-        Given que NIR uniquement est saisie
+        Given Un rendez-vous a été créer 
+            * que NIR uniquement est saisie
         When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
         Then Passe à l'etape suivant: "Vous êtes bien enregistré !" s'affiche sur la page confirmation avec RDV
 
     Scenario: Téléphone uniquement saisie: Le RDV est retrouvé
-		Given que Téléphone uniquement est saisie
+		Given Un rendez-vous a été créer 
+            * que Téléphone uniquement est saisie
         When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
         Then Passe à l'etape suivant: "Vous êtes bien enregistré !" s'affiche sur la page confirmation avec RDV
   
     Scenario: NIR et Téléphone saisie: Le RDV est retrouvé
-		Given que NIR et Téléphone sont saisie
+		Given Un rendez-vous a été créer 
+            * que NIR et Téléphone sont saisie
         When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
         Then Passe à l'etape suivant: "Vous êtes bien enregistré !" s'affiche sur la page confirmation avec RDV
     
@@ -40,7 +43,8 @@ Feature: Signalement d'une arrivée avec RDV (usager): Recherche
         Then Message d'erreur phone incorrecte s'affiche
 
     Scenario: Boutton continuer: On peut passer à l'étape suivante
-        Given que NIR et Téléphone sont saisie
+        Given Un rendez-vous a été créer 
+            * que NIR et Téléphone sont saisie
         When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
         Then Passe à l'etape suivant: "Vous êtes bien enregistré !" s'affiche sur la page confirmation avec RDV
     

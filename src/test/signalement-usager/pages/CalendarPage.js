@@ -42,7 +42,7 @@ class CalendarPage {
       await this.page.getByPlaceholder('Ajouter un Nom').fill(name);
       await this.page.getByPlaceholder('Ajouter un Prénom').fill(firstname);
       await this.page.getByPlaceholder('Ajouter un Email').fill(email);
-      await this.page.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
+      //await this.page.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
       await this.page.getByPlaceholder('Numéro de téléphone').fill(phone);
 
       await this.page.locator('button[title="Confirmer"]').click()
