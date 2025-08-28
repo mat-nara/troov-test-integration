@@ -48,6 +48,10 @@ Given("Un rendez-vous a été créé", async function() {
     // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
 
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
+
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
     await selectorButtonCreerUser.click();
@@ -80,7 +84,7 @@ Given("Un rendez-vous a été créé", async function() {
     const dateInputLocator = this.backofficePage.getByText('Date du RDV').locator('xpath=following-sibling::*').locator('input[aria-label="Cliquez ici pour choisir la date"]');
     this.initialAppointmentDate  = await dateInputLocator.inputValue();
 
-    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    // const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
     this.initialAppointmentTime  = await selectorHeureDuRDV.inputValue();
 
     // -------------------------  Confirmation du rendez-vous ----------------------- //
@@ -333,6 +337,10 @@ Given("Un rendez-vous a été créé et ses informations ont été enregistrées
     // const selectorModeDuRDV = this.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
 
+    // Select heure du RDV 
+    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  
+
     // Create new user
     const selectorButtonCreerUser = this.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
     await selectorButtonCreerUser.click();
@@ -366,7 +374,7 @@ Given("Un rendez-vous a été créé et ses informations ont été enregistrées
     const dateInputLocator = this.backofficePage.getByText('Date du RDV').locator('xpath=following-sibling::*').locator('input[aria-label="Cliquez ici pour choisir la date"]');
     this.initialAppointmentDate  = await dateInputLocator.inputValue();
 
-    const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    // const selectorHeureDuRDV = this.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
     this.initialAppointmentTime  = await selectorHeureDuRDV.inputValue();
 
     // Save value for next except
