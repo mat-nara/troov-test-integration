@@ -275,18 +275,18 @@ When("Cliquer sur 'Quitter' de la page: Enregistrement avec RDV", async function
 // ------------------------------------------------------------------------
 
 Then("Passe à l'etape suivant: \"Vous êtes bien enregistré !\" s'affiche sur la page confirmation avec RDV", async function() {
-    // const heading = await this.terminalPage.getByText("Vous êtes bien enregistré !");
-    // await expect(heading).toBeVisible();
+    const heading = await this.terminalPage.getByText("Vous êtes bien enregistré !");
+    await expect(heading).toBeVisible();
 
-    const messagesPossibles = [
-        "Vous êtes bien enregistré !",
-        "Vous êtes en dehors du délai prévu pour vous présenter à votre rendez-vous. Pour rappel votre RDV est prévu à",
-    ];
-
-    const pageText = await this.terminalPage.textContent('.p-message-info');
-    const trouve = messagesPossibles.some(msg => pageText.includes(msg));
-
-    expect(trouve).toBeTruthy();
+//    const messagesPossibles = [
+//        "Vous êtes bien enregistré !",
+//        "Vous êtes en dehors du délai prévu pour vous présenter à votre rendez-vous. Pour rappel votre RDV est prévu à",
+//    ];
+//
+//    const pageText = await this.terminalPage.textContent('.p-message-info');
+//    const trouve = messagesPossibles.some(msg => pageText.includes(msg));
+//
+//    expect(trouve).toBeTruthy();
 });
 
 Then("Revient sur la page initiale: \"Je signale mon arrivée\" s'affiche sur la page", async function() {
@@ -309,4 +309,32 @@ Then("Message d'erreur phone incorrecte s'affiche", async function() {
 Then("Message d'erreur 'Aucun rendez-vous' s'affiche", async function() {
     const heading = await this.terminalPage.getByText("Aucun rendez-vous");
     await expect(heading).toBeVisible();
+});
+
+
+After(async function () {
+    console.log('==> CLEANING OF RDV');
+
+    if (!this.name || !this.firstname) {
+        console.log('==> Aucun rendez-vous a néttoyer');
+        return;
+    }
+
+    //***********************   Selectionne le rendez-vous *************************/
+    var fullname = this.name.toUpperCase() + ' ' + this.firstname
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    await appointmentLocator.click();
+    await this.backofficePage.waitForTimeout(1000);
+
+    //***********************   Clique sur annuler, puis Annuler ce/ces rendez-vous *************************/
+    const annulerBtnLocator = this.backofficePage.locator('#reservation-edit-modal button').filter({ hasText: "Annuler ce/ces rendez-vous" });
+    
+    await annulerBtnLocator.click();
+    const annulerCesRdvBtnLocator = this.backofficePage.locator('#send-message span:has-text("Annuler ce/ces rendez-vous")').locator('..');
+    await annulerCesRdvBtnLocator.click();
+
+
+    await appointmentLocator.waitFor({ state: 'detached', timeout: 5000 });
+
+    console.log('==> RDV deleted');
 });
