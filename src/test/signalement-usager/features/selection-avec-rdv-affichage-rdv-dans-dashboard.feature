@@ -2,7 +2,8 @@
 Feature: Signalement d'une arrivée avec RDV (usager): Vérification que le signalement d'une arrivée s'affiche correctement dans la file d'attente. 
 
   Background:
-        Given que un signalement d'arrivée avec rendez-vous est confirmé 
+        Given Un rendez-vous a été créer
+            * que un signalement d'arrivée avec rendez-vous est confirmé 
 
   Scenario: Vérification le signalement arrivé avec rendez-vous s'affiche dans la file d'attente du lieu concerné  
     When la page de la file d'attente du backoffice est ouverte
