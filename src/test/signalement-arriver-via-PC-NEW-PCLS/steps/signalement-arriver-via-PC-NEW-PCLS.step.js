@@ -8,6 +8,8 @@ const { faker, fakerFR  } = require('@faker-js/faker');
 const { chromium } = require('@playwright/test');
 const { text } = require('stream/consumers');
 
+setDefaultTimeout(60 * 1000);
+
 function randomNIR() {
   const sexe = Math.random() < 0.5 ? 1 : 2;          // 1 ou 2
   const annee = String(Math.floor(Math.random() * 100)).padStart(2, '0'); // 00..99
@@ -23,22 +25,32 @@ function randomNIR() {
 async function setupRdv(world) {
 
     console.log('==> CREATION OF RDV');
+    await world.backofficePage.waitForTimeout(2000);
 
     // Open window Ajouter un RDV
     await world.backofficePage.locator('button[title="Ajouter un RDV"]').click();
 
     // Choix du Service (1st item)
+    world.motif = "06 - J'ai une demande concernant le handicap ou la dépendance - Je souhaite faire une demande d'allocation journalière de proche aidant (AJPA)"
     const selectorService = world.backofficePage.locator('span').filter({ hasText: 'Choisir un service' })
     await selectorService.click();
     const selectorServiceLegend = world.backofficePage.locator('legend').filter({ hasText: 'Service' })
-    // const firstItemService = selectorServiceLegend.locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li').filter({ hasText: "06 - J'ai une demande concernant le handicap ou la dépendance - Je souhaite faire une demande d'allocation journalière de proche aidant (AJPA)" }).first(); 
-    const firstItemService = selectorServiceLegend.locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li').filter({ hasText: "Demande d'abandon du recouvrement (M1)" }).first(); 
+    const firstItemService = selectorServiceLegend.locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li').filter({ hasText: world.motif }).first(); 
 
     await firstItemService.click();
 
     // Choix du mode
     // const selectorModeDuRDV = world.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
     // await selectorModeDuRDV.selectOption({ index: 0 });  
+
+    // Select heure du RDV 
+    // const selectorDateDuRDV = world.backofficePage.locator('label').filter({ hasText: 'Date du RDV' }).locator('xpath=following-sibling::span//div//input');
+    // await selectorDateDuRDV.click();
+    // world.backofficePage.locator('span[aria-label="jeudi 28 août 2025"]').nth(1).click();
+    // await selectorDateDuRDV.fill('28/08/2025');
+
+    const selectorHeureDuRDV = world.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    await selectorHeureDuRDV.selectOption({ index: 1 });  //
 
     // Create new user
     const selectorButtonCreerUser = world.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -73,7 +85,7 @@ async function setupRdv(world) {
     const dateInputLocator = world.backofficePage.getByText('Date du RDV').locator('xpath=following-sibling::*').locator('input[aria-label="Cliquez ici pour choisir la date"]');
     world.initialAppointmentDate  = await dateInputLocator.inputValue();
 
-    const selectorHeureDuRDV = world.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
+    // const selectorHeureDuRDV = world.backofficePage.locator('legend').filter({ hasText: 'Heure du RDV' }).locator('xpath=following-sibling::div//select');
     world.initialAppointmentTime  = await selectorHeureDuRDV.inputValue();
 
     // -------------------------  Confirmation du rendez-vous ----------------------- //
@@ -97,6 +109,11 @@ async function setupRdv(world) {
 
     world.oldDateRdv     = world.initialAppointmentDate
     world.oldHeureRdv    = world.initialAppointmentTime
+    console.log('Initial date RDV: ' + world.initialAppointmentDate);
+    console.log('Initial heure RDV: ' + world.initialAppointmentTime);
+    console.log('old date RDV: ' + world.oldDateRdv);
+    console.log('old heure RDV: ' + world.oldHeureRdv);
+
 
     // Récuperer la date courant
     const now = new Date();
@@ -107,8 +124,9 @@ async function setupRdv(world) {
 
     console.log('==> RDV CREATED');
     
-    return { name: world.name, firstname: world.firstname, NIR: world.NIR, phone: world.phone, oldDateRdv: world.oldDateRdv, oldHeureRdv: world.oldHeureRdv, appointmentDate: world.appointmentDate, appointmentTime: world.appointmentTime};
+    return { name: world.name, firstname: world.firstname, NIR: world.NIR, phone: world.phone, oldDateRdv: world.oldDateRdv, oldHeureRdv: world.oldHeureRdv, appointmentDate: world.appointmentDate, appointmentTime: world.appointmentTime, motif: world.motif};
 };
+
 
 Given("Un rendez-vous a été créer", async function() {
     const { name, firstname, NIR, phone, oldDateRdv_1, oldHeureRdv_1, appointmentDate_1, appointmentTime_1 } = await setupRdv(this);
@@ -280,3 +298,33 @@ Then("Le signalement sans rendez-vous doit s'afficher dans \"Attente sans rendez
     await expect(ticketBlock).toBeVisible();
 });
 
+After(async function () {
+    console.log('==> CLEANING OF RDV');
+
+    if (!this.name || !this.firstname) {
+        console.log('==> Aucun rendez-vous a néttoyer');
+        return;
+    }
+
+    this.backofficePage.locator('i[title="Calendrier"]').click();
+    await this.backofficePage.waitForTimeout(2000);
+
+
+    //***********************   Selectionne le rendez-vous *************************/
+    var fullname = this.name.toUpperCase() + ' ' + this.firstname
+    const appointmentLocator = this.backofficePage.locator('span.font-weight-bold').filter({ hasText: fullname }).locator('xpath=..//..//..').nth(0);
+    await appointmentLocator.click();
+    await this.backofficePage.waitForTimeout(1000);
+
+    //***********************   Clique sur annuler, puis Annuler ce/ces rendez-vous *************************/
+    const annulerBtnLocator = this.backofficePage.locator('#reservation-edit-modal button').filter({ hasText: "Annuler ce/ces rendez-vous" });
+    
+    await annulerBtnLocator.click();
+    const annulerCesRdvBtnLocator = this.backofficePage.locator('#send-message span:has-text("Annuler ce/ces rendez-vous")').locator('..');
+    await annulerCesRdvBtnLocator.click();
+
+
+    await appointmentLocator.waitFor({ state: 'detached', timeout: 5000 });
+
+    console.log('==> RDV deleted');
+});
