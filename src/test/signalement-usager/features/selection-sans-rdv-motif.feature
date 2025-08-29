@@ -15,10 +15,10 @@ Feature: Signalement d'une arrivée sans RDV (usager): Motif
     Then Chaque sous-motif de la liste doit contenir: "<motClef>"
 
   Examples:
-    | motif                     | motClef               |
-    | Enfant                    | enfant                |
-    | Handicap                  | handicapé             |
-    | Situation professionnelle | Je suis travailleur   |
+    | motif                     | motClef             |
+    | Enfant                    | enfant              |
+    | Handicap                  | handicapé           |
+    | Situation professionnelle | Je suis travailleur |
 
   Scenario: Boutton quitter de la page motif: On revient sur la page initiale pour le signalement d'une arrivée
     When Cliquer sur 'Quitter' de la page motif
