@@ -1,0 +1,593 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement;nir-uniquement-saisie:-on-peut-passer-à-l'étape-suivante",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "NIR uniquement saisie: On peut passer à l'étape suivante",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 322220799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "La page \"Je m'enregistre\" sans rendez-vous est ouverte",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8628694199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "NIR uniquement est saisie",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17500299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 9,
+            "name": "Cliquer sur le bouton 'Continuer' de la page d'enregistrement",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 42538899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 10,
+            "name": "Passe à l'etape suivant: \"Je choisis mon motif de visite\" s'affiche sur la page",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:78"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2870600
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 133306300
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@sansRdvEnregistrement",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement;téléphone-uniquement-saisie:-on-peut-passer-à-l'étape-suivante",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Téléphone uniquement saisie: On peut passer à l'étape suivante",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 312310199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "La page \"Je m'enregistre\" sans rendez-vous est ouverte",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7796316200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "Téléphone uniquement est saisie",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:27"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14872100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "Cliquer sur le bouton 'Continuer' de la page d'enregistrement",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31841800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "Passe à l'etape suivant: \"Je choisis mon motif de visite\" s'affiche sur la page",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:78"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2570899
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 154552700
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@sansRdvEnregistrement",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement;nir-et-téléphone-saisie:-on-peut-passer-à-l'étape-suivante",
+        "keyword": "Scenario",
+        "line": 17,
+        "name": "NIR et Téléphone saisie: On peut passer à l'étape suivante",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 292389100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "La page \"Je m'enregistre\" sans rendez-vous est ouverte",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9088513999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 18,
+            "name": "NIR et Téléphone sont saisie",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30380499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 19,
+            "name": "Cliquer sur le bouton 'Continuer' de la page d'enregistrement",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1976498699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 20,
+            "name": "Passe à l'etape suivant: \"Je choisis mon motif de visite\" s'affiche sur la page",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:78"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3933300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 256192200
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@sansRdvEnregistrement",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement;nir-dans-un-mauvais-format:-un-message-d'erreur-s'affiche",
+        "keyword": "Scenario",
+        "line": 22,
+        "name": "NIR dans un mauvais format: Un message d'erreur s'affiche",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 392518199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "La page \"Je m'enregistre\" sans rendez-vous est ouverte",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7051867500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 23,
+            "name": "que le NIR est saisi au mauvais format dans un signalement sans rendez-vous",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24457799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 24,
+            "name": "Cliquer sur le bouton 'Continuer' de la page d'enregistrement",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1384060199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 25,
+            "name": "Message d'erreur s'affiche",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:83"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2811999
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 152659800
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@sansRdvEnregistrement",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement;téléphone-dans-un-mauvais-format:-un-message-d'erreur-s'affiche",
+        "keyword": "Scenario",
+        "line": 27,
+        "name": "Téléphone dans un mauvais format: Un message d'erreur s'affiche",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 325923300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "La page \"Je m'enregistre\" sans rendez-vous est ouverte",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7067818399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 28,
+            "name": "que le téléphone est saisi au mauvais format dans un signalement sans rendez-vous",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:57"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24118999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 29,
+            "name": "Cliquer sur le bouton 'Continuer' de la page d'enregistrement",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1360078099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 30,
+            "name": "Message d'erreur s'affiche",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:83"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2563300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 148320400
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@sansRdvEnregistrement",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement;boutton-continuer:-on-peut-passer-à-l'étape-suivante",
+        "keyword": "Scenario",
+        "line": 32,
+        "name": "Boutton continuer: On peut passer à l'étape suivante",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 367453299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "La page \"Je m'enregistre\" sans rendez-vous est ouverte",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7491144099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 33,
+            "name": "NIR et Téléphone sont saisie",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 34824800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 34,
+            "name": "Cliquer sur le bouton 'Continuer' de la page d'enregistrement",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1985457200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 35,
+            "name": "Passe à l'etape suivant: \"Je choisis mon motif de visite\" s'affiche sur la page",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:78"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3741900
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 166572299
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@sansRdvEnregistrement",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement;boutton-quitter-de-la-page-d'enregistrement:-on-revient-sur-la-page-initiale-pour-le-signalement-d'une-arrivée",
+        "keyword": "Scenario",
+        "line": 37,
+        "name": "Boutton quitter de la page d'enregistrement: On revient sur la page initiale pour le signalement d'une arrivée",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 307927999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "La page \"Je m'enregistre\" sans rendez-vous est ouverte",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7465994599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 38,
+            "name": "Cliquer sur 'Quitter' de la page d'enregistrement",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:73"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1992477000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 39,
+            "name": "Revient sur la page initiale depuis la page d'enregistrement, signalement sans rendez-vous: \"Je signale mon arrivée\" s'affiche sur la page",
+            "match": {
+              "location": "src\\test\\signalement-usager\\steps\\selection-sans-rdv-enregistrement.step.js:88"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5147400
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 166267099
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@sansRdvEnregistrement",
+            "line": 1
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "signalement-d'une-arrivée-sans-rdv-(usager):-enregistrement",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Signalement d'une arrivée sans RDV (usager): Enregistrement",
+    "tags": [
+      {
+        "name": "@sansRdvEnregistrement",
+        "line": 1
+      }
+    ],
+    "uri": "src\\test\\signalement-usager\\features\\selection-sans-rdv-enregistrement.feature"
+  }
+]
