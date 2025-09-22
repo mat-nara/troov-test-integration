@@ -25,8 +25,8 @@ async function setupRdv(world) {
     await firstItemService.click();
 
     // Choix du mode
-    const selectorModeDuRDV = world.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-    await selectorModeDuRDV.selectOption({ index: 0 });  
+    // const selectorModeDuRDV = world.backofficePage.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+    // await selectorModeDuRDV.selectOption({ index: 0 });  
 
     // Create new user
     const selectorButtonCreerUser = world.backofficePage.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -42,7 +42,7 @@ async function setupRdv(world) {
     await world.backofficePage.getByPlaceholder('Ajouter un Nom').fill(world.name);
     await world.backofficePage.getByPlaceholder('Ajouter un Prénom').fill(world.firstname);
     await world.backofficePage.getByPlaceholder('Ajouter un Email').fill(world.email);
-    await world.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(world.NIR);
+    // await world.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(world.NIR);
     await world.backofficePage.getByPlaceholder('Numéro de téléphone').fill(world.phone);
     
     await world.backofficePage.locator('button[title="Confirmer"]').click()
@@ -359,4 +359,3 @@ Then("Les information sur le rendez-vous sont visible", async function() {
 Then("Les information sur l'historique du rendez-vous avec plusieur onglet sont visible", async function() {    
     expect(await this.backofficePage.locator('#edit-reservation ul>li .nav-link').count()).toBeGreaterThan(0);
 });
-

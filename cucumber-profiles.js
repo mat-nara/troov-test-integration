@@ -155,7 +155,142 @@ const testList = [
 		feature: "src/test/prise-RDV-entretient-urgence/features/prise-RDV-entretient-urgence.feature",
 		step: "src/test/prise-RDV-entretient-urgence/steps/prise-RDV-entretient-urgence.step.js"
 	},
-
+	/********************************************************************************************************/
+	/*  								GESTION DE LIEU 													*/
+	/********************************************************************************************************/
+	{
+		profileName: "gestion-lieu",
+		feature: "src/test/gestion-lieu/features/gestion-lieu.feature",
+		step: "src/test/gestion-lieu/steps/gestion-lieu.step.js"
+	},
+	/********************************************************************************************************/
+	/*  								GESTION DES EQUIPES 												*/
+	/********************************************************************************************************/
+	{
+		profileName: "gestion-equipe",
+		feature: "src/test/gestion-equipe/features/gestion-equipe.feature",
+		step: "src/test/gestion-equipe/steps/gestion-equipe.step.js"
+	},
+	/********************************************************************************************************/
+	/*  								GESTION DES SERVICES 												*/
+	/********************************************************************************************************/
+	// Gestion des services: Motif 
+	{
+		profileName: "gestion-service-motif",
+		feature: "src/test/gestion-service/features/gestion-service.feature",
+		step: "src/test/gestion-service/steps/gestion-service.step.js"
+	},
+	// Gestion des services: Guichets 
+	{
+		profileName: "gestion-service-guichets",
+		feature: "src/test/gestion-guichets/features/gestion-guichets.feature",
+		step: "src/test/gestion-guichets/steps/gestion-guichets.step.js"
+	},
+	// Gestion des services: Autres options 
+	{
+		profileName: "gestion-service-autres-options",
+		feature: "src/test/gestion-service-autres-options/features/gestion-service-autres-options.feature",
+		step: "src/test/gestion-service-autres-options/steps/gestion-service-autres-options.step.js"
+	},
+	// Gestion des services: Plage exceptionnelle 
+	{
+		profileName: "gestion-service-plage-exceptionnel",
+		feature: "src/test/plage-exceptionnel/features/plage-exceptionnel.feature",
+		step: "src/test/plage-exceptionnel/steps/plage-exceptionnel.step.js"
+	},
+	// Gestion des services: Cas approche popup guichets 
+	{
+		profileName: "gestion-service-cas-approche-popup-guichets",
+		feature: "src/test/cas-approche-popup-guichets/features/cas-approche-popup-guichets.feature",
+		step: "src/test/cas-approche-popup-guichets/steps/cas-approche-popup-guichets.step.js"
+	},
+	/********************************************************************************************************/
+	/*  								GESTION DE LA FILE D'ATTENTE 										*/
+	/********************************************************************************************************/
+	// Gestion de la file d'attente 
+	{
+		profileName: "gestion-file-d-attente",
+		feature: "src/test/gestion-file-d-attente/features/gestion-file-d-attente.feature",
+		step: "src/test/gestion-file-d-attente/steps/gestion-file-d-attente.step.js"
+	},
+	/********************************************************************************************************/
+	/*  								STATISTIQUES 														*/
+	/********************************************************************************************************/
+	// Console de pilotage différé: Statistiques RDV 
+	{
+		profileName: "statistiques-rdv",
+		feature: "src/test/statistiques-rdv/features/statistiques-rdv.feature",
+		step: "src/test/statistiques-rdv/steps/statistiques-rdv.step.js"
+	},
+	// Console de pilotage différé: Pilotage file d'attente
+	{
+		profileName: "statistique-file-d-attente",
+		feature: "src/test/statistique-file-d-attente/features/statistique-file-d-attente.feature",
+		step: "src/test/statistique-file-d-attente/steps/statistique-file-d-attente.step.js"
+	},
+	// Console de pilotage différé: Statistiques individuelles 
+	{
+		profileName: "statistique-individuel-utilisateur-acceuil",
+		feature: "src/test/statistique-individuel-utilisateur-acceuil/features/statistique-individuel-utilisateur-acceuil.feature",
+		step: "src/test/statistique-individuel-utilisateur-acceuil/steps/statistique-individuel-utilisateur-acceuil.step.js"
+	},
+	/********************************************************************************************************/
+	/*  								ACCESS 														*/
+	/********************************************************************************************************/
+	// Vérification des accès: Profile Interface National  
+	{
+		profileName: "access-profil-interface-national",
+		feature: "src/test/access-profil-interface-national/features/access-profil-interface-national.feature",
+		step: "src/test/access-profil-interface-national/steps/access-profil-interface-national.step.js"
+	},
+	// Vérification des accès: Profile Administrateur
+	{
+		profileName: "access-profil-administrateur",
+		feature: "src/test/access-profil-administrateur/features/access-profil-administrateur.feature",
+		step: "src/test/access-profil-administrateur/steps/access-profil-administrateur.step.js"
+	},
+	// Vérification des accès: Profil Superviseur  
+	{
+		profileName: "access-profil-superviseur",
+		feature: "src/test/access-profil-superviseur/features/access-profil-superviseur.feature",
+		step: "src/test/access-profil-superviseur/steps/access-profil-superviseur.step.js"
+	},
+	// Vérification des accès: Profil utilisateur acceuil  
+	{
+		profileName: "access-profil-utilisateur-acceuil",
+		feature: "src/test/access-profil-utilisateur-acceuil/features/access-profil-utilisateur-acceuil.feature",
+		step: "src/test/access-profil-utilisateur-acceuil/steps/access-profil-utilisateur-acceuil.step.js"
+	},
+	/********************************************************************************************************/
+	/*  								ENTRETIENT PHYSIQUE 												*/
+	/********************************************************************************************************/
+	// Debuter un entretient  
+	{
+		profileName: "debuter-entretient",
+		feature: "src/test/debuter-entretient/features/debuter-entretient.feature",
+		step: "src/test/debuter-entretient/steps/debuter-entretient.step.js"
+	},
+	/********************************************************************************************************/
+	/*  								CALENDRIER 												*/
+	/********************************************************************************************************/
+	// Téléchargement des exports du calendrier  
+	{
+		profileName: "calendrier-total-download",
+		feature: "src/test/calendrier-total-download/features/calendrier-total-download.feature",
+		step: "src/test/calendrier-total-download/steps/calendrier-total-download.step.js"
+	},
+	// Filtre fenetre total  
+	{
+		profileName: "calendrier-total-filtre",
+		feature: "src/test/calendrier-total-filtre/features/calendrier-total-filtre.feature",
+		step: "src/test/calendrier-total-filtre/steps/calendrier-total-filtre.step.js"
+	},
+	// Autres filtres du calendrier  
+	{
+		profileName: "calendrier-autres-filtres",
+		feature: "src/test/calendrier-autres-filtres/features/calendrier-autres-filtres.feature",
+		step: "src/test/calendrier-autres-filtres/steps/calendrier-autres-filtres.step.js"
+	},
 ];
 
 
