@@ -1,6 +1,7 @@
 // 13 digits
 function generateRandomNIR() { 
     const randomNumber = Math.floor(1000000000000 + Math.random() * 9000000000000); 
+    return "1 84 12 75 123 456 89";
     return randomNumber.toString();
 }
 
