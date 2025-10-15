@@ -5,7 +5,9 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js test"
+    "test": "cucumber-js test",
+    "test:signalement-arrivee:serie": "node ./scripts/run-tests.js signalement-arrivee serie",
+    "test:signalement-arrivee:parallel": "node ./scripts/run-tests.js signalement-arrivee parallel"
   },
   "keywords": [],
   "author": "",

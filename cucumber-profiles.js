@@ -83,6 +83,12 @@ const testList = [
 		feature: "src/test/signalement-arriver-via-PC-NEW-PCLS/features/signalement-arriver-via-PC-NEW-PCLS.feature",
 		step: "src/test/signalement-arriver-via-PC-NEW-PCLS/steps/signalement-arriver-via-PC-NEW-PCLS.step.js"
 	},
+	// Signalement via file d'attente troov
+	{
+		profileName: "fil-d-attente-signalement",
+		feature: "src/test/fil-d-attente-signalement/features/fil-d-attente-signalement.feature",
+		step: "src/test/fil-d-attente-signalement/steps/fil-d-attente-signalement.step.js"
+	},
 
 	/********************************************************************************************************/
 	/*  								GESTION DE RENDEZ-VOUS 												*/
@@ -155,6 +161,14 @@ const testList = [
 		feature: "src/test/prise-RDV-entretient-urgence/features/prise-RDV-entretient-urgence.feature",
 		step: "src/test/prise-RDV-entretient-urgence/steps/prise-RDV-entretient-urgence.step.js"
 	},
+	// Rdv multi-lieux
+	{
+		profileName: "rdv-multi-lieux",
+		feature: "src/test/rdv-multi-lieux/features/rdv-multi-lieux.feature",
+		step: "src/test/rdv-multi-lieux/steps/rdv-multi-lieux.step.js"
+	},
+
+
 	/********************************************************************************************************/
 	/*  								GESTION DE LIEU 													*/
 	/********************************************************************************************************/
@@ -271,7 +285,7 @@ const testList = [
 		step: "src/test/debuter-entretient/steps/debuter-entretient.step.js"
 	},
 	/********************************************************************************************************/
-	/*  								CALENDRIER 												*/
+	/*  								CALENDRIER 															*/
 	/********************************************************************************************************/
 	// Téléchargement des exports du calendrier  
 	{
@@ -290,6 +304,15 @@ const testList = [
 		profileName: "calendrier-autres-filtres",
 		feature: "src/test/calendrier-autres-filtres/features/calendrier-autres-filtres.feature",
 		step: "src/test/calendrier-autres-filtres/steps/calendrier-autres-filtres.step.js"
+	},
+	/********************************************************************************************************/
+	/*  						ACCESS/AUTHENTIFICATION/CHANGEMENT DE PROFILE 								*/
+	/********************************************************************************************************/
+	// Access - Authentification - Changement de profile
+	{
+		profileName: "access-authentification-changement-profile",
+		feature: "src/test/access-authentification-changement-profile/features/access-authentification-changement-profile.feature",
+		step: "src/test/access-authentification-changement-profile/steps/access-authentification-changement-profile.step.js"
 	},
 ];
 
