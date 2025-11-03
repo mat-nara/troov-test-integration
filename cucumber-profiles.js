@@ -121,19 +121,19 @@ const testList = [
 	},
 	// Prise de RDV via parcours Troov
 	{
-		profileName: "prise-rdv-agent-via-troov-rdv",
+		profileName: "prise-rdv-agent-via-troov-rdv-creation",
 		feature: "src/test/gestion-rdv/features/prise-rdv-agent-via-troov-rdv.feature",
 		step: "src/test/gestion-rdv/steps/prise-rdv-agent-via-troov-rdv.step.js"
 	},
 	// Mofidication de RDV Troov
 	{
-		profileName: "prise-rdv-agent-via-troov-rdv",
+		profileName: "prise-rdv-agent-via-troov-rdv-modification",
 		feature: "src/test/gestion-rdv/features/modification-rdv-agent-via-troov-rdv.feature",
 		step: "src/test/gestion-rdv/steps/modification-rdv-agent-via-troov-rdv.step.js"
 	},
 	// Annulation de RDV Troov
 	{
-		profileName: "prise-rdv-agent-via-troov-rdv",
+		profileName: "prise-rdv-agent-via-troov-rdv-annulation",
 		feature: "src/test/gestion-rdv/features/annulation-rdv-agent-via-troov-rdv.feature",
 		step: "src/test/gestion-rdv/steps/annulation-rdv-agent-via-troov-rdv.step.js"
 	},
@@ -182,8 +182,8 @@ const testList = [
 	/********************************************************************************************************/
 	{
 		profileName: "gestion-equipe",
-		feature: "src/test/gestion-equipe/features/gestion-equipe.feature",
-		step: "src/test/gestion-equipe/steps/gestion-equipe.step.js"
+		feature: "src/test/gestion-equipe/features/gestion-membre-equipe.feature",
+		step: "src/test/gestion-equipe/steps/gestion-membre-equipe.step.js"
 	},
 	/********************************************************************************************************/
 	/*  								GESTION DES SERVICES 												*/
