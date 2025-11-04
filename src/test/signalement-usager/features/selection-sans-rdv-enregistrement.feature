@@ -21,13 +21,13 @@ Feature: Signalement d'une arrivée sans RDV (usager): Enregistrement
 
   Scenario: NIR dans un mauvais format: Un message d'erreur s'affiche
 		Given que le NIR est saisi au mauvais format dans un signalement sans rendez-vous
-    When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
-    Then Message d'erreur s'affiche
+    #When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Message d'erreur associé au NIR s'affiche
 
   Scenario: Téléphone dans un mauvais format: Un message d'erreur s'affiche
 		Given que le téléphone est saisi au mauvais format dans un signalement sans rendez-vous
-    When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
-    Then Message d'erreur s'affiche
+    #When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Message d'erreur associé au Téléphone s'affiche
 
   Scenario: Boutton continuer: On peut passer à l'étape suivante
 		Given NIR et Téléphone sont saisie
