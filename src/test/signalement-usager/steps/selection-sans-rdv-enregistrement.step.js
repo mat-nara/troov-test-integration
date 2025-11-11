@@ -1,5 +1,5 @@
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
-const { generateRandomNIR, generateRandomPhone, generateFakeNIR } = require('../../signalement-usager/utils/helper');
+const { generateRandomNIR, generateRandomPhone } = require('../../signalement-usager/utils/helper');
 const { expect } = require('@playwright/test');
 const config = require('../../../../config/env.js')
 
@@ -20,7 +20,7 @@ Given("La page \"Je m'enregistre\" sans rendez-vous est ouverte", async function
 // Scenario NIR uniquement
 Given("NIR uniquement est saisie", async function() {
   const inputNIRLocator = this.terminalPage.locator('label[for="social-security-number"] + input');
-  await inputNIRLocator.fill(generateFakeNIR());
+  await inputNIRLocator.fill(generateRandomNIR());
   const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
 });
@@ -36,7 +36,7 @@ Given("Téléphone uniquement est saisie", async function() {
 // Scenario NIR et Téléphone sont saisie
 Given("NIR et Téléphone sont saisie", async function() {
   const inputNIRLocator = this.terminalPage.locator('label[for="social-security-number"] + input');
-  await inputNIRLocator.fill(generateFakeNIR());
+  await inputNIRLocator.fill(generateRandomNIR());
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill(generateRandomPhone());
   const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
@@ -46,7 +46,7 @@ Given("NIR et Téléphone sont saisie", async function() {
 // Scenario NIR saisie au mauvais format
 Given("que le NIR est saisi au mauvais format dans un signalement sans rendez-vous", async function() {
   const inputNIRLocator = this.terminalPage.locator('label[for="social-security-number"] + input');
-  await inputNIRLocator.fill(generateFakeNIR().slice(0, -1)); // 12 caracter au lieu de 13
+  await inputNIRLocator.fill(generateRandomNIR().slice(0, -1)); // 12 caracter au lieu de 13
   await this.terminalPage.mouse.click(10, 10);
 
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
@@ -59,7 +59,7 @@ Given("que le NIR est saisi au mauvais format dans un signalement sans rendez-vo
 // Scenario Téléphone saisie au mauvais format
 Given("que le téléphone est saisi au mauvais format dans un signalement sans rendez-vous", async function() {
   const inputNIRLocator = this.terminalPage.locator('label[for="social-security-number"] + input');
-  await inputNIRLocator.fill(generateFakeNIR()); 
+  await inputNIRLocator.fill(generateRandomNIR()); 
 
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill(generateRandomPhone().slice(0, -1)); // 9 caracter au lieu de 10
