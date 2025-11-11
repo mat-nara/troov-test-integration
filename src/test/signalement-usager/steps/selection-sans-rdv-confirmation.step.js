@@ -2,7 +2,7 @@ const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { Before, After, BeforeAll, AfterAll } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const config = require('../../../../config/env.js');
-const { generateRandomNIR, generateRandomPhone, generateFakeNIR } = require('../../signalement-usager/utils/helper');
+const { generateRandomNIR, generateRandomPhone } = require('../../signalement-usager/utils/helper');
 const LoginPage = require('../../signalement-usager/pages/LoginPage');
 
 
@@ -20,7 +20,7 @@ Given("La page de confirmation de la création de ticket sans rendez-vous est ou
   const heading = await this.terminalPage.getByText("Je m'enregistre");
   await expect(heading).toBeVisible();
   const inputNIRLocator = this.terminalPage.locator('label[for="social-security-number"] + input');
-  await inputNIRLocator.fill(generateFakeNIR());
+  await inputNIRLocator.fill(generateRandomNIR());
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
   await inputPhoneLocator.fill(generateRandomPhone());
   const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
