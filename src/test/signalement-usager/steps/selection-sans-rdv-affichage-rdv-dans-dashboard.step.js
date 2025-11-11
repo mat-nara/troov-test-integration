@@ -1,6 +1,9 @@
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const config = require('../../../../config/env.js')
+const { Before, After, BeforeAll, AfterAll } = require('@cucumber/cucumber');
+const { generateRandomNIR, generateRandomPhone } = require('../../signalement-usager/utils/helper');
+
 
 setDefaultTimeout(60 * 1000);
 
@@ -36,9 +39,9 @@ Given("que un signalement d'arrivée sans rendez-vous est confirmé", async func
   const heading = await this.terminalPage.getByText("Je m'enregistre");
   await expect(heading).toBeVisible();
   const inputNIRLocator = this.terminalPage.locator('label[for="social-security-number"] + input');
-  await inputNIRLocator.fill('1234567891111');
+  await inputNIRLocator.fill(generateRandomNIR());
   const inputPhoneLocator = this.terminalPage.locator('label[for="phone-number"] + input');
-  await inputPhoneLocator.fill('1234567891');
+  await inputPhoneLocator.fill(generateRandomPhone());
   const buttonLocator = await this.terminalPage.locator('button').filter({ hasText: 'Continuer' });
   await expect(buttonLocator).toBeEnabled();
   await buttonLocator.click();
@@ -113,4 +116,66 @@ Then("Le numéro et le motif du ticket confirmé dans le signalement sans rendez
 
   const motifBlock = ticketBlock.locator('xpath=..//..').getByText(motif);
   await expect(motifBlock).toBeVisible();
+});
+
+
+After(async function () {
+    console.log('==> CLEANING OF TICKET CREATED');
+    
+    // Chercher le numero du ticket
+    const pElement = this.terminalPage.locator('text="Vous êtes bien enregistré !"').locator('xpath=../following-sibling::*[1]/child::*[2]/p');
+    this.ticket = await pElement.textContent();
+
+    if (!this.ticket) {
+        console.log('==> Aucun ticket a néttoyer');
+        return;
+    }
+
+    //***********************   Login Backoffice *************************/
+//    this.loginPageAlt = new LoginPage(this.backofficePage);
+//    await this.loginPageAlt.navigate(this.backofficePage);
+//    await this.loginPageAlt.login(config.troovCafUserBackofficeUsername, config.troovCafUserBackofficePassword);
+//
+//    // wait for backoffice loaded
+//    await this.backofficePage.waitForSelector('#page-topbar', { state: 'visible' }); 
+//
+//    let currentURL = await this.backofficePage.url();
+//    while (!currentURL.includes('calendar')) {
+//        await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
+//        currentURL = await this.backofficePage.url();
+//    }
+//    expect(await this.backofficePage.url()).toContain('calendar');
+//
+//    // Changer de compte en CNAF Formation
+//    await this.backofficePage.locator('img.header-profile-user').click();
+//    await this.backofficePage.locator('button[title="Changer de compte"]').click();
+//    await this.backofficePage.waitForTimeout(3000); 
+//
+//    await this.backofficePage.locator('li[aria-label="CNAF Formation"] > div.p-tree-node-content > span.p-tree-node-label').click();
+//
+//    currentURL = await this.backofficePage.url();
+//    while (!currentURL.includes('calendar')) {
+//        await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
+//        currentURL = await this.backofficePage.url();
+//    }
+//    expect(await this.backofficePage.url()).toContain('calendar');
+
+
+    //***********************   Supprimer le ticket créé *************************/
+    
+    await this.backofficePage.locator('i[title="File d\'attente"]').click();
+    await this.backofficePage.waitForTimeout(2000); 
+
+    // Localiser le ticket dans la section "Attente sans RDV"
+    const ticketBlock = this.backofficePage.getByText(/Attente sans RDV \(\d+\)/)
+                                           .locator('xpath=..//..//..')
+                                           .locator('div.font-size-large.w-25:has-text("' + this.ticket + '")');
+    
+    await ticketBlock.locator('..').locator('button[title="Annuler le ticket"]').click();
+    await this.backofficePage.waitForTimeout(1000);
+    await this.backofficePage.locator('.modal-dialog footer button').filter({ hasText: 'Oui' }).click();
+
+    await ticketBlock.waitFor({ state: 'detached', timeout: 5000 });
+
+    console.log('==> Ticket deleted');
 });
