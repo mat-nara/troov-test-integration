@@ -16,4 +16,4 @@ function generateRandomPhone() {
     return "0" + randomNumber.toString().slice(1);
 }
 
-module.exports = { generateRandomNIR, generateRandomPhone, generateFakeNIR };
+module.exports = { generateRandomNIR, generateRandomPhone };
