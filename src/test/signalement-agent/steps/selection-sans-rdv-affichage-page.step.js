@@ -10,16 +10,13 @@ Given("La fenêtre \"signaler une arrivée\" est ouverte | signalement sans rend
 	await signalerArriveeButton.waitFor({ state: 'visible' });
 	await signalerArriveeButton.click();
 
-	const element = await this.backofficePage.getByText("Je signale une arrivée pour :");
-  await expect(element).toBeVisible();
+  await expect(this.backofficePage.locator('header').filter({ hasText: "Signaler une arrivée" }).first()).toBeVisible();
 });
 
 When("Cliquer sur \"Un usager sans RDV\"", async function() {
-  const sansRdvButton = this.backofficePage.locator('button:has-text("Un usager sans RDV")');
-  await sansRdvButton.click();
+  await this.backofficePage.locator('button').filter({ hasText: "Usager sans rendez-vous" }).click();
 });
 
-Then("On passe aux choix du motif", async function() {
-  const heading = await this.backofficePage.getByText("Je choisis le service pour lequel l’usager souhaite prendre un RDV ");
-  await expect(heading).toBeVisible();
+Then("On passe a la page \"Enregistrer l'usager\"", async function() {
+  await expect(this.backofficePage.getByText("Enregistrer l’usager")).toBeVisible();
 });
