@@ -24,8 +24,9 @@ function generateRandomNIR() {
             return corsica[Math.floor(Math.random() * corsica.length)];
         } else if (mode === 1) {
             return String(Math.floor(Math.random() * 100)).padStart(2, '0');
-        // } else {
+         } else {
         //     return "9" + (7 + Math.floor(Math.random() * 2)) + String(Math.floor(Math.random() * 10));
+            return String(Math.floor(Math.random() * 100)).padStart(2, '0');
         }
     }
     const departement = randomDepartement();
