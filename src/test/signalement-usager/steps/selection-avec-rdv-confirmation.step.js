@@ -2,23 +2,13 @@ const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const { Before, After, BeforeAll, AfterAll } = require('@cucumber/cucumber');
 const config = require('../../../../config/env.js')
-const { generateRandomNIR, generateRandomPhone } = require('../utils/helper');
+const { generateRandomNIR, generateRandomPhone } = require('../../signalement-usager/utils/helper');
+
 const LoginPage = require('../pages/LoginPage');
 const { faker, fakerFR  } = require('@faker-js/faker');
 
 
 setDefaultTimeout(60 * 1000);
-
-function randomNIR() {
-  const sexe = Math.random() < 0.5 ? 1 : 2;          // 1 ou 2
-  const annee = String(Math.floor(Math.random() * 100)).padStart(2, '0'); // 00..99
-  const mois = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0'); // 01..12
-  const dept = String(Math.floor(Math.random() * 96) + 1).padStart(2, '0'); // 01..95
-  const commune = String(Math.floor(Math.random() * 990) + 1).padStart(3, '0');
-  const ordre = String(Math.floor(Math.random() * 990) + 1).padStart(3, '0');
-
-  return `${sexe} ${annee} ${mois} ${dept} ${commune} ${ordre}`;
-}
 
 
 async function setupRdv(world) {
@@ -58,9 +48,11 @@ async function setupRdv(world) {
     // Generate random data for appointment
     world.name = faker.person.lastName();
     world.firstname = faker.person.firstName();
-    world.email = world.name.toLowerCase() + '@test.com';
-    // world.NIR = generateRandomNIR();
-    world.NIR = randomNIR()
+    // world.email = world.name.toLowerCase() + '@test.com';
+    const randomNumber = Math.floor(100 + Math.random() * 999); // Générer un nombre aléatoire à 6 chiffres
+    world.email = world.name.toLowerCase() + "-" + world.firstname.toLowerCase() + "-" + randomNumber.toString() + '@test.com';
+
+    world.NIR = generateRandomNIR()
     world.phone = generateRandomPhone();
 
     await world.backofficePage.getByPlaceholder('Ajouter un Nom').fill(world.name);
@@ -168,7 +160,7 @@ Given("Un rendez-vous a été créer", async function() {
     this.phone          = phone;
     this.dateRdv        = oldDateRdv;
     this.heureRdv       = oldHeureRdv;
-    this.datePriseRdv  = appointmentDate;
+    this.datePriseRdv   = appointmentDate;
     this.heurePriseRdv  = appointmentTime;
     this.motif          = motif;
 
@@ -297,4 +289,40 @@ After(async function () {
     await appointmentLocator.waitFor({ state: 'detached', timeout: 5000 });
 
     console.log('==> RDV deleted');
+
+    //*********************************************** End of suppression du rendez-vous *************************/
+
+    console.log('==> CLEANING OF TICKET CREATED');
+    
+    if (!(await this.terminalPage.locator('text="Vous êtes bien enregistré !"').count() > 0)) {
+        console.log('==> Aucun ticket à nettoyer');
+        return;
+    }
+    
+    // Chercher le numero du ticket
+    const pElement = this.terminalPage.locator('text="Vous êtes bien enregistré !"').locator('xpath=../following-sibling::*[1]/child::*[2]/p');
+    this.ticket = await pElement.textContent();
+
+    if (!this.ticket) {
+        console.log('==> Aucun ticket a néttoyer');
+        return;
+    }
+    
+    //***********************   Supprimer le ticket créé *************************/
+    
+    await this.backofficePage.locator('i[title="File d\'attente"]').click();
+    await this.backofficePage.waitForTimeout(2000); 
+
+    // Localiser le ticket dans la section "Attente sans RDV"
+    const ticketBlock = this.backofficePage.getByText(/Attente avec RDV \(\d+\)/)
+                                           .locator('xpath=..//..//..')
+                                           .locator('div.font-size-large.w-25:has-text("' + this.ticket + '")');
+    
+    await ticketBlock.locator('..').locator('button[title="Annuler le ticket"]').click();
+    await this.backofficePage.waitForTimeout(1000);
+    await this.backofficePage.locator('.modal-dialog footer button').filter({ hasText: 'Oui' }).click();
+
+    await ticketBlock.waitFor({ state: 'detached', timeout: 5000 });
+
+    console.log('==> Ticket deleted');
 });
