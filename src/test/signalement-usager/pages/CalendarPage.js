@@ -30,10 +30,10 @@ class CalendarPage {
       await firstItemService.click();
 
       // Select physique (1st item)
-      const selectorModeDuRDV = this.page.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
-      await selectorModeDuRDV.selectOption({ index: 0 });  
+      //const selectorModeDuRDV = this.page.locator('label').filter({ hasText: 'Modes de RDV' }).locator('xpath=following-sibling::*');
+      //await selectorModeDuRDV.selectOption({ index: 0 });  
 
-      await this.page.waitForTimeout(1000);  
+      //await this.page.waitForTimeout(1000);  
 
       // Create new user
       const selectorButtonCreerUser = this.page.locator('button > span').filter({ hasText: 'Créer un utilisateur' });
@@ -42,10 +42,19 @@ class CalendarPage {
       await this.page.getByPlaceholder('Ajouter un Nom').fill(name);
       await this.page.getByPlaceholder('Ajouter un Prénom').fill(firstname);
       await this.page.getByPlaceholder('Ajouter un Email').fill(email);
-      await this.page.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
+      //await this.page.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
       await this.page.getByPlaceholder('Numéro de téléphone').fill(phone);
 
       await this.page.locator('button[title="Confirmer"]').click()
+
+      // Mode de prise du rendez-vous
+      //await this.page.locator('#radio-taken-mode label').first().click(); // prise sur site
+      // Choix du Service (1st item)
+      const selectorPriseRdv = this.page.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+      await selectorPriseRdv.click();
+      const selectorPriseRdvLegend = this.page.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+      const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+      await firstItemPriseRdv.click();
 
       // Bloquer le créneau
       await this.page.locator('button[title="Bloquer ce créneau"]').click()
