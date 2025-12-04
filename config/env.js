@@ -23,4 +23,12 @@ module.exports =  {
   callscreenURL: process.env.CALLSCREEN_URL || 'http://localhost:3001', 
   username: process.env.TROOV_USERNAME || 'caf@troov.com',
   password: process.env.TROOV_PASSWORD || 'Caf2024',
+  usernameProfileInterfaceNational: process.env.USERNAME_PROFILE_INTERFACE_NATIONAL || 'interface-national@test.com', 
+  passwordProfileInterfaceNational: process.env.PASSWORD_PROFILE_INTERFACE_NATIONAL || 'Troov2025', 
+  usernameProfileAdministrateurCaf: process.env.USERNAME_PROFILE_ADMINISTRATEUR_CAF || 'admin-caf-1@test.com', 
+  passwordProfileAdministrateurCaf: process.env.PASSWORD_PROFILE_ADMINISTRATEUR_CAF || 'Troov2025', 
+  usernameProfileSuperviseur: process.env.USERNAME_PROFILE_SUPERVISEUR || 'superviseur-manager@test.com', 
+  passwordProfileSuperviseur: process.env.PASSWORD_PROFILE_SUPERVISEUR || 'Troov2025', 
+  usernameProfileUtilisateurAcceuil: process.env.USERNAME_PROFILE_UTILISATEUR_ACCEUIL || 'utilisateur-acceuil@test.com', 
+  passwordProfileUtilisateurAcceuil: process.env.PASSWORD_PROFILE_UTILISATEUR_ACCEUIL || 'Troov2025', 
 };
