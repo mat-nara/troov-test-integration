@@ -1,51 +1,40 @@
-@authenticated @SignalementAgentSansRdvInfoUsager
-Feature: Signalement d'une arrivée sans RDV (agent): Information usager 
+@SignalementAgentSansRdvInfoUsager
+Feature: Signalement d'une arrivée sans RDV (agent): Enregistrer l’usager 
 
   Background:
-    Given La fenêtre "Informations de l'usager" sans rendez-vous est ouverte
+    Given L'utilisateur est connecté à l'application Troov
+        * La page "Enregistrer l’usager" d'un signalement sans rendez-vous est ouverte
 
-		Scenario: Nom uniquement saisi : On peut passer à l'étape suivante
-			Given Le nom uniquement est saisi | signalement sans rendez-vous
-      When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
-      Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
-        *  Le nom saisi récemment s'affiche sur la page de confirmation
+	Scenario: NIR uniquement saisie: On peut passer à l'étape suivante
+		Given NIR uniquement est saisie
+    When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Passe à l'etape suivant: "Choisir le motif de visite" s'affiche sur la page
 
-		Scenario: Prénom uniquement saisi : On peut passer à l'étape suivante
-			Given Le prénom uniquement est saisi | signalement sans rendez-vous
-      When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
-      Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
-        *  Le prénom saisi récemment s'affiche sur la page de confirmation
-      
-		Scenario: Nom et prénom saisi : On peut passer à l'étape suivante
-			Given Le nom et le prénom sont saisis | signalement sans rendez-vous
-      When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
-      Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
-        *  Le nom et le prénom saisi récemment s'affiche sur la page de confirmation
-    
-    Scenario: NIR uniquement saisi : On peut passer à l'étape suivante
-			Given Le NIR uniquement est saisi | signalement sans rendez-vous
-      When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
-      Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
+  Scenario: Téléphone uniquement saisie: On peut passer à l'étape suivante
+		Given Téléphone uniquement est saisie
+    When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Passe à l'etape suivant: "Choisir le motif de visite" s'affiche sur la page
+  
+  Scenario: NIR et Téléphone saisie: On peut passer à l'étape suivante
+		Given NIR et Téléphone sont saisie
+    When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Passe à l'etape suivant: "Choisir le motif de visite" s'affiche sur la page
 
-		
-		Scenario: Nom dans un mauvais format: Un message d'erreur s'affiche
-			Given que le nom est saisi au mauvais format dans un signalement sans rendez-vous
-      Then un message d'erreur relatif au nom s'affiche
-		
-		Scenario: Prénom dans un mauvais format: Un message d'erreur s'affiche
-			Given que le prénom est saisi dans un mauvais format dans un signalement sans rendez-vous
-      Then un message d'erreur relatif au prénom s'affiche
-    
-    Scenario: NIR dans un mauvais format: Un message d'erreur s'affiche
-			Given que le NIR est saisi au mauvais format dans un signalement sans rendez-vous
-      Then un message d'erreur relatif au NIR s'affiche
+  Scenario: NIR dans un mauvais format: Un message d'erreur s'affiche
+		Given que le NIR est saisi au mauvais format dans un signalement sans rendez-vous
+    #When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Message d'erreur associé au NIR s'affiche
 
-		Scenario: Bouton Valider : On peut passer à l'étape suivante
-			Given Le nom et le prénom sont saisis | signalement sans rendez-vous
-      When L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous
-      Then L'étape suivante est atteinte : "Sélectionnez le RDV qui concerne l'usager" s'affiche sur la page après la page des informations de l'usager
-    
-    Scenario: Bouton Retour de la page informations de l'usager : On revient sur la page choix du service d'un signalement sans rendez-vous
-        When L'utilisateur clique sur 'Retour' de la page des informations de l'usager
-        Then L'utilisateur revient sur la page de choix du service pour un signalement sans rendez-vous : "Je choisis le service pour lequel l’usager souhaite prendre un RDV" s'affiche sur la page
-    
+  Scenario: Téléphone dans un mauvais format: Un message d'erreur s'affiche
+		Given que le téléphone est saisi au mauvais format dans un signalement sans rendez-vous
+    #When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Message d'erreur associé au Téléphone s'affiche
+
+  Scenario: Boutton continuer: On peut passer à l'étape suivante
+		Given NIR et Téléphone sont saisie
+    When Cliquer sur le bouton 'Continuer' de la page d'enregistrement
+    Then Passe à l'etape suivant: "Choisir le motif de visite" s'affiche sur la page
+  
+  Scenario: Boutton quitter de la page d'enregistrement: On revient sur la page initiale pour le signalement d'une arrivée
+    When Cliquer sur 'Quitter' de la page d'enregistrement 
+    Then Revient sur la page initiale depuis la page d'enregistrement, signalement sans rendez-vous: "Signaler l’arrivée d’un usager" s'affiche sur la page

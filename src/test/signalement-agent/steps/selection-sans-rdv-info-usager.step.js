@@ -1,159 +1,139 @@
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
+const { generateRandomNIR, generateRandomPhone } = require('../../signalement-usager/utils/helper');
 const { expect } = require('@playwright/test');
 const config = require('../../../../config/env.js')
-const { fakerFR } = require('@faker-js/faker');
-const { generateRandomNIR, generateRandomPhone } = require('../../signalement-usager/utils/helper');
-
+const LoginPage = require('../../signalement-usager/pages/LoginPage');
 
 
 setDefaultTimeout(60 * 1000);
 
-let nom, prenom;
 
-Given("La fenêtre \"Informations de l'usager\" sans rendez-vous est ouverte", async function() {
+Given("L'utilisateur est connecté à l'application Troov", async function() {
+  
+  //***********************   Login Backoffice *************************/
+  this.loginPageAlt = new LoginPage(this.backofficePage);
+  await this.loginPageAlt.navigate(this.backofficePage);
+  await this.loginPageAlt.login(config.troovCafUserBackofficeUsername, config.troovCafUserBackofficePassword);
+
+  // wait for backoffice loaded
+  await this.backofficePage.waitForSelector('#page-topbar', { state: 'visible' }); 
+
+  let currentURL = await this.backofficePage.url();
+  while (!currentURL.includes('calendar')) {
+      await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
+      currentURL = await this.backofficePage.url();
+  }
+  expect(await this.backofficePage.url()).toContain('calendar');
+
+  // Changer de compte en CNAF Formation
+  await this.backofficePage.locator('img.header-profile-user').click();
+  await this.backofficePage.locator('button[title="Changer de compte"]').click();
+  await this.backofficePage.waitForTimeout(3000); 
+
+  await this.backofficePage.locator('li[aria-label="CNAF Formation"] > div.p-tree-node-content > span.p-tree-node-label').click();
+
+  currentURL = await this.backofficePage.url();
+  while (!currentURL.includes('calendar')) {
+      await this.backofficePage.waitForTimeout(1000); // wait for 1 second before checking again
+      currentURL = await this.backofficePage.url();
+  }
+  expect(await this.backofficePage.url()).toContain('calendar');
+});
+
+
+Given("La page \"Enregistrer l’usager\" d'un signalement sans rendez-vous est ouverte", async function() {
 	await this.backofficePage.locator('i[title="File d\'attente"]').click();
-  const signalerArriveeButton = await this.backofficePage.locator('button[title="Signaler une arrivée"]');
+	const signalerArriveeButton = await this.backofficePage.locator('button[title="Signaler une arrivée"]');
 	await signalerArriveeButton.waitFor({ state: 'visible' });
 	await signalerArriveeButton.click();
-	await this.backofficePage.waitForTimeout(1000);
-
-	// Page principale signalement d'un arrivée
-	const headingSignalement = await this.backofficePage.getByText("Je signale une arrivée pour :");
-  await expect(headingSignalement).toBeVisible();
-
-	const sansRdvButton = this.backofficePage.locator('button:has-text("Un usager sans RDV")');
-  await sansRdvButton.click();
-	await this.backofficePage.waitForTimeout(1000);
-
-	// Choisir un service
-	const headingService = await this.backofficePage.getByText("Je choisis le service pour lequel l’usager souhaite prendre un RDV");
-  await expect(headingService).toBeVisible();
-
-	const nextSibling = headingService.locator('xpath=following-sibling::*[1]');
-	const firstServiceButton = nextSibling.locator('xpath=child::*[1]').locator('button');
-	await firstServiceButton.click();
-
-  const validerButton = this.backofficePage.locator('button:has-text("Valider")');
-	await validerButton.click();
-
-	// Page Information de l'usager
-	const heading = await this.backofficePage.getByText("Je renseigne les informations de l’usager qui souhaite prendre un RDV");
-  await expect(heading).toBeVisible();  
+	await this.backofficePage.locator('button').filter({ hasText: "Usager sans rendez-vous" }).click();
+	await expect(this.backofficePage.getByText("Enregistrer l’usager")).toBeVisible();
 });
 
-// Scenario Nom uniquement
-Given("Le nom uniquement est saisi | signalement sans rendez-vous", async function() {
-	nom = fakerFR.person.lastName()
-	await this.backofficePage.locator('#lastname').fill(nom);
-});
-
-// Scenario Prénom uniquement
-Given("Le prénom uniquement est saisi | signalement sans rendez-vous", async function() {
-	prenom = fakerFR.person.firstName()
-	await this.backofficePage.locator('#firstname').fill(prenom);
-});
-
-// Scenario Nom et prénom sont saisie
-Given("Le nom et le prénom sont saisis | signalement sans rendez-vous", async function() {
-	nom = fakerFR.person.lastName()
-	await this.backofficePage.locator('#lastname').fill(nom);
-
-	prenom = fakerFR.person.firstName()
-	await this.backofficePage.locator('#firstname').fill(prenom);
-});
 
 // Scenario NIR uniquement
-Given("Le NIR uniquement est saisi | signalement sans rendez-vous", async function() {
-	const NIR = generateRandomNIR()
-	await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
+Given("NIR uniquement est saisie", async function() {
+  const inputNIRLocator = this.backofficePage.locator('label[for="social-security-number"] + input');
+  await inputNIRLocator.fill(generateRandomNIR());
+  const buttonLocator = await this.backofficePage.locator('button').filter({ hasText: 'Continuer' });
+  await expect(buttonLocator).toBeEnabled();
 });
 
-// Scenario Nom saisie au mauvais format
-Given("que le nom est saisi au mauvais format dans un signalement sans rendez-vous", async function() {
-
-  nom = fakerFR.person.lastName() + '21' // Ajouter un nombre au nom
-	await this.backofficePage.locator('#lastname').fill(nom);
-
-	prenom = fakerFR.person.firstName()
-	await this.backofficePage.locator('#firstname').fill(prenom);
+// Scenario Téléphone uniquement
+Given("Téléphone uniquement est saisie", async function() {
+  const inputPhoneLocator = this.backofficePage.locator('label[for="phone-number"] + input');
+  await inputPhoneLocator.fill(generateRandomPhone());
+  const buttonLocator = await this.backofficePage.locator('button').filter({ hasText: 'Continuer' });
+  await expect(buttonLocator).toBeEnabled();
 });
 
-// Scenario Prénom saisie au mauvais format
-Given("que le prénom est saisi dans un mauvais format dans un signalement sans rendez-vous", async function() {
-
-  nom = fakerFR.person.lastName() 
-	await this.backofficePage.locator('#lastname').fill(nom);
-
-	prenom = fakerFR.person.firstName() + '21' // Ajouter un nombre au prenom
-	await this.backofficePage.locator('#firstname').fill(prenom);
+// Scenario NIR et Téléphone sont saisie
+Given("NIR et Téléphone sont saisie", async function() {
+  const inputNIRLocator = this.backofficePage.locator('label[for="social-security-number"] + input');
+  await inputNIRLocator.fill(generateRandomNIR());
+  const inputPhoneLocator = this.backofficePage.locator('label[for="phone-number"] + input');
+  await inputPhoneLocator.fill(generateRandomPhone());
+  const buttonLocator = await this.backofficePage.locator('button').filter({ hasText: 'Continuer' });
+  await expect(buttonLocator).toBeEnabled();
 });
 
-// Scenario Prénom saisie au mauvais format
+// Scenario NIR saisie au mauvais format
 Given("que le NIR est saisi au mauvais format dans un signalement sans rendez-vous", async function() {
+	const inputNIRLocator = this.backofficePage.locator('label[for="social-security-number"] + input');
+	await inputNIRLocator.fill(generateRandomNIR().slice(0, -1)); // 12 caracter au lieu de 13
+	// await this.backofficePage.mouse.click(10, 10);
+	await this.backofficePage.evaluate(() => document.activeElement.blur());
 
-	nom = fakerFR.person.lastName()
-	await this.backofficePage.locator('#lastname').fill(nom);
+	const inputPhoneLocator = this.backofficePage.locator('label[for="phone-number"] + input');
+	await inputPhoneLocator.fill(generateRandomPhone());
 
-	prenom = fakerFR.person.firstName() // Ajouter un nombre au prenom
-	await this.backofficePage.locator('#firstname').fill(prenom);
-
-	const NIR = generateRandomNIR().slice(0, -1);
-	await this.backofficePage.getByPlaceholder('1 48 05 99 *** ***').fill(NIR);
+	//const buttonLocator = await this.backofficePage.locator('button').filter({ hasText: 'Continuer' });
+	//await expect(buttonLocator).toBeEnabled();
 });
 
+// Scenario Téléphone saisie au mauvais format
+Given("que le téléphone est saisi au mauvais format dans un signalement sans rendez-vous", async function() {
+  const inputNIRLocator = this.backofficePage.locator('label[for="social-security-number"] + input');
+  await inputNIRLocator.fill(generateRandomNIR()); 
+
+  const inputPhoneLocator = this.backofficePage.locator('label[for="phone-number"] + input');
+  await inputPhoneLocator.fill(generateRandomPhone().slice(0, -1)); // 9 caracter au lieu de 10
+  // await this.backofficePage.mouse.click(10, 10);
+  await this.backofficePage.evaluate(() => document.activeElement.blur());
+
+  // const buttonLocator = await this.backofficePage.locator('button').filter({ hasText: 'Continuer' });
+  // await expect(buttonLocator).toBeEnabled();
+});
 // ------------------------------------------------------------------------
 
-When("L'utilisateur clique sur 'Valider' sur la page des informations de l'usager pour un signalement sans rendez-vous", async function() {
-	const validerButton = this.backofficePage.locator('button:has-text("Valider")');
-	await validerButton.click();
+When("Cliquer sur le bouton 'Continuer' de la page d'enregistrement", async function() {
+  await this.backofficePage.locator('button').filter({ hasText: 'Continuer' }).click();
 });
 
-When("L'utilisateur clique sur 'Retour' de la page des informations de l'usager", async function() {
-  const validerButton = this.backofficePage.locator('button:has-text("Retour")');
-	await validerButton.click();
+When("Cliquer sur 'Quitter' de la page d'enregistrement", async function() {
+  await this.backofficePage.locator('button[aria-label="Quitter"]').click();
 });
-
 // ------------------------------------------------------------------------
 
-Then("L'étape suivante est atteinte : \"Sélectionnez le RDV qui concerne l'usager\" s'affiche sur la page après la page des informations de l'usager", async function() {
-  const heading = await this.backofficePage.getByText("Sélectionnez le RDV qui concerne l'usager");
+Then("Passe à l'etape suivant: \"Choisir le motif de visite\" s'affiche sur la page", async function() {
+  const heading = await this.backofficePage.getByText("Choisir le motif de visite");
   await expect(heading).toBeVisible();
 });
 
-Then("Le nom saisi récemment s'affiche sur la page de confirmation", async function() {
-  const element = await this.backofficePage.getByText(nom);
-  await expect(element).toBeVisible();
+Then("Message d'erreur associé au NIR s'affiche", async function() {
+  await expect(this.backofficePage.locator('div.p-message-text').filter({ hasText: "Format invalide : Le numéro de Sécurité sociale n'est pas valide (exemple : 2 94 03 75 120 005)" }).first()).toBeVisible();
 });
 
-Then("Le prénom saisi récemment s'affiche sur la page de confirmation", async function() {
-  const element = await this.backofficePage.getByText(prenom);
-  await expect(element).toBeVisible();
+Then("Message d'erreur associé au Téléphone s'affiche", async function() {
+  await expect(this.backofficePage.locator('div.p-message-text').filter({ hasText: "Saisie incorrecte (10 caractères ; Exemple : 07 21 30 89 28)" }).first()).toBeVisible();
 });
 
-Then("Le nom et le prénom saisi récemment s'affiche sur la page de confirmation", async function() {
-  const elementNom = await this.backofficePage.getByText(nom);
-  await expect(elementNom).toBeVisible();
-
-	const elementPrenom = await this.backofficePage.getByText(prenom);
-  await expect(elementPrenom).toBeVisible();
+Then("Message d'erreur s'affiche", async function() {
+  const heading = await this.backofficePage.getByText("Saisie incorrecte");
+  await expect(heading).toBeVisible();
 });
 
-Then("un message d'erreur relatif au nom s'affiche", async function() {
-  const message = await this.backofficePage.locator("#firstname-invalid-feedback");
-  await expect(message).toBeVisible();
-});
-
-Then("un message d'erreur relatif au prénom s'affiche", async function() {
-  const message = await this.backofficePage.locator("#lastname-invalid-feedback");
-  await expect(message).toBeVisible();
-});
-
-Then("un message d'erreur relatif au NIR s'affiche", async function() {
-	const message = await this.backofficePage.locator("#NIR-invalid-feedback");
-	await expect(message).toBeVisible();
-});
-
-Then("L'utilisateur revient sur la page de choix du service pour un signalement sans rendez-vous : \"Je choisis le service pour lequel l’usager souhaite prendre un RDV\" s'affiche sur la page", async function() {
-  const heading = await this.backofficePage.getByText("Je choisis le service pour lequel l’usager souhaite prendre un RDV");
+Then("Revient sur la page initiale depuis la page d'enregistrement, signalement sans rendez-vous: \"Signaler l’arrivée d’un usager\" s'affiche sur la page", async function() {
+  const heading = await this.backofficePage.getByText("Signaler l’arrivée d’un usager");
   await expect(heading).toBeVisible();
 });
