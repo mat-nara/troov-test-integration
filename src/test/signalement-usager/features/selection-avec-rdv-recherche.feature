@@ -34,13 +34,13 @@ Feature: Signalement d'une arrivée avec RDV (usager): Recherche
 
     Scenario: NIR dans un mauvais format: Un message d'erreur s'affiche
 		Given NIR saisie au mauvais format
-        When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
-        Then Message d'erreur NIR incorrecte s'affiche
+        # When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
+        Then Message d'erreur associé au NIR s'affiche
 
     Scenario: Téléphone dans un mauvais format: Un message d'erreur s'affiche
         Given Téléphone saisie au mauvais format
-        When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
-        Then Message d'erreur phone incorrecte s'affiche
+        # When Cliquer sur le bouton 'Continuer' de la page: Enregistrement avec RDV
+        Then Message d'erreur associé au Téléphone s'affiche
 
     Scenario: Boutton continuer: On peut passer à l'étape suivante
         Given Un rendez-vous a été créer 
