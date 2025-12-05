@@ -47,6 +47,15 @@ class CalendarPage {
 
       await this.page.locator('button[title="Confirmer"]').click()
 
+      // Mode de prise du rendez-vous
+      //await this.page.locator('#radio-taken-mode label').first().click(); // prise sur site
+      // Choix du Service (1st item)
+      const selectorPriseRdv = this.page.locator('span').filter({ hasText: 'Choisir un mode de prise de RDV' })
+      await selectorPriseRdv.click();
+      const selectorPriseRdvLegend = this.page.locator('span').filter({ hasText: 'Le rendez-vous a été pris :' })
+      const firstItemPriseRdv = selectorPriseRdvLegend.locator('..').locator('xpath=following-sibling::*').locator('div.multiselect__content-wrapper > ul.multiselect__content > li:first-child') 
+      await firstItemPriseRdv.click();
+
       // Bloquer le créneau
       await this.page.locator('button[title="Bloquer ce créneau"]').click()
 
