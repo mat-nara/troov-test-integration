@@ -1,4 +1,4 @@
-@authenticated @SignalementAgentAvecRdvAffichageRdvDansDashboard  
+@SignalementAgentAvecRdvAffichageRdvDansDashboard  
 Feature: Signalement d'une arrivée avec RDV (agent): Vérification que le signalement d'une arrivée s'affiche correctement dans la file d'attente. 
 
   Background:
