@@ -2,11 +2,11 @@ Feature: Gestion des services : Paramètres / Mes calendriers / Services (Motifs
 
 ##  Background:
 ##    Given L'utilisateur est connecté avec un profil Admin Caf ou CDR
-
+##
     Scenario: Accéder à la page partenaire sur laquelle l'usager se connecte
         When L'utilisateur navigue vers la page partenaire 
         Then La page partenaire s'affiche correctement et l'usager peut déclarer un objet trouvé
-
+##
 ##    Scenario: Affichage de la page Partenaire sur différente navigateur 
 ##        When L'utilisateur navigue vers la page partenaire sur chrome
 ##        Then La page présente sa fonctionnalité phare et est responsive, et permet de déclarer un OP ou un OIC

@@ -78,5 +78,10 @@ module.exports = {
     "npx cucumber-js --config cucumber-profiles.js --profile gestion-lieu-alfa --format progress",
   ],
 
+
+  "troov-objets-signalement-usager-objets-perdu": [
+    "npx cucumber-js --config cucumber-profiles.js --profile troov-objets-signalement-usager-objets-perdu --format progress",
+  ],
+
   
 };

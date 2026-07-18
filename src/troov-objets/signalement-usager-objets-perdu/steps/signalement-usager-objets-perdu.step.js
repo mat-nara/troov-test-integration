@@ -19,7 +19,6 @@ Given("L'utilisateur est sur la page de connexion", async function() {
 
 
 When("L'utilisateur navigue vers la page partenaire", async function() {
-    console.log(this)
     await this.backofficePage.goto("http://localhost:3000");
 });
 
