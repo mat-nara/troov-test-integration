@@ -65,4 +65,18 @@ module.exports = {
   "access-authentification-changement-profile": [
     
   ],
+  "prise-rdv-public": [
+    "npx cucumber-js --config cucumber-profiles.js --profile prise-rdv-public --format progress",
+  ],
+  "prise-rdv-agent-via-troov-rdv-creation-alfa": [
+    "npx cucumber-js --config cucumber-profiles.js --profile prise-rdv-agent-via-troov-rdv-creation-alfa --format progress",
+  ],
+  "deplacement-rdv-masse-alfa": [
+    "npx cucumber-js --config cucumber-profiles.js --profile deplacement-rdv-masse-alfa --format progress",
+  ],
+  "gestion-lieu-alfa": [
+    "npx cucumber-js --config cucumber-profiles.js --profile gestion-lieu-alfa --format progress",
+  ],
+
+  
 };

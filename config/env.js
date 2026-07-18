@@ -31,4 +31,7 @@ module.exports =  {
   passwordProfileSuperviseur: process.env.PASSWORD_PROFILE_SUPERVISEUR || 'Troov2025', 
   usernameProfileUtilisateurAcceuil: process.env.USERNAME_PROFILE_UTILISATEUR_ACCEUIL || 'utilisateur-acceuil@test.com', 
   passwordProfileUtilisateurAcceuil: process.env.PASSWORD_PROFILE_UTILISATEUR_ACCEUIL || 'Troov2025', 
+  troovPublicUserBackofficeURL: process.env.TROOV_PUBLIC_BACKOFFICE_URL || 'https://localhost:3000/fr/login', 
+  troovPublicUserBackofficeUsername: process.env.TROOV_PUBLIC_BACKOFFICE_USERNAME || 'ethel_sanford@gmail.com', 
+  troovPublicUserBackofficePassword: process.env.TROOV_PUBLIC_BACKOFFICE_PASSWORD || 'T&C-Oe4cMol4e!', 
 };

@@ -2,9 +2,16 @@
 const path = require("path");
 
 // Partie commune pour tous les profils
+// const commonRequire = [
+//   "src/test/**/support/*.js",
+//   "src/test/**/pages/*.js"
+// ];
+
 const commonRequire = [
-  "src/test/**/support/*.js",
-  "src/test/**/pages/*.js"
+	"src/core/world.js",
+	"src/core/hooks.js",
+	"src/core/helper.js",
+  	"src/core/pages/*.js"
 ];
 
 const commonFormatOptions = { snippetInterface: "async-await" };
@@ -313,6 +320,96 @@ const testList = [
 		profileName: "access-authentification-changement-profile",
 		feature: "src/test/access-authentification-changement-profile/features/access-authentification-changement-profile.feature",
 		step: "src/test/access-authentification-changement-profile/steps/access-authentification-changement-profile.step.js"
+	},
+	/********************************************************************************************************/
+	/*  						PRISE DE RDV PUBLIC 								*/
+	/********************************************************************************************************/
+	// Access - Authentification - Changement de profile
+	{
+		profileName: "prise-rdv-public",
+		feature: "src/test/prise-rdv-public/features/prise-rdv-public.feature",
+		step: "src/test/prise-rdv-public/steps/prise-rdv-public.step.js"
+	},
+
+	/***************************************** Serveur Alfa ***********************************************/
+	/********************************************************************************************************/
+	/*  								GESTION DE RENDEZ-VOUS 												*/
+	/********************************************************************************************************/
+	// Prise de RDV via parcours Troov Alfa
+	{
+		profileName: "prise-rdv-agent-via-troov-rdv-creation-alfa",
+		feature: "src/test/gestion-rdv-alfa/features/prise-rdv-agent-via-troov-rdv.feature",
+		step: "src/test/gestion-rdv-alfa/steps/prise-rdv-agent-via-troov-rdv.step.js"
+	},
+	// Deplacement de RDV en masse via parcours Troov Alfa
+	{
+		profileName: "deplacement-rdv-masse-alfa",
+		feature: "src/test/deplacement-rdv-masse-alfa/features/deplacement-rdv-masse.feature",
+		step: "src/test/deplacement-rdv-masse-alfa/steps/deplacement-rdv-masse.step.js"
+	},
+
+	/********************************************************************************************************/
+	/*  								GESTION DE LIEU 													*/
+	/********************************************************************************************************/
+	{
+		profileName: "gestion-lieu-alfa",
+		feature: "src/test/gestion-lieu-alfa/features/gestion-lieu.feature",
+		step: "src/test/gestion-lieu-alfa/steps/gestion-lieu.step.js"
+	},
+//	/********************************************************************************************************/
+//	/*  								GESTION DES EQUIPES 												*/
+//	/********************************************************************************************************/
+//	{
+//		profileName: "gestion-equipe",
+//		feature: "src/test/gestion-equipe/features/gestion-membre-equipe.feature",
+//		step: "src/test/gestion-equipe/steps/gestion-membre-equipe.step.js"
+//	},
+//	/********************************************************************************************************/
+//	/*  								GESTION DES SERVICES 												*/
+//	/********************************************************************************************************/
+//	// Gestion des services: Motif 
+//	{
+//		profileName: "gestion-service-motif",
+//		feature: "src/test/gestion-service/features/gestion-service.feature",
+//		step: "src/test/gestion-service/steps/gestion-service.step.js"
+//	},
+//	// Gestion des services: Guichets 
+//	{
+//		profileName: "gestion-service-guichets",
+//		feature: "src/test/gestion-guichets/features/gestion-guichets.feature",
+//		step: "src/test/gestion-guichets/steps/gestion-guichets.step.js"
+//	},
+//	// Gestion des services: Autres options 
+//	{
+//		profileName: "gestion-service-autres-options",
+//		feature: "src/test/gestion-service-autres-options/features/gestion-service-autres-options.feature",
+//		step: "src/test/gestion-service-autres-options/steps/gestion-service-autres-options.step.js"
+//	},
+//	// Gestion des services: Plage exceptionnelle 
+//	{
+//		profileName: "gestion-service-plage-exceptionnel",
+//		feature: "src/test/plage-exceptionnel/features/plage-exceptionnel.feature",
+//		step: "src/test/plage-exceptionnel/steps/plage-exceptionnel.step.js"
+//	},
+//	// Gestion des services: Cas approche popup guichets 
+//	{
+//		profileName: "gestion-service-cas-approche-popup-guichets",
+//		feature: "src/test/cas-approche-popup-guichets/features/cas-approche-popup-guichets.feature",
+//		step: "src/test/cas-approche-popup-guichets/steps/cas-approche-popup-guichets.step.js"
+//	},
+
+
+
+
+	/***********************************************************************************************************************************************************************************************************/
+	/********************************************************************************************************/
+	/*  						TROOV OBJET 								*/
+	/********************************************************************************************************/
+	// Signalement usager objet trouvé
+	{
+		profileName: "troov-objets-signalement-usager-objets-perdu",
+		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-objets-perdu.feature",
+		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-objets-perdu.step.js"
 	},
 ];
 
