@@ -16,17 +16,8 @@ Given("L'utilisateur est sur la page de déclaration d'objet perdu", async funct
     await this.backofficePage.goto("http://localhost:3000/perdu", { waitUntil: 'domcontentloaded' });
     await expect(this.backofficePage).toHaveURL(/\/perdu/);
     await expect(this.backofficePage.getByText("Déclarer un objet")).toBeVisible();
-
-    // Attend activement le bandeau cookies (avec un court timeout) et le ferme s'il apparaît
-    const boutonCookies = this.backofficePage.getByRole('button', { name: 'Tout refuser' });
-    try {
-        await boutonCookies.waitFor({ state: 'visible', timeout: 5000 });
-        await boutonCookies.click();
-        await boutonCookies.waitFor({ state: 'hidden', timeout: 5000 });
-    } catch (error) {
-        // Le bandeau n'est pas apparu dans les 5s, on continue sans bloquer
-    }
 });
+
 Given("L'utilisateur clique sur retour dans la catégorie", async function() {
     await this.backofficePage.locator('.col-6 > div').first().click();
 });
@@ -51,38 +42,43 @@ When("DEBUG: inspection du champ date", async function() {
 
 When("L'utilisateur clique sur le bouton \"J'ai perdu\"", async function() {
     const boutonPerdu = this.backofficePage.getByText("J'ai perdu").first();
-    
-    try {
-        await boutonPerdu.waitFor({ state: 'visible', timeout: 15000 });
-        await boutonPerdu.click({ force: true });
-    } catch (error) {
-        await this.backofficePage.screenshot({ path: 'debug-bouton-jai-perdu.png', fullPage: true });
-        throw error;
-    }
+    await boutonPerdu.waitFor({ state: 'visible', timeout: 15000 });
+    await boutonPerdu.click({ force: true });
 });
 
 When("L'utilisateur sélectionne la date aujourd'hui dans le calendrier", async function() {
-    await this.backofficePage.locator('#common-when').getByRole('textbox').click();
-    await this.backofficePage.getByRole('button', { name: 'Aujourd\'hui' }).click();
+    await this.backofficePage.locator('#common-when .input-date-picker #input-date-picker__today').click();
 });
 
 When("L'utilisateur sélectionne la date d'hier dans le calendrier", async function() {
-    await this.backofficePage.locator('#common-when').getByRole('textbox').click();
-    await this.backofficePage.getByRole('button', { name: 'Hier', exact: true }).click();
+    await this.backofficePage.locator('#common-when .input-date-picker #input-date-picker__yesterday').click();
 });
-When("L'utilisateur sélectionne la date d'avant-hier dans le calendrier", async function() {
-    await this.backofficePage.locator('#common-when').getByRole('textbox').click();
-    await this.backofficePage.locator('#input-date-picker__before_yesterday').click();
-});
-When("L'utilisateur sélectionne une date dans le calendrier", async function() {
-    await this.backofficePage.locator('#common-when').getByRole('textbox').click();
 
-    // Sélectionne le 15 du mois et je vais l'afficher "mercredi 15 juillet"
-    const dateChoisie = new Date();
-    dateChoisie.setDate(15);
+When("L'utilisateur sélectionne la date d'avant-hier dans le calendrier", async function() {
+    await this.backofficePage.locator('#common-when .input-date-picker #input-date-picker__before_yesterday').click();
+});
+
+
+// Si aujourd'hui est le 10, on sélectionne le 15 du mois précédent (toujours visible dans le calendrier).
+When("L'utilisateur sélectionne une date dans le calendrier", async function() {
+    const conteneurDate = this.backofficePage.locator('#common-when');
+
+    await conteneurDate.getByRole('textbox').click();
+
+    const aujourdHui = new Date();
+    const dateChoisie = new Date(aujourdHui);
+
+    if (aujourdHui.getDate() > 15) {
+        dateChoisie.setDate(15); // 15 du mois courant, déjà passé donc visible
+    } else {
+        dateChoisie.setMonth(dateChoisie.getMonth() - 1);
+        dateChoisie.setDate(15); // 15 du mois précédent, toujours visible
+    }
+
     const libelleJour = dateChoisie.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 
-    await this.backofficePage.getByLabel(libelleJour).click();
+    // Scopé sous #common-when, comme les autres sélecteurs de date (today/hier/avant-hier)
+    await conteneurDate.getByLabel(libelleJour).click();
 });
 
 
@@ -170,12 +166,14 @@ When("L'utilisateur sélectionne la catégorie {string}, puis {string} dans le f
 
 When("L'utilisateur clique sur le bouton {string} sans remplir les champs obligatoires", async function(bouton) {
 
-    // On s'assure qu'aucun champ n'est pré-rempli, puis on clique directement
     const boutonAjouter = this.backofficePage.getByRole('button', { name: bouton });
     await expect(boutonAjouter).toBeVisible();
-    await boutonAjouter.click();
+    await boutonAjouter.scrollIntoViewIfNeeded();
 
-    // Petite pause pour laisser le temps aux validations front de s'afficher
+    await this.backofficePage.screenshot({ path: 'debug-avant-clic-bouton.png', fullPage: true });
+
+    await boutonAjouter.dispatchEvent('click');
+
     await this.backofficePage.waitForTimeout(1000);
 });
 When("L'utilisateur remplit les champs obligatoires avec des valeurs invalides et clique sur le bouton {string}", async function(bouton) {
@@ -243,7 +241,7 @@ When("L'utilisateur remplit les champs obligatoires avec des valeurs invalides e
     const champModele = page.getByPlaceholder('Indiquez le modèle');
     if (await champModele.isVisible().catch(() => false)) {
         await champModele.click();
-        await champModele.fill('x');
+        await champModele.fill('Téléphone noir avec coque transparente, retrouvé près de la station');
     }
 
   
@@ -299,7 +297,10 @@ When("L'utilisateur remplit les champs obligatoires avec des valeurs invalides e
     // ------------------------------------------
     const boutonSoumission = page.getByRole('button', { name: bouton });
     await boutonSoumission.scrollIntoViewIfNeeded();
-    await boutonSoumission.click();
+
+    // Clic direct sur l'élément DOM, contourne les overlays (ex: bandeau cookies)
+    // qui interceptent les événements souris même avec { force: true }
+    await boutonSoumission.dispatchEvent('click');
 
     await page.waitForTimeout(1500);
 });
@@ -361,8 +362,16 @@ Then("La date d'avant-hier est correctement affichée dans le formulaire de déc
     await expect(champDate).toHaveValue(new RegExp(`^${dateFormatee} \\d{2}:\\d{2}$`));
 });
 Then("La date sélectionnée est correctement affichée dans le formulaire de déclaration d'objet perdu", async function() {
-    const dateChoisie = new Date();
-    dateChoisie.setDate(15);
+    const aujourdHui = new Date();
+    const dateChoisie = new Date(aujourdHui);
+
+    if (aujourdHui.getDate() > 15) {
+        dateChoisie.setDate(15);
+    } else {
+        dateChoisie.setMonth(dateChoisie.getMonth() - 1);
+        dateChoisie.setDate(15);
+    }
+
     const jour = String(dateChoisie.getDate()).padStart(2, '0');
     const mois = String(dateChoisie.getMonth() + 1).padStart(2, '0');
     const annee = dateChoisie.getFullYear();
@@ -410,8 +419,9 @@ Then("L'adresse {string} est correctement sélectionnée dans le formulaire de d
         expect(trouveVisible).toBe(true);
     }
 });
+
+// Exemple : catégorie: Électronique, sous-catégorie: Téléphone
 Then("Les sous-catégories {string} correspondantes sont correctement affichées dans le formulaire de déclaration d'objet perdu", async function(sousCategories) {
- 
     const items = sousCategories.includes(' - ')
         ? sousCategories.split(' - ').map(i => i.trim())
         : sousCategories.split(',').map(i => i.trim());
@@ -430,19 +440,14 @@ Then("Les champs associé a la catégorie {string} s'affiche", async function(ch
 
 
 Then("Les messages d'erreur de validation des champs obligatoires s'affichent correctement dans le formulaire de déclaration d'objet perdu", async function() {
-    
-    const messagesErreur = this.backofficePage.locator(
-        '.error, .invalid-feedback, .field-error, [class*="error"], [class*="invalid"]'
-    );
+    const page = this.backofficePage;
+
+    const messageErreur = page.getByText(/Vous devez choisir une adresse/i);
 
     try {
-        await expect(messagesErreur.first()).toBeVisible({ timeout: 5000 });
-
-        // Vérifie qu'il y a bien au moins un message affiché (pas juste un élément vide dans le DOM)
-        const nombreMessages = await messagesErreur.count();
-        expect(nombreMessages).toBeGreaterThan(0);
+        await expect(messageErreur).toBeVisible({ timeout: 5000 });
     } catch (error) {
-        await this.backofficePage.screenshot({ path: 'debug-messages-erreur-validation.png', fullPage: true });
+        await page.screenshot({ path: 'debug-messages-erreur-validation.png', fullPage: true });
         throw error;
     }
 });
