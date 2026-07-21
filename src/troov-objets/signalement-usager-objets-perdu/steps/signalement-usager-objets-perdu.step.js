@@ -34,7 +34,7 @@ When("L'utilisateur navigue vers la page partenaire", async function() {
     await this.backofficePage.goto("http://localhost:3000");
 });
 
-// ⬇️ Step de debug temporaire à ajouter ici
+// ⬇️ Step de debug temporaire 
 When("DEBUG: inspection du champ date", async function() {
     const html = await this.backofficePage.locator('form, [class*="date"], [class*="Date"]').first().evaluate(el => el.outerHTML);
     console.log(html);
