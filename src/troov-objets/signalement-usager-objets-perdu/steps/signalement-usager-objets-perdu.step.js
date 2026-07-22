@@ -165,17 +165,15 @@ When("L'utilisateur sélectionne la catégorie {string}, puis {string} dans le f
 
 When("L'utilisateur clique sur le bouton {string} sans remplir les champs obligatoires", async function(bouton) {
 
-    const boutonAjouter = this.backofficePage.getByRole('button', { name: bouton });
-    await expect(boutonAjouter).toBeVisible();
-    await boutonAjouter.scrollIntoViewIfNeeded();
+    const boutonAjouter = this.backofficePage.getByRole('button', { name: bouton });
+    await expect(boutonAjouter).toBeVisible();
+    await boutonAjouter.scrollIntoViewIfNeeded();
 
-    await this.backofficePage.screenshot({ path: 'debug-avant-clic-bouton.png', fullPage: true });
+    await this.backofficePage.screenshot({ path: 'debug-avant-clic-bouton.png', fullPage: true });
 
-    // Clic direct sur l'élément DOM, contourne les overlays (ex: bandeau cookies)
-    // qui interceptent les événements souris même avec { force: true }
-    await boutonAjouter.dispatchEvent('click');
+    await boutonAjouter.dispatchEvent('click');
 
-    await this.backofficePage.waitForTimeout(1000);
+    await this.backofficePage.waitForTimeout(1000);
 });
 When("L'utilisateur remplit les champs obligatoires avec des valeurs invalides et clique sur le bouton {string}", async function(bouton) {
     const page = this.backofficePage;
@@ -434,11 +432,10 @@ Then("Les sous-catégories {string} correspondantes sont correctement affichées
     }
 });
 Then("Les champs associé a la catégorie {string} s'affiche", async function(champs) {
-   
-    const html = await this.backofficePage.locator('[data-v-63f1f14a]').first().innerHTML();
-    await this.backofficePage.screenshot({ path: 'debug-champs-specifiques.png', fullPage: true });
+   
+    const html = await this.backofficePage.locator('[data-v-63f1f14a]').first().innerHTML();
+    await this.backofficePage.screenshot({ path: 'debug-champs-specifiques.png', fullPage: true });
 });
-
 
 Then("Les messages d'erreur de validation des champs obligatoires s'affichent correctement dans le formulaire de déclaration d'objet perdu", async function() {
     const page = this.backofficePage;
