@@ -41,6 +41,7 @@ function createProfile(featurePath, stepPath) {
   };
 }
 
+
 // Liste de tous les tests à inclure
 const testList = [	
 
@@ -401,6 +402,11 @@ const testList = [
 
 
 
+
+
+
+
+
 	/***********************************************************************************************************************************************************************************************************/
 	/********************************************************************************************************/
 	/*  						TROOV OBJET 								*/
@@ -411,6 +417,24 @@ const testList = [
 		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-objets-perdu.feature",
 		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-objets-perdu.step.js"
 	},
+	// creation de compte
+	{
+		profileName: "troov-objets-creation-compte",
+		feature: "src/troov-objets/signalement-usager-objets-perdu/features/creation-compte.feature",
+		step: "src/troov-objets/signalement-usager-objets-perdu/steps/creation-compte.step.js"
+	},
+	// login
+		{
+			profileName: "troov-objets-connexion",
+			feature: "src/troov-objets/signalement-usager-objets-perdu/features/connexion.feature",
+			step: "src/troov-objets/signalement-usager-objets-perdu/steps/connexion.step.js"
+		},
+	//accueil
+		{
+    profileName: "troov-objets-accueil",
+    feature: "src/troov-objets/signalement-usager-objets-perdu/features/accueil.feature",
+    step: "src/troov-objets/signalement-usager-objets-perdu/steps/accueil.step.js"
+},
 ];
 
 
