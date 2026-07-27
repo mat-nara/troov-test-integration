@@ -435,11 +435,17 @@ const testList = [
     feature: "src/troov-objets/signalement-usager-objets-perdu/features/accueil.feature",
     step: "src/troov-objets/signalement-usager-objets-perdu/steps/accueil.step.js"
 },
-//agestion-annonce
+//gestion-annonce
 		{
     profileName: "troov-objets-signalement-usager-objets-perdu-gestion-annonce",
     feature: "src/troov-objets/signalement-usager-objets-perdu/features/gestion-annonce.feature",
     step: "src/troov-objets/signalement-usager-objets-perdu/steps/gestion-annonce.step.js"
+},
+//Gestion des objets trouvés
+		{
+    profileName: "troov-objets-signalement-usager-objets-perdu-Gestion-des-objets-trouves",
+    feature: "src/troov-objets/signalement-usager-objets-perdu/features/Gestion-des-objets-trouves.feature",
+    step: "src/troov-objets/signalement-usager-objets-perdu/steps/Gestion-des-objets-trouves.step.js"
 },
 ];
 
