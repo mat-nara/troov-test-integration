@@ -169,8 +169,6 @@ When("L'utilisateur clique sur le bouton {string} sans remplir les champs obliga
     await expect(boutonAjouter).toBeVisible();
     await boutonAjouter.scrollIntoViewIfNeeded();
 
-    await this.backofficePage.screenshot({ path: 'debug-avant-clic-bouton.png', fullPage: true });
-
     await boutonAjouter.dispatchEvent('click');
 
     await this.backofficePage.waitForTimeout(1000);
@@ -385,7 +383,6 @@ Then("Une suggestion s'affiche et cliquable", async function() {
     try {
         await expect(suggestion).toBeVisible({ timeout: 15000 });
     } catch (error) {
-        await this.backofficePage.screenshot({ path: 'debug-suggestion-adresse.png', fullPage: true });
         throw error;
     }
 });
@@ -434,7 +431,6 @@ Then("Les sous-catégories {string} correspondantes sont correctement affichées
 Then("Les champs associé a la catégorie {string} s'affiche", async function(champs) {
    
     const html = await this.backofficePage.locator('[data-v-63f1f14a]').first().innerHTML();
-    await this.backofficePage.screenshot({ path: 'debug-champs-specifiques.png', fullPage: true });
 });
 
 Then("Les messages d'erreur de validation des champs obligatoires s'affichent correctement dans le formulaire de déclaration d'objet perdu", async function() {
@@ -445,7 +441,6 @@ Then("Les messages d'erreur de validation des champs obligatoires s'affichent co
     try {
         await expect(messageErreur).toBeVisible({ timeout: 5000 });
     } catch (error) {
-        await page.screenshot({ path: 'debug-messages-erreur-validation.png', fullPage: true });
         throw error;
     }
 });
@@ -463,7 +458,6 @@ Then("On passe a la page d'inscription ou de connexion", async function() {
         await expect(page.getByText('Inscrivez-vous')).toBeVisible();
         await expect(page.getByText('Civilité*')).toBeVisible();
     } catch (error) {
-        await page.screenshot({ path: 'debug-page-inscription.png', fullPage: true });
         throw error;
     }
 });

@@ -1,7 +1,6 @@
 const { Given, When, Then, Before, After, setDefaultTimeout } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 Before(async function () {
-    console.log("🔄 Reset avant scénario");
     await this.backofficePage.goto("http://localhost:3000", { waitUntil: 'domcontentloaded' });
 });
 
@@ -128,7 +127,7 @@ Given("L'utilisateur atteint la modale d'inscription depuis une declaration d'ob
 // ------------------------------------------- Given ---------------------------------------
 
 Given("L'utilisateur est connecte a son espace usager", async function () {
-    // TODO: remplacer par un vrai login usager (via UI ou injection directe d'un token/session)
+
     await this.backofficePage.goto("http://localhost:3000/login", { waitUntil: 'domcontentloaded' });
     await this.backofficePage.getByPlaceholder('Indiquez votre email').fill('user.test@troov.com');
     await this.backofficePage.getByPlaceholder('Indiquez votre mot de passe').fill('Password123!');
@@ -152,6 +151,9 @@ Given("L'utilisateur est connecte a son espace usager", async function () {
     await this.backofficePage.getByRole('button', { name: 'Connexion' }).click();
     await this.backofficePage.waitForURL(/\/accueil/);
 });
+
+
+
 
 // ----------------------------------------- When --------------------------------------------------------
 
@@ -211,9 +213,8 @@ When('L\'utilisateur ne coche pas la case {string}', async function (labelCase) 
     await expect(checkbox).not.toBeChecked();
 });
 
-// ============================================================
-// STEPS CAPTCHA - Version nettoyée et robuste
-// ============================================================
+// STEPS CAPTCHA-
+//-------------------------------------------------------------
 
 When("L'utilisateur remplit correctement le champ Captcha {string}", async function (captchaLabel) {
     const modale = modaleInscription(this.backofficePage);
@@ -263,22 +264,17 @@ When('L\'utilisateur saisit les informations obligatoires \\(Civilite, Nom, Pren
     const timestamp = Date.now();
     const emailTest = `test.user.${timestamp}@yopmail.com`;
 
-    console.log(`📧 Email généré: ${emailTest}`);
-    console.log('🔄 Remplissage des champs du formulaire...');
-
     try {
         // 1. Civilité - Sélectionner "Monsieur"
         const civiliteMale = modale.locator('button:has-text("M."), input[value="M"]').first();
         if (await civiliteMale.isVisible().catch(() => false)) {
             await civiliteMale.click();
-            console.log('✅ Civilité "Monsieur" sélectionnée');
         } else {
             // Alternative: chercher par label
             const civiliteLabel = modale.getByText('Civilité').locator('..');
             const optionMale = civiliteLabel.locator('button:has-text("M."), input[value="M"]').first();
             if (await optionMale.isVisible().catch(() => false)) {
                 await optionMale.click();
-                console.log('✅ Civilité "Monsieur" sélectionnée (via label)');
             }
         }
 
@@ -288,9 +284,8 @@ When('L\'utilisateur saisit les informations obligatoires \\(Civilite, Nom, Pren
             await nomInput.click();
             await nomInput.clear();
             await nomInput.fill('Dupont');
-            console.log('✅ Nom rempli');
         } else {
-            console.log('❌ Champ Nom non trouvé');
+            console.log(' Champ Nom non trouvé');
         }
 
         // 3. Prénom
@@ -299,9 +294,8 @@ When('L\'utilisateur saisit les informations obligatoires \\(Civilite, Nom, Pren
             await prenomInput.click();
             await prenomInput.clear();
             await prenomInput.fill('Jean');
-            console.log('✅ Prénom rempli');
         } else {
-            console.log('❌ Champ Prénom non trouvé');
+            console.log('Champ Prénom non trouvé');
         }
 
         // 4. Email
@@ -310,9 +304,8 @@ When('L\'utilisateur saisit les informations obligatoires \\(Civilite, Nom, Pren
             await emailInput.click();
             await emailInput.clear();
             await emailInput.fill(emailTest);
-            console.log('✅ Email rempli');
         } else {
-            console.log('❌ Champ Email non trouvé');
+            console.log('Champ Email non trouvé');
         }
 
         // 5. Téléphone
@@ -321,9 +314,8 @@ When('L\'utilisateur saisit les informations obligatoires \\(Civilite, Nom, Pren
             await telephoneInput.click();
             await telephoneInput.clear();
             await telephoneInput.fill('0612345678');
-            console.log('✅ Téléphone rempli');
         } else {
-            console.log('❌ Champ Téléphone non trouvé');
+            console.log('Champ Téléphone non trouvé');
         }
 
         // 6. Mot de passe
@@ -332,17 +324,17 @@ When('L\'utilisateur saisit les informations obligatoires \\(Civilite, Nom, Pren
             await passwordInput.click();
             await passwordInput.clear();
             await passwordInput.fill('MotDePasseFort123!');
-            console.log('✅ Mot de passe rempli');
+
         } else {
-            console.log('❌ Champ Mot de passe non trouvé');
+            console.log('Champ Mot de passe non trouvé');
         }
 
-        // Attendre un peu pour que les changements soient pris en compte
+
         await page.waitForTimeout(500);
 
 
     } catch (error) {
-        console.error('❌ Erreur lors du remplissage:', error.message);
+        console.error('Erreur lors du remplissage:', error.message);
         throw error;
     }
 });
@@ -363,8 +355,6 @@ When('L\'utilisateur accede a la page {string}', async function (pageName) {
     await this.backofficePage.goto(`http://localhost:3000${routes[pageName] || '/'}`, { waitUntil: 'domcontentloaded' });
 });
 
-// Step littéral (pas générique) pour éviter toute collision avec
-// "L'utilisateur clique sur le bouton \"J'ai perdu\"" déjà défini ailleurs
 When("L'utilisateur clique sur le bouton \"Renvoyer l'email de confirmation\"", async function () {
     await this.backofficePage.getByRole('button', { name: "Renvoyer l'email de confirmation" }).click();
 });
@@ -376,7 +366,6 @@ When("L'utilisateur clique sur la croix de fermeture de la pop-up", async functi
 // ----------- ----------------------- Then ------------------------------------------------
 
 Then("Le compte utilisateur est cree", async function () {
-    // La vérification de la redirection est faite dans le step suivant.
 });
 
 Then("Le compte est cree avec succes", async function () {
@@ -389,7 +378,6 @@ Then("Le compte est cree avec succes", async function () {
 });
 
 Then("Le compte n'est pas cree", async function () {
-    // La modale reste affichée (le compte n'a pas été créé)
     await expect(this.backofficePage.getByText('Plus qu\'une étape!')).toBeVisible();
 });
 
@@ -404,10 +392,7 @@ Then("L'utilisateur est redirigé vers son tableau de bord", async function () {
 });
 
 Then("Un mail de verification est envoye a l'adresse email de l'utilisateur", async function () {
-    // TODO: vérification réelle via une boîte mail de test (ex: Mailosaur, Mailtrap, Ethereal)
-    // Exemple à adapter :
-    // const email = await mailClient.waitForEmail({ to: this.email });
-    // expect(email.subject).toContain('Vérifiez votre compte');
+
 });
 
 Then(

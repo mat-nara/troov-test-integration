@@ -419,21 +419,27 @@ const testList = [
 	},
 	// creation de compte
 	{
-		profileName: "troov-objets-creation-compte",
+		profileName: "troov-objets-signalement-usager-objets-perdu-creation-compte",
 		feature: "src/troov-objets/signalement-usager-objets-perdu/features/creation-compte.feature",
 		step: "src/troov-objets/signalement-usager-objets-perdu/steps/creation-compte.step.js"
 	},
 	// login
 		{
-			profileName: "troov-objets-connexion",
+			profileName: "troov-objets-signalement-usager-objets-perdu-connexion",
 			feature: "src/troov-objets/signalement-usager-objets-perdu/features/connexion.feature",
 			step: "src/troov-objets/signalement-usager-objets-perdu/steps/connexion.step.js"
 		},
 	//accueil
 		{
-    profileName: "troov-objets-accueil",
+    profileName: "troov-objets-signalement-usager-objets-perdu-accueil",
     feature: "src/troov-objets/signalement-usager-objets-perdu/features/accueil.feature",
     step: "src/troov-objets/signalement-usager-objets-perdu/steps/accueil.step.js"
+},
+//agestion-annonce
+		{
+    profileName: "troov-objets-signalement-usager-objets-perdu-gestion-annonce",
+    feature: "src/troov-objets/signalement-usager-objets-perdu/features/gestion-annonce.feature",
+    step: "src/troov-objets/signalement-usager-objets-perdu/steps/gestion-annonce.step.js"
 },
 ];
 

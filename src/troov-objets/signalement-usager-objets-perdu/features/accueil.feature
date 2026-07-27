@@ -19,5 +19,4 @@ Feature: Page d'accueil de l'espace usager
     When L'utilisateur clique sur le lien "Accueil" dans le menu lateral
     Then L'utilisateur est de retour sur la page d'accueil
     When L'utilisateur clique sur le popup "Compte non verifie"
-        * L'utilisateur clique sur le bouton "Renvoyer l'email de confirmation"
     Then Le popup "Compte non verifie" disparait
