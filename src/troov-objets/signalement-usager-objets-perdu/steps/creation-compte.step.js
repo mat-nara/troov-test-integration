@@ -10,15 +10,7 @@ function modaleInscription(page) {
     return page.getByText('Plus qu\'une étape!').locator('..').locator('..');
 }
 
-// ============================================================
-// Step combiné : regroupe en une seule ligne tout le parcours
-// nécessaire pour atteindre la modale d'inscription depuis une
-// déclaration d'objet perdu (page partenaire -> J'ai perdu ->
-// catégorie -> soumission avec valeurs invalides -> modale).
-// Reprend exactement la même logique/timing que les steps
-// existants dans signalement-usager-objets-perdu.step.js, juste
-// regroupée pour éviter la répétition dans le fichier .feature.
-// ============================================================
+
 Given("L'utilisateur atteint la modale d'inscription depuis une declaration d'objet perdu", async function () {
     const page = this.backofficePage;
 
