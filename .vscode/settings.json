@@ -1,13 +1,13 @@
 {
     "cucumber.features": [
-        "src/test/**/features/*.feature",
+        "src/**/**/features/*.feature",
         "src/test/**/*.feature",
         "features/**/*.feature",
         "tests/**/*.feature",
         "*specs*/**/*.feature"
     ],
     "cucumber.glue": [
-        "src/test/**/steps/*.js",
+        "src/**/**/steps/*.js",
         "*specs*/**/*.cs",
         "features/**/*.js",
         "features/**/*.jsx",
