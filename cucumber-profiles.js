@@ -411,6 +411,25 @@ const testList = [
 		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-objets-perdu.feature",
 		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-objets-perdu.step.js"
 	},
+
+
+
+
+	/********************************************************************************************************/
+	/*  						signalement agent 								*/
+	/********************************************************************************************************/
+	// Signalement usager objet trouvé
+	{
+		profileName: "signalement-agent-connexion-agent",
+		feature: "src/troov-objets/signalement-agent/features/connexion-agent.feature",
+		step: "src/troov-objets/signalement-agent/steps/connexion-agent.step.js"
+	},
+	// Signalement agent 
+   {
+        profileName: "signalement-agent",
+        feature: "src/troov-objets/signalement-agent/features/signalement-agent.feature",
+        step: "src/troov-objets/signalement-agent/steps/*.step.js"
+    },
 ];
 
 
