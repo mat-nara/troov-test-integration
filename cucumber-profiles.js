@@ -430,6 +430,12 @@ const testList = [
         feature: "src/troov-objets/signalement-agent/features/signalement-agent.feature",
         step: "src/troov-objets/signalement-agent/steps/*.step.js"
     },
+	// modification objet signalé 
+  {
+  profileName: "signalement-agent-modification-objet",
+  feature: "src/troov-objets/signalement-agent/features/modification-objet.feature",
+  step: "src/troov-objets/signalement-agent/steps/{modification-objet,connexion-agent}.step.js"
+}
 ];
 
 
