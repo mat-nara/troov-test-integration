@@ -441,6 +441,12 @@ const testList = [
   profileName: "signalement-agent-signalement-objet-avec-ia",
   feature: "src/troov-objets/signalement-agent/features/signalement-objet-avec-ia.feature",
   step: "src/troov-objets/signalement-agent/steps/{signalement-objet-avec-ia,connexion-agent}.step.js"
+},
+// Objet lie 
+  {
+  profileName: "signalement-agent-objet-lie",
+  feature: "src/troov-objets/signalement-agent/features/objet-lie.feature",
+  step: "src/troov-objets/signalement-agent/steps/{objet-lie,connexion-agent}.step.js"
 }
 ];
 

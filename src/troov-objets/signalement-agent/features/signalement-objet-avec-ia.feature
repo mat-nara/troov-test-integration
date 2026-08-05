@@ -1,31 +1,20 @@
 Feature: Signalement d'un objet trouvé avec IA
-
   Background:
     Given l'utilisateur est sur "http://localhost:3000/login"
     When L'utilisateur se connecte avec ces identifiants SSO
     Then L'utilisateur arrive sur sa page d'accueil agent
 
-## Scenario: Ouvrir le formulaire via l'icone appareil photo dans la barre du haut
-##   When L'utilisateur clique sur l'icone appareil photo dans la barre du haut
-##   Then Le formulaire de signalement avec IA s'ouvre
+  Scenario: Ouvrir le formulaire via l'icone appareil photo dans la barre du haut
+    When L'utilisateur clique sur l'icone appareil photo dans la barre du haut
+    Then Le formulaire de signalement avec IA s'ouvre
+        * Le compteur de photos affiche "0/3"
 
-## Scenario: Ouvrir le formulaire via les boutons dédiés
-##   When L'utilisateur clique sur l'un des deux boutons de signalement
-##   Then Le formulaire de signalement classique s'ouvre
+  Scenario: Ouvrir le formulaire via les boutons dédiés
+    When L'utilisateur clique sur le bouton "Signaler un objet"
+    Then Le formulaire de signalement classique s'ouvre
 
-##  Scenario: Ajouter plusieurs photos depuis l'onglet photo
-##    When L'utilisateur ouvre le formulaire avec IA
-##     * L'utilisateur ajoute une ou plusieurs photos via l'onglet photo
-##    Then Les photos sont ajoutées au formulaire
-
-Scenario: Ajouter un objet lie dans le formulaire de signalement
-  When L'utilisateur clique sur l'un des deux boutons de signalement
-     * L'utilisateur remplit le formulaire de signalement principal
-     * L'utilisateur ajoute un objet lie dans le formulaire
-  Then L'objet lié est cree et apparait dans la fiche de l'objet principal
-
-##  Scenario: Ajouter un objet lie en faisant appel à l'IA avec une photo
-##    When L'utilisateur ajoute un objet lie
-##    * L'utilisateur ajoute une photo pour faire appel à l'IA
-##    Then L'objet lie est genere par l'IA
-##    * L'objet lie se retrouve dans la fiche de l'objet principal
+  Scenario: Ajouter plusieurs photos depuis l'onglet photo
+    When L'utilisateur clique sur l'icone appareil photo dans la barre du haut
+    Then Le formulaire de signalement avec IA s'ouvre
+    When L'utilisateur ajoute 3 photos depuis l'onglet photo
+    Then Les 3 photos sont visibles en miniature et le compteur affiche "3/3"
