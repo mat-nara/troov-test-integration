@@ -411,6 +411,20 @@ const testList = [
 		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-objets-perdu.feature",
 		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-objets-perdu.step.js"
 	},
+
+		// Bordereaux
+	{
+		profileName: "troov-objets-signalement-usager-bordereaux",
+		feature: "src/troov-objets/bordereaux/features/creer-bordereau.feature",
+		step: "src/troov-objets/bordereaux/steps/creer-bordereau.step.js"
+	},
+
+	// Bordereaux - Affichage
+  {
+    profileName: "troov-objets-signalement-affichage-bordereaux",
+    feature: "src/troov-objets/bordereaux/features/affichage-bordereaux.feature",
+    step: "src/troov-objets/bordereaux/steps/affichage-bordereaux.step.js"
+  },
 ];
 
 
