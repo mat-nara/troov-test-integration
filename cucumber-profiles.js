@@ -425,6 +425,13 @@ const testList = [
     feature: "src/troov-objets/bordereaux/features/affichage-bordereaux.feature",
     step: "src/troov-objets/bordereaux/steps/affichage-bordereaux.step.js"
   },
+
+  	// Bordereaux - selectionner-objet-bordereau
+  {
+    profileName: "troov-objets-signalement-selectionner-objets-bordereau",
+    feature: "src/troov-objets/bordereaux/features/selectionner-objets-bordereau.feature",
+    step: "src/troov-objets/bordereaux/steps/selectionner-objets-bordereau.step.js"
+  },
 ];
 
 
