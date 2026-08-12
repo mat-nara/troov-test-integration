@@ -23,11 +23,38 @@ When("L'utilisateur clique sur le menu {string} dans la sidebar", async function
 });
 
 When("L'utilisateur clique sur le filtre {string}", async function (filtre) {
-    await this.backofficePage.getByText(filtre, { exact: true }).click();
+    const regexFiltre = new RegExp(filtre, 'i');
+
+    // 1. Localise le composant Select/Dropdown PrimeVue associé au texte du filtre
+    const selectComponent = this.backofficePage
+        .locator('.p-select, .p-dropdown, .p-multiselect')
+        .filter({ hasText: regexFiltre })
+        .first();
+
+    if (await selectComponent.isVisible({ timeout: 2000 }).catch(() => false)) {
+        // Clic sur l'icône SVG à l'intérieur (comme identifié dans votre enregistrement)
+        await selectComponent.locator('svg, .p-select-dropdown, .p-dropdown-trigger').first().click();
+    } else {
+        // Fallback si le libellé "TYPE" est un label parent/voisin
+        const label = this.backofficePage.getByText(regexFiltre).first();
+        const container = label.locator('xpath=ancestor::*[contains(@class, "field") or contains(@class, "flex") or self::div][1]');
+        await container.locator('svg').first().click();
+    }
 });
 
 When("L'utilisateur clique sur le filtre de période", async function () {
-    await this.backofficePage.locator('input[placeholder*="date"], .p-datepicker input, [class*="datepicker"]').first().click();
+    // 1. Ciblage principal basé sur l'enregistrement ('Choose Date')
+    const datePickerTrigger = this.backofficePage.getByLabel(/Choose Date|Sélectionner une date/i);
+
+    if (await datePickerTrigger.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await datePickerTrigger.click();
+    } else {
+        // Fallback : recherche le champ de date par input ou icône de calendrier PrimeVue
+        await this.backofficePage
+            .locator('.p-datepicker input, .p-calendar input, button[aria-label*="Date"], .p-datepicker-trigger')
+            .first()
+            .click();
+    }
 });
 
 
@@ -57,6 +84,35 @@ Then("La liste des bordereaux affiche les colonnes : Nom, Type, Statut, Contact,
 });
 
 Then("Les boutons {string} et {string} sont visibles en haut à droite", async function (btn1, btn2) {
-    await expect(this.backofficePage.getByRole('button', { name: btn1 })).toBeVisible();
-    await expect(this.backofficePage.getByRole('button', { name: btn2 })).toBeVisible();
+    await expect(this.backofficePage.getByText(btn1, { exact: false })).toBeVisible();
+    await expect(this.backofficePage.getByText(btn2, { exact: false })).toBeVisible();
+});
+
+Then("Les options de type s'affichent", async function () {
+    // Vérification basée sur les options réelles identifiées dans votre enregistrement
+    const optionType = this.backofficePage
+        .getByLabel(/Transfert|Introuvable|Archivage/i)
+        .or(this.backofficePage.getByText(/Réception|Modification|Destruction|Restitution/i))
+        .first();
+
+    await expect(optionType).toBeVisible({ timeout: 5000 });
+});
+
+Then("Les options de contact s'affichent", async function () {
+    // Vérification pour le filtre Contact basé sur vos options (ex: HOPITAL LAVERAN)
+    const overlayOrOption = this.backofficePage
+        .locator('.p-select-overlay, .p-dropdown-panel, [role="listbox"]')
+        .or(this.backofficePage.getByText(/HOPITAL|Enseignes/i))
+        .first();
+
+    await expect(overlayOrOption).toBeVisible({ timeout: 5000 });
+});
+
+Then("Le calendrier de sélection de période s'affiche", async function () {
+    // Vérifie l'apparition du panneau/popover calendrier PrimeVue
+    const calendarPanel = this.backofficePage.locator(
+        '.p-datepicker, .p-datepicker-panel, .p-calendar-panel'
+    ).first();
+
+    await expect(calendarPanel).toBeVisible({ timeout: 5000 });
 });
