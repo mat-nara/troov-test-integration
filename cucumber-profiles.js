@@ -432,6 +432,12 @@ const testList = [
     feature: "src/troov-objets/bordereaux/features/selectionner-objets-bordereau.feature",
     step: "src/troov-objets/bordereaux/steps/selectionner-objets-bordereau.step.js"
   },
+  // Bordereaux - exporter-donnees-bordereau
+  {
+    profileName: "troov-objets-signalement-exporter-donnees-bordereau",
+    feature: "src/troov-objets/bordereaux/features/exporter-donnees-bordereau.feature",
+    step: "src/troov-objets/bordereaux/steps/exporter-donnees-bordereau.step.js"
+  },
 ];
 
 
