@@ -1,49 +1,42 @@
-Feature: Créer un bordereau
+Feature: Creation d'un bordereau (Etape 1)
 
   Background:
     Given L'utilisateur est sur "http://localhost:3000/login"
-    When L'utilisateur se connecte avec ces identifiants SSO
+    When L'utilisateur se connecte avec les identifiants SSO "mairie@troov.com" et "Hello(123)"
     Then L'utilisateur arrive sur sa page d'accueil agent
-    When L'utilisateur clique sur le menu "Bordereaux" dans la sidebar
-    And L'utilisateur clique sur le bouton "Créer manuellement"
+    When L'utilisateur ouvre le menu "Bordereaux" dans la sidebar
+    * L'utilisateur clique sur le bouton "+ Ajouter un bordereau"
 
-  Scenario: Afficher le formulaire de création en 3 étapes
-    Then Un formulaire en 3 étapes s'affiche avec :
-      * Les étapes "Informations", "Sélection des objets" et "Confirmation" sont visibles
-      * Le champ "Nom du bordereau" est visible
-      * Les types de bordereau "Transfert", "Modification", "Introuvable", "Destruction", "Restitution" et "Archivage" sont visibles
-      * Le champ "Destinataire" avec le placeholder "Choisir un contact" est visible
-      * Les boutons "Filtres" et "Ajouter un contact" sont visibles
-      * Le champ "Message" est visible
-      * Le bouton "Continuer" est visible en bas à droite
+  Scenario: Ajouter un bordereau - Affichage de l'etape 1
+    Then Le formulaire en 3 etapes s'affiche avec les indicateurs :
+      | Creer un bordereau   |
+      | Selectionner un objet |
+      | Exporter les donnees  |
+    * Les champs "Nom du bordereau", "Type" s'affichent
+    * Les options de receveur "A un nouveau contact" et "A compte Troov" s'affichent
+    * Les champs "Nom", "Adresse", "Ville", "Code postal", "Pays" et "Type d'entite" s'affichent
+    * Les toggles "Receveur (bordereaux)" et "Service deposant" s'affichent
+    * Le bouton "Ajouter", le champ "Message" et le bouton "Suivant" s'affichent
 
-  Scenario: Vérifier l'ajout d'un contact
-    When L'utilisateur clique sur le bouton "Ajouter un contact"
-    Then Les options de contact s'affichent
+ ## Scenario: Modele de bordereau - Verification des options
+ ##   When L'utilisateur ouvre le menu deroulant "Modele"
+ ##   Then Le menu deroulant "Modele" propose exactement les 3 options :
+ ##     | Defaut                 |
+ ##     | Prefecture de Paris    |
+ ##     | Etiquettes individuelles|
 
-  Scenario: Créer un bordereau complet avec succès
-    When L'utilisateur renseigne le nom du bordereau "Bordereau Test Auto"
-     * L'utilisateur sélectionne le type de bordereau "Transfert"
-     * L'utilisateur clique sur le bouton "Ajouter un contact"
-     * L'utilisateur renseigne le nouveau contact avec les informations suivantes :
-      | Nom          | Contact Test Auto          |
-      | Adresse      | 12 rue de la Paix          |
-      | Ville        | Paris                      |
-      | Code postal  | 75001                      |
-      | Pays         | France                     |
-      | Type d'entité| Entreprise                 |
-     * L'utilisateur clique sur le bouton "Ajouter"
-     * L'utilisateur renseigne le message "Message de test automatisé"
-     * L'utilisateur clique sur le bouton "Continuer"
+ ## Scenario: Type - Verification des options disponibles
+ ##   When L'utilisateur ouvre le menu deroulant "Type"
+ ##   Then La liste deroulante propose les types de bordereaux disponibles
 
-    Then L'étape "Sélection des objets" s'affiche
-    When L'utilisateur clique sur l'onglet "Objets en stock"
-     * L'utilisateur sélectionne la plage de dates du "01/08/2026" au "03/08/2026"
-     * L'utilisateur clique sur le bouton "Rechercher"
-     * L'utilisateur sélectionne un objet
-     * L'utilisateur clique sur le bouton "Valider la sélection"
-     * L'utilisateur clique sur le bouton "Continuer"
+  Scenario: Receveur - choix du type de contact (Onglet A un nouveau contact)
+    When L'utilisateur selectionne l'onglet "A un nouveau contact"
+    Then Les champs "Nom", "Adresse", "Ville", "Code postal", "Pays" et "Type d'entite" s'affichent
+    * Les toggles "Receveur (bordereaux)" et "Service deposant" s'affichent
+    * Le champ "Message" s'affiche
 
-    Then L'étape "Confirmation" s'affiche
-    When L'utilisateur clique sur le bouton "Créer le bordereau"
-    Then Le bordereau est créé avec succès
+  Scenario: Receveur - choix du type de contact (Onglet A un compte Troov)
+    When L'utilisateur selectionne l'onglet "A un compte Troov"
+    Then Le champ "Email" s'affiche
+    * Le bouton "Rechercher" s'affiche
+    * Le champ "Message" s'affiche

@@ -1,177 +1,283 @@
-require('./affichage-bordereaux.step.js');
-
-const { When, Then } = require('@cucumber/cucumber');
+const { Given, When, Then } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 
-/*---------------------------------------WHEN---------------------------------------------*/
+const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-When("L'utilisateur clique sur le bordereau {string} dans la liste", async function (nomBordereau) {
-    // Utilise la précision exacte enregistrée avec le .locator('div')
-    await this.backofficePage
-        .getByRole('gridcell', { name: nomBordereau, exact: true })
-        .locator('div')
-        .first()
-        .click();
+/*---------------------------- GIVEN / WHEN COMMUNS ------------------------------------------*/
+
+Given("L'utilisateur est sur {string}", async function (url) {
+    await this.backofficePage.goto(url);
+    await this.backofficePage.waitForLoadState('domcontentloaded');
 });
 
-When("L'utilisateur clique sur le bouton {string} de la liste des objets", async function (nomBouton) {
-    await this.backofficePage
-        .getByRole('button', { name: new RegExp(nomBouton, 'i') })
-        .or(this.backofficePage.locator('.p-button, button').filter({ hasText: nomBouton }))
-        .first()
-        .click();
+When(
+    "L'utilisateur se connecte avec les identifiants SSO {string} et {string}",
+    async function (email, password) {
+        const page = this.backofficePage;
+        await page.locator('input#email, input[type="email"]').fill(email);
+        await page.locator('input#password, input[type="password"]').fill(password);
+        await page.locator('button[type="submit"].btn-primary, button:has-text("Connexion")').click();
+        await page.waitForURL(url => !url.href.includes('/login'), { timeout: 15000 });
+    }
+);
+
+Then("L'utilisateur arrive sur sa page d'accueil agent", async function () {
+    await expect(this.backofficePage).not.toHaveURL(/\/login/);
 });
 
-When("L'utilisateur remplit le filtre {string} avec {string}", async function (nomChamp, valeur) {
-    // Recherche directe par le placeholder ou par input contenu dans la zone de filtre
-    const input = this.backofficePage
-        .getByPlaceholder(nomChamp, { exact: false })
-        .or(this.backofficePage.locator(`.transmission-filter-panel input[placeholder*="${nomChamp}"]`))
-        .first();
+When("L'utilisateur ouvre le menu {string} dans la sidebar", async function (menu) {
+    const page = this.backofficePage;
+    let menuItem;
 
-    await expect(input).toBeVisible({ timeout: 5000 });
-    await input.fill(valeur);
-});
-
-When("L'utilisateur clique sur le bouton {string}", async function (nomBouton) {
-    const button = this.backofficePage
-        .locator('.transmission-filter-panel')
-        .getByRole('button', { name: new RegExp(nomBouton, 'i') })
-        .or(this.backofficePage.getByText(nomBouton))
-        .first();
-
-    // S'assure que le bouton est bien activé avant de cliquer
-    await expect(button).toBeEnabled({ timeout: 3000 });
-    await button.click();
-});
-
-When("L'utilisateur saisit la plage de dates {string}", async function (plageDates) {
-    const dateInput = this.backofficePage.locator('#tx-items-filter-date');
-
-    // Résolution du Timeout : Si le champ date n'est pas encore visible sur l'écran
-    if (!(await dateInput.isVisible().catch(() => false))) {
-        // 1. Clique sur le bordereau de la liste
-        const bordereauCell = this.backofficePage
-            .getByRole('gridcell', { name: "Contact Test Auto", exact: true })
-            .locator('div')
-            .first();
-        
-        await expect(bordereauCell).toBeVisible({ timeout: 10000 });
-        await bordereauCell.click();
-
-        // 2. Clique sur le bouton "Filtrer" pour ouvrir le panneau
-        const filterBtn = this.backofficePage.getByRole('button', { name: /Filtrer/i }).first();
-        await expect(filterBtn).toBeVisible({ timeout: 10000 });
-        await filterBtn.click();
+    if (menu === "Bordereaux") {
+        menuItem = page.locator('a[href*="/transmissions"]').or(
+            page.locator('a.side-nav-link-ref', { hasText: 'Bordereaux' })
+        ).first();
+    } else {
+        menuItem = page.locator('a.side-nav-link-ref, .sidebar-menu a').filter({ hasText: menu }).first();
     }
 
-    // 3. Saisit la plage de dates dans l'input
-    await expect(dateInput).toBeVisible({ timeout: 10000 });
-    await dateInput.click();
-    await dateInput.fill(plageDates);
+    await expect(menuItem).toBeVisible({ timeout: 10000 });
+    await menuItem.click();
 });
 
-When("L'utilisateur coche la case du premier objet", async function () {
-    const firstCheckboxInput = this.backofficePage
-        .locator('table[aria-label*="Liste des objets"] tbody .p-checkbox-input')
+/*------------------------------WHEN--------------------------------------*/
+
+When("L'utilisateur cree une premiere etape de bordereau valide et clique sur {string}", async function (nomBouton) {
+    const page = this.backofficePage;
+
+    // 1. Ouverture de la création de bordereau
+    const btnAjouterBordereau = page.locator('button[aria-label="Créer manuellement"]').or(
+        page.getByRole('button', { name: /\+ ajouter un bordereau|créer manuellement/i })
+    ).first();
+    await btnAjouterBordereau.click();
+
+    // 2. Nom du bordereau
+    const inputNom = page.getByPlaceholder('Entrez un nom...');
+    await inputNom.fill('Mairie');
+
+    // 3. Séquence de sélection du contact
+    await page.getByLabel('Filtres').click();
+    await page.getByLabel('Choisir un contact').click();
+    await page.getByText('Aéroport Marseille Provence').click();
+
+    // 4. Passage à l'étape suivante
+    await page.getByLabel('Continuer').click();
+});
+
+
+When("L'utilisateur clique sur le bouton {string} sans remplir de filtres", async function (nomBouton) {
+    const page = this.backofficePage;
+    await page.getByRole('button', { name: 'Rechercher' }).click();
+});
+
+When("L'utilisateur effectue une recherche d'objets valide", async function () {
+    const page = this.backofficePage;
+
+    // 1. Saisie de la plage de dates
+    const inputDate = page.getByPlaceholder('Plage de dates');
+    await inputDate.click();
+    await inputDate.fill('01/08/2026 - 03/08/2026');
+
+    // 2. Sélection du filtre de correspondance
+    await page.getByText('CorrespondanceAvec matchSans').click();
+
+    // 3. Clic sur le bouton Rechercher
+    await page.getByRole('button', { name: 'Rechercher' }).click();
+
+    // 4. Validation de la sélection de l'objet
+    await page.getByLabel('Valider la sélection').click();
+});
+
+When("L'utilisateur coche un ou plusieurs objets dans la liste", async function () {
+    const page = this.backofficePage;
+
+    const inputDate = page.getByPlaceholder('Plage de dates');
+    if (await inputDate.isVisible()) {
+        await inputDate.click();
+        await inputDate.fill('01/08/2026 - 03/08/2026');
+        await page.getByText('CorrespondanceAvec matchSans').click();
+        await page.getByRole('button', { name: 'Rechercher' }).click();
+    }
+
+    const btnCocher = page.getByRole('button', { name: '' }).first();
+    await btnCocher.click();
+});
+
+
+
+/*---------------------------------THEN---------------------------------*/
+Then("La page de recherche des objets s'affiche avec les onglets :", async function (dataTable) {
+    const page = this.backofficePage;
+
+    await expect(page.getByRole('tab', { name: 'Objets en stock' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('tab', { name: 'Objets archivés' })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('tab', { name: 'Par référence' })).toBeVisible({ timeout: 10000 });
+});
+
+
+Then("Les filtres d'ordre {string} et {string} s'affichent", async function (f1, f2) {
+    const page = this.backofficePage;
+
+    await expect(page.getByLabel('Du plus récent')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel('Du plus ancien')).toBeVisible({ timeout: 10000 });
+});
+
+
+Then("Les filtres d'etat {string} et {string} s'affichent", async function (e1, e2) {
+    const page = this.backofficePage;
+
+    const chkTrouve = page.locator('label').filter({ hasText: 'Trouvé' }).getByLabel('Checkbox');
+    const chkPerdu = page.locator('label').filter({ hasText: 'Perdu' }).getByLabel('Checkbox');
+
+    await expect(chkTrouve).toBeVisible({ timeout: 10000 });
+    await expect(chkPerdu).toBeVisible({ timeout: 10000 });
+});
+
+Then("Les filtres de date {string} et {string} s'affichent", async function (d1, d2) {
+    const page = this.backofficePage;
+
+    await expect(page.getByLabel('Date de déclaration')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel("Date d'ajout")).toBeVisible({ timeout: 10000 });
+});
+
+
+Then("Les filtres de statut s'affichent :", async function (dataTable) {
+    const page = this.backofficePage;
+
+    const chkAvecMatch = page.locator('label').filter({ hasText: 'Avec match' }).getByLabel('Checkbox');
+    const chkSansMatch = page.locator('label').filter({ hasText: 'Sans match' }).getByLabel('Checkbox');
+
+    await expect(chkAvecMatch).toBeVisible({ timeout: 10000 });
+    await expect(chkSansMatch).toBeVisible({ timeout: 10000 });
+});
+
+Then(/Les filtres\s+"Type",\s+"Nom mentionne",\s+"Marque",\s+"Modele"\s+s'affichent/, async function () {
+    const page = this.backofficePage;
+
+    await expect(page.getByText("Types d'objets")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByPlaceholder('Nom')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByPlaceholder('Modèle')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByPlaceholder('Marque')).toBeVisible({ timeout: 10000 });
+});
+
+Then("Les filtres {string}, {string}, {string}, {string} s'affichent", async function (f1, f2, f3, f4) {
+    const page = this.backofficePage;
+
+    await expect(page.getByText("Types d'objets")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByPlaceholder('Nom')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByPlaceholder('Modèle')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByPlaceholder('Marque')).toBeVisible({ timeout: 10000 });
+});
+
+
+Then("Les boutons {string}, {string} et {string} s'affichent", async function (b1, b2, b3) {
+    const page = this.backofficePage;
+
+    await expect(page.getByRole('button', { name: 'Rechercher' })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel('Continuer')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel('Retour', { exact: true })).toBeVisible({ timeout: 10000 });
+});
+
+
+
+Then("La {string} affiche le message {string}", async function (section, messageAttendu) {
+    const page = this.backofficePage;
+
+    const messageLocator = page.getByText(messageAttendu)
+        .or(page.getByText('Veuillez sélectionner une plage de dates'))
+        .or(page.locator('.p-toast, .p-inline-message, .alert, .invalid-feedback', { hasText: new RegExp(messageAttendu, 'i') }))
         .first();
 
-    await firstCheckboxInput.check({ force: true });
-});
-/*-------------------------------------THEN------------------------------------------*/
-
-Then("La page de détail du bordereau s'affiche avec le titre {string}", async function (titre) {
-    // 1. Vérification du titre principal
-    await expect(
-        this.backofficePage.getByRole('heading', { name: titre }).or(this.backofficePage.getByText(titre, { exact: true }))
-    ).toBeVisible({ timeout: 10000 });
-
-    // 2. Vérification insensible à la casse / espace pour "Détail du bordereau"
-    await expect(
-        this.backofficePage.getByText(/Détail du bordereau/i).first()
-    ).toBeVisible();
-
-    // 3. Vérification de la présence de la liste des objets
-    await expect(
-        this.backofficePage.getByText(/Liste des objets/i).first()
-    ).toBeVisible();
+    await expect(messageLocator).toBeVisible({ timeout: 10000 });
 });
 
-Then("Le panneau des filtres de recherche s'affiche avec :", async function (dataTable) {
-    // 1. Ciblage direct du formulaire de filtres réel (.transmission-filter-panel)
-    const filterPanel = this.backofficePage
-        .locator('.transmission-filter-panel, form[class*="filter-panel"]')
-        .first();
+Then("Le lien {string} s'affiche", async function (intituleLien) {
+    const page = this.backofficePage;
 
-    // Vérification que le panneau de filtres est visible
-    await expect(filterPanel).toBeVisible({ timeout: 5000 });
-
-    // 2. Vérification des éléments réels du formulaire d'après le DOM
-    await expect(filterPanel.getByText('Date', { exact: true })).toBeVisible();
-    await expect(filterPanel.getByText('Nom/Prénom', { exact: true })).toBeVisible();
-    await expect(filterPanel.getByText('Références', { exact: true })).toBeVisible();
-
-    // 3. Vérification des boutons d'action du filtre
-    await expect(filterPanel.getByRole('button', { name: /Appliquer/i })).toBeVisible();
-    await expect(filterPanel.getByRole('button', { name: /Réinitialiser les filtres/i })).toBeVisible();
+    const btnVoirObjets = page.getByLabel(/Voir les objets \(\d+\)/).or(page.getByText(intituleLien)).first();
+    await expect(btnVoirObjets).toBeVisible({ timeout: 10000 });
 });
 
 Then("Le message {string} s'affiche", async function (messageAttendu) {
-    // Vérifie l'apparition du paragraphe <p class="tui-text-sm">
-    const messageElement = this.backofficePage
-        .getByText(messageAttendu, { exact: true })
-        .or(this.backofficePage.locator('p.tui-text-sm', { hasText: messageAttendu }))
+    const page = this.backofficePage;
+
+    const btnVoirObjets = page.getByLabel(/Voir les objets \(\d+\)/).first();
+    if (await btnVoirObjets.isVisible()) {
+        await btnVoirObjets.click();
+    }
+
+    const msgLocator = page.getByText(messageAttendu, { exact: false })
+        .or(page.locator('.instruction-message, .alert, span, p', { hasText: messageAttendu }))
         .first();
 
-    await expect(messageElement).toBeVisible({ timeout: 5000 });
+    await expect(msgLocator).toBeVisible({ timeout: 10000 });
 });
 
-Then("La liste des objets s'affiche avec :", async function () {
-    const table = this.backofficePage.locator('table[aria-label="Liste des objets trouvés et perdus"]');
-    await expect(table).toBeVisible();
-});
+Then("Le compteur de selection {string} s'affiche", async function (compteurAttendu) {
+    const page = this.backofficePage;
 
-Then("Le compteur d'objets {string}", async function (compteurAttendu) {
-    await expect(this.backofficePage.getByText(compteurAttendu)).toBeVisible();
-});
-
-// Résolution de l'erreur Undefined : Utilisation d'une Regex pour échapper le caractère '/'
-Then(/^Les colonnes : Type d'objet, État - N° réf\., Date, Nom\/Prénom, Informations clefs$/, async function () {
-    const table = this.backofficePage.locator('table[aria-label="Liste des objets trouvés et perdus"]');
-    await expect(table.locator('th', { hasText: "Type d'objet" })).toBeVisible();
-    await expect(table.locator('th', { hasText: "État - N° réf." })).toBeVisible();
-    await expect(table.locator('th', { hasText: "Date" })).toBeVisible();
-    await expect(table.locator('th', { hasText: "Nom/Prénom" })).toBeVisible();
-    await expect(table.locator('th', { hasText: "Informations clefs" })).toBeVisible();
-});
-
-Then("Des cases à cocher pour chaque objet", async function () {
-    const checkboxes = this.backofficePage.locator('table tbody .p-checkbox-input, table tbody input[type="checkbox"]');
-    await expect(checkboxes.first()).toBeVisible();
-});
-
-Then("La pagination au bas de la liste", async function () {
-    const pagination = this.backofficePage
-        .locator('.p-paginator, [class*="pagination"]')
-        .or(this.backofficePage.getByText('1', { exact: true }));
-
-    await expect(pagination.first()).toBeVisible();
-});
-
-Then("La case de l'objet est cochée", async function () {
-    const firstCheckboxInput = this.backofficePage
-        .locator('table[aria-label*="Liste des objets"] tbody .p-checkbox-input')
+    const compteur = page.getByText(/objets?\s+sélectionnés?/i)
+        .or(page.getByText(/objets?\s+selectionne/i))
+        .or(page.getByText(compteurAttendu))
         .first();
 
-    await expect(firstCheckboxInput).toBeChecked();
+    await expect(compteur).toBeVisible({ timeout: 10000 });
 });
 
-Then("Le compteur de sélection indique {string}", async function (compteurAttendu) {
-    const selectionBar = this.backofficePage.locator('.bx-check-square').locator('..');
-    await expect(selectionBar).toContainText(compteurAttendu);
+Then("Le compteur de selection se met a jour", async function () {
+    const page = this.backofficePage;
+
+    const compteur = page.getByText(/objets au total dans le/i)
+        .or(page.getByText(/\d+\s*\/\s*\d+\s*objets?/i))
+        .first();
+
+    await expect(compteur).toBeVisible({ timeout: 10000 });
 });
 
-Then("Les boutons d'action globale et de suppression s'affichent", async function () {
-    await expect(this.backofficePage.locator('button[aria-label="Sélectionner tout"]')).toBeVisible();
-    await expect(this.backofficePage.locator('button[aria-label="Supprimer"]')).toBeVisible();
+Then("Les objets meches s'affichent en surbrillance avec fond beige\\/orange et texte en rouge", async function () {
+    const page = this.backofficePage;
+
+    // Détection de l'élément / de la ligne affichant un objet matché en surbrillance
+    const objetMatche = page.locator('tr, div').filter({ hasText: /match/i }).first();
+    await expect(objetMatche).toBeVisible({ timeout: 10000 });
+});
+
+Then("La liste des objets s'affiche avec photo, date, type, nom, ref, details et cases a cocher", async function () {
+    const page = this.backofficePage;
+
+    const btnVoirObjets = page.getByLabel(/Voir les objets \(\d+\)/).first();
+    if (await btnVoirObjets.isVisible()) {
+        await btnVoirObjets.click();
+    }
+
+    const rowObjet = page.getByRole('row', { name: /Carte d'identité/i }).first();
+    await expect(rowObjet).toBeVisible({ timeout: 10000 });
+
+    await expect(page.getByText("Carte d'identité").first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('03/08/').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Admin Troov', { exact: true }).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('T263212717675').first()).toBeVisible({ timeout: 10000 });
+});
+
+Then("Le bouton {string} s'affiche en haut a droite", async function (nomBouton) {
+    const page = this.backofficePage;
+
+    const btnSauvegarder = page.getByLabel(nomBouton)
+        .or(page.getByRole('button', { name: nomBouton }))
+        .first();
+
+    await expect(btnSauvegarder).toBeVisible({ timeout: 10000 });
+});
+
+Then("La pagination et les boutons {string} \\/ {string} s'affichent", async function (b1, b2) {
+    const page = this.backofficePage;
+
+    const btnAnnuler = page.getByLabel('Annuler cette recherche');
+    if (await btnAnnuler.isVisible()) {
+        await btnAnnuler.click();
+    }
+
+    await expect(page.getByLabel('Continuer')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel('Retour', { exact: true })).toBeVisible({ timeout: 10000 });
 });

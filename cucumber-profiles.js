@@ -438,6 +438,40 @@ const testList = [
     feature: "src/troov-objets/bordereaux/features/exporter-donnees-bordereau.feature",
     step: "src/troov-objets/bordereaux/steps/exporter-donnees-bordereau.step.js"
   },
+
+  // Retrait
+  {
+    profileName: "troov-objets-signalement-objet-Retrait",
+    feature: "src/troov-objets/Retrait-expedition/features/Retrait.feature",
+    step: "src/troov-objets/Retrait-expedition/steps/Retrait.step.js"
+  },
+    // Expedition
+  {
+    profileName: "troov-objets-signalement-objet-Expedition",
+    feature: "src/troov-objets/Retrait-expedition/features/Expedition.feature",
+    step: "src/troov-objets/Retrait-expedition/steps/Expedition.step.js"
+  },
+
+  // Statistique-objets-trouves
+  {
+    profileName: "troov-objets-signalement-Statistique-objets-trouves",
+    feature: "src/troov-objets/Statistiques-objets-trouves/features/Statistiques-objets-trouves.feature",
+    step: "src/troov-objets/Statistiques-objets-trouves/steps/Statistiques-objets-trouves.step.js"
+  },
+
+    // Statistique-objets
+  {
+    profileName: "troov-objets-signalement-Statistique-objets-trouves",
+    feature: "src/troov-objets/Statistiques-objets-trouves/features/Statistiques-objets-trouves.feature",
+    step: "src/troov-objets/Statistiques-objets-trouves/steps/Statistiques-objets-trouves.step.js"
+  },
+
+  // Stock objets trouves
+  {
+    profileName: "troov-objets-signalement-Stock-objets-trouves",
+    feature: "src/troov-objets/Statistiques-objets-trouves/features/Stock-objets-trouves.feature",
+    step: "src/troov-objets/Statistiques-objets-trouves/steps/Stock-objets-trouves.step.js"
+  },
 ];
 
 
