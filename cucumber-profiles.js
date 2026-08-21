@@ -411,6 +411,18 @@ const testList = [
 		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-objets-perdu.feature",
 		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-objets-perdu.step.js"
 	},
+	// Signalement usager Statistique objets trouves
+	{
+		profileName: "troov-objets-signalement-Statistique-objets-trouves",
+		feature: "src/troov-objets/Statistiques-objets-trouves/features/Statistiques-objets-trouves.feature",
+		step: "src/troov-objets/Statistiques-objets-trouves/steps/Statistiques-objets-trouves.step.js"
+	},
+		// Signalement usager Stock objets trouves
+	{
+		profileName: "troov-objets-signalement-Stock-objets-trouves",
+		feature: "src/troov-objets/Statistiques-objets-trouves/features/Stock-objets-trouves.feature",
+		step: "src/troov-objets/Statistiques-objets-trouves/steps/Stock-objets-trouves.step.js"
+	},
 ];
 
 
