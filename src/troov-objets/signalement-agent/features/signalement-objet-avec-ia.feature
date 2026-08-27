@@ -1,4 +1,4 @@
-Feature: Signalement d'un objet trouvé avec IA
+Feature: Signalement d'un objet trouve avec IA
   Background:
     Given l'utilisateur est sur "http://localhost:3000/login"
     When L'utilisateur se connecte avec ces identifiants SSO
@@ -9,7 +9,7 @@ Feature: Signalement d'un objet trouvé avec IA
     Then Le formulaire de signalement avec IA s'ouvre
         * Le compteur de photos affiche "0/3"
 
-  Scenario: Ouvrir le formulaire via les boutons dédiés
+  Scenario: Ouvrir le formulaire via les boutons dédies
     When L'utilisateur clique sur le bouton "Signaler un objet"
     Then Le formulaire de signalement classique s'ouvre
 

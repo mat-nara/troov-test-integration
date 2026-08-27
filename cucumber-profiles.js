@@ -424,23 +424,23 @@ const testList = [
 		feature: "src/troov-objets/signalement-agent/features/connexion-agent.feature",
 		step: "src/troov-objets/signalement-agent/steps/connexion-agent.step.js"
 	},
-	// Signalement agent 
+	// Signaler un objet trouve sans IA 
    {
-        profileName: "signalement-agent",
-        feature: "src/troov-objets/signalement-agent/features/signalement-agent.feature",
-        step: "src/troov-objets/signalement-agent/steps/*.step.js"
+        profileName: "Signaler-un-objet-trouve-sans-IA",
+        feature: "src/troov-objets/signalement-agent/features/Signaler-un-objet-trouve-sans-IA.feature",
+        step: "src/troov-objets/signalement-agent/steps/Signaler-un-objet-trouve-sans-IA.step.js"
     },
 	// modification objet signalé 
   {
   profileName: "signalement-agent-modification-objet",
   feature: "src/troov-objets/signalement-agent/features/modification-objet.feature",
-  step: "src/troov-objets/signalement-agent/steps/{modification-objet,connexion-agent}.step.js"
+  step: "src/troov-objets/signalement-agent/steps/modification-objet.step.js"
 },
 // signalement objet avec IA 
   {
   profileName: "signalement-agent-signalement-objet-avec-ia",
   feature: "src/troov-objets/signalement-agent/features/signalement-objet-avec-ia.feature",
-  step: "src/troov-objets/signalement-agent/steps/{signalement-objet-avec-ia,connexion-agent}.step.js"
+  step: "src/troov-objets/signalement-agent/steps/signalement-objet-avec-ia.step.js"
 },
 // Objet lie 
   {

@@ -49,6 +49,7 @@ class CustomWorld {
     // Initialiser les pages
     this.terminalPage = await this.context.newPage();
     this.backofficePage = await this.context.newPage();
+    this.page = this.backofficePage;
     this.loginPage = new LoginPage(this.backofficePage);  // Page de connexion dans le backoffice
     this.calendarPage = new CalendarPage(this.backofficePage);
   }
