@@ -409,44 +409,35 @@ const testList = [
 
 	/***********************************************************************************************************************************************************************************************************/
 	/********************************************************************************************************/
-	/*  						TROOV OBJET 								*/
+	/*  						TROOV OBJETS PERDU 								*/
 	/********************************************************************************************************/
-	// Signalement usager objet trouvé
-	{
-		profileName: "troov-objets-signalement-usager-objets-perdu",
-		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-objets-perdu.feature",
-		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-objets-perdu.step.js"
-	},
-	// creation de compte
-	{
-		profileName: "troov-objets-signalement-usager-objets-perdu-creation-compte",
-		feature: "src/troov-objets/signalement-usager-objets-perdu/features/creation-compte.feature",
-		step: "src/troov-objets/signalement-usager-objets-perdu/steps/creation-compte.step.js"
-	},
 	// login
 		{
 			profileName: "troov-objets-signalement-usager-objets-perdu-connexion",
 			feature: "src/troov-objets/signalement-usager-objets-perdu/features/connexion.feature",
 			step: "src/troov-objets/signalement-usager-objets-perdu/steps/connexion.step.js"
 		},
-	//accueil
-		{
-    profileName: "troov-objets-signalement-usager-objets-perdu-accueil",
-    feature: "src/troov-objets/signalement-usager-objets-perdu/features/accueil.feature",
-    step: "src/troov-objets/signalement-usager-objets-perdu/steps/accueil.step.js"
-},
-//gestion-annonce
-		{
-    profileName: "troov-objets-signalement-usager-objets-perdu-gestion-annonce",
-    feature: "src/troov-objets/signalement-usager-objets-perdu/features/gestion-annonce.feature",
-    step: "src/troov-objets/signalement-usager-objets-perdu/steps/gestion-annonce.step.js"
-},
-//Gestion des objets trouvés
-		{
-    profileName: "troov-objets-signalement-usager-objets-perdu-Gestion-des-objets-trouves",
-    feature: "src/troov-objets/signalement-usager-objets-perdu/features/Gestion-des-objets-trouves.feature",
-    step: "src/troov-objets/signalement-usager-objets-perdu/steps/Gestion-des-objets-trouves.step.js"
-},
+
+// Signalement usager declaration objet perdu
+	{
+		profileName: "troov-objets-signalement-usager-declaration-objet-perdu",
+		feature: "src/troov-objets/signalement-usager-objets-perdu/features/declaration-objet-perdu.feature",
+		step: "src/troov-objets/signalement-usager-objets-perdu/steps/declaration-objet-perdu.step.js"
+	},
+
+	// Signalement usager declaration oic
+	{
+		profileName: "troov-objets-signalement-usager-declaration-oic",
+		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-declaration-oic.feature",
+		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-declaration-oic.step.js"
+	},
+	
+	// Signalement usager page partenaire
+	{
+		profileName: "troov-objets-signalement-usager-page-partenaire",
+		feature: "src/troov-objets/signalement-usager-objets-perdu/features/page-partenaire.feature",
+		step: "src/troov-objets/signalement-usager-objets-perdu/steps/page-partenaire.step.js"
+	},
 ];
 
 
