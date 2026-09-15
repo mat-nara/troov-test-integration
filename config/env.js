@@ -34,4 +34,24 @@ module.exports =  {
   troovPublicUserBackofficeURL: process.env.TROOV_PUBLIC_BACKOFFICE_URL || 'https://localhost:3000/fr/login', 
   troovPublicUserBackofficeUsername: process.env.TROOV_PUBLIC_BACKOFFICE_USERNAME || 'ethel_sanford@gmail.com', 
   troovPublicUserBackofficePassword: process.env.TROOV_PUBLIC_BACKOFFICE_PASSWORD || 'T&C-Oe4cMol4e!', 
+
+  usernameMairie: process.env.USERNAME_MAIRIE || 'mairie@troov.com',
+  passwordMairie: process.env.PASSWORD_MAIRIE || 'Hello(123)',
+
+  username: process.env.USER_PUBLIC_EMAIL || 'faniloniainaramahenintsoa@gmail.com',
+  password: process.env.USER_PUBLIC_PASSWORD || '1234$Fanilo',
+  userFullName: process.env.USER_PUBLIC_FULLNAME || 'Faniloniaina Ramahenintsoa',
+  troovURL: process.env.TROOV_URL || 'http://localhost:3000',
+
+
+  invalidUsername: process.env.USER_INVALID_EMAIL || 'utilisateur.inexistant@test.com',
+  invalidPassword: process.env.USER_INVALID_PASSWORD || 'MauvaisMotDePasse123!',
+
+  // Données de formulaire par défaut
+  defaultTestUser: {
+    firstName: process.env.TEST_FIRSTNAME || 'Fanilo',
+    lastName: process.env.TEST_LASTNAME || 'RAMAHENINTSOA',
+    phone: process.env.TEST_PHONE || '0612345678',
+    defaultPassword: process.env.TEST_PASSWORD || 'MotDePasseFort123!'
+  }
 };

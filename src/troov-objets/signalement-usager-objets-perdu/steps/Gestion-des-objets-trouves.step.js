@@ -1,5 +1,6 @@
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
+const config = require('../../../../config/env'); // Import de la configuration centralisée
 
 setDefaultTimeout(60000);
 
@@ -10,7 +11,6 @@ function versRegexInsensibleAuxAccents(texte) {
     return new RegExp(pattern, 'i');
 }
 
-// Clic natif Playwright uniquement
 async function clicSur(locator) {
     const element = locator.first();
     await element.waitFor({ state: 'visible', timeout: 10000 });
@@ -38,11 +38,15 @@ async function selectionnerDansDropdown(page, conteneur, labelChamp, valeur) {
 }
 
 async function seConnecterMairie(page) {
-    await page.goto("http://localhost:3000/login", { waitUntil: 'domcontentloaded' });
+    const baseUrl = config.troovURL;
+    const email = config.usernameMairie || 'mairie@troov.com';
+    const password = config.passwordMairie || 'Hello(123)';
+
+    await page.goto(`${baseUrl}/login`, { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveURL(/\/login/);
 
-    await page.getByLabel('Email').fill('mairie@troov.com');
-    await page.getByLabel('Mot de passe').fill('Hello(123)');
+    await page.getByLabel('Email').fill(email);
+    await page.getByLabel('Mot de passe').fill(password);
     await page.getByRole('button', { name: 'Connexion' }).click();
 
     await page.waitForURL(/\/dashboard\//, { timeout: 30000, waitUntil: 'domcontentloaded' });
@@ -55,7 +59,7 @@ function getBoutonOuLien(page, name) {
         .or(page.getByRole('link', { name: regex }));
 }
 
-//-----------------------------------------------------------GIVEN-------------------------------------------------------------
+//----------------------------------------------------------- GIVEN -------------------------------------------------------------
 
 Given("L'utilisateur mairie est connecte a son espace", async function () {
     await seConnecterMairie(this.backofficePage);
@@ -64,7 +68,7 @@ Given("L'utilisateur mairie est connecte a son espace", async function () {
     ).toBeVisible({ timeout: 10000 });
 });
 
-//-----------------------------------------------------------WHEN-------------------------------------------------------------
+//----------------------------------------------------------- WHEN -------------------------------------------------------------
 
 When("L'utilisateur clique sur le lien {string} dans le menu lateral", async function (linkLabel) {
     const lien = this.backofficePage.getByRole('link', { name: linkLabel, exact: true });
@@ -97,7 +101,7 @@ When("L'utilisateur renseigne le formulaire du proprietaire avec les information
     }
 });
 
-//-----------------------------------------------------------THEN-------------------------------------------------------------
+//----------------------------------------------------------- THEN -------------------------------------------------------------
 
 Then("La page {string} s'affiche", async function (pageName) {
     await expect(

@@ -1,14 +1,20 @@
+const path = require('path');
 const { Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
+
+// Importation de la configuration centralisée
+const config = require(path.resolve(process.cwd(), 'config/env.js'));
 
 setDefaultTimeout(60000);
 
 async function seConnecter(page) {
-    await page.goto("http://localhost:3000/login", { waitUntil: 'domcontentloaded' });
+    // Utilisation de l'URL centralisée
+    await page.goto(`${config.troovURL}/login`, { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveURL(/\/login/);
 
-    await page.getByLabel('Email').fill('faniloniainaramahenintsoa@gmail.com');
-    await page.getByLabel('Mot de passe').fill('1234$Fanilo');
+    // Utilisation des identifiants centralisés
+    await page.getByLabel('Email').fill(config.username);
+    await page.getByLabel('Mot de passe').fill(config.password);
 
     const bouton = page.getByRole('button', { name: 'Connexion' });
     await bouton.waitFor({ state: 'visible', timeout: 10000 });
@@ -20,7 +26,6 @@ async function seConnecter(page) {
     });
 }
 
-// Un lien du menu lateral peut être rendu comme <button> ou <a> selon l'écran
 function getBoutonOuLien(page, name) {
     return page.getByRole('button', { name }).or(page.getByRole('link', { name }));
 }
@@ -61,7 +66,6 @@ Given("L'utilisateur est sur la page {string}", async function (pageName) {
         return;
     }
 
-    // Cas générique : on vérifie juste qu'un titre correspondant s'affiche
     await expect(
         this.backofficePage.getByRole('heading', { name: pageName, exact: false })
             .or(this.backofficePage.getByTitle(pageName))
@@ -79,7 +83,6 @@ When("L'utilisateur clique sur le bouton {string}", async function (buttonLabel)
     const element = getBoutonOuLien(this.backofficePage, buttonLabel);
 
     if (buttonLabel === "Renvoyer l'email de confirmation") {
-        // On attend la requête de renvoi en parallèle du clic
         await Promise.all([
             this.backofficePage.waitForResponse(
                 resp => /resend|confirm|email/i.test(resp.url()) && resp.request().method() === 'POST',
@@ -134,7 +137,8 @@ Then("La categorie, la date et le lieu de l'objet sont affiches", async function
 });
 
 Then("Le nom du declarant est affiche", async function () {
-    await expect(this.backofficePage.getByText('Faniloniaina Ramahenintsoa')).toBeVisible({ timeout: 10000 });
+    // Utilisation de la valeur centralisée
+    await expect(this.backofficePage.getByText(config.userFullName)).toBeVisible({ timeout: 10000 });
 });
 
 Then("Les boutons {string} et {string} sont disponibles", async function (bouton1, bouton2) {
@@ -147,14 +151,12 @@ Then("Le bouton {string} est visible en haut de la page", async function (button
 });
 
 Then("L'utilisateur est redirige vers le formulaire de declaration d'objet perdu ou trouve", async function () {
-    // Le clic ouvre une modale plutôt qu'une nouvelle page
     const formulaire = this.backofficePage.locator('form')
         .or(this.backofficePage.getByRole('dialog'))
         .or(this.backofficePage.getByRole('heading', { name: /signaler|déclaration/i }));
 
     await expect(formulaire.first()).toBeVisible({ timeout: 10000 });
 
-    // Retour à l'état initial
     await clicSur(this.backofficePage.getByRole('link', { name: 'Accueil', exact: true }));
     await expect(this.backofficePage.getByTitle('Accueil')).toBeVisible({ timeout: 10000 });
 });
