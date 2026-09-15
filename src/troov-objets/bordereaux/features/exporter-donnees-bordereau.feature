@@ -1,11 +1,10 @@
 Feature: Export des donnees (Etape 3) & Fiche bordereau
 
-  Background:
+Background:
     Given L'utilisateur est sur "http://localhost:3000/login"
     When L'utilisateur se connecte avec les identifiants SSO "mairie@troov.com" et "Hello(123)"
     Then L'utilisateur arrive sur sa page d'accueil agent
     When L'utilisateur ouvre le menu "Bordereaux" dans la sidebar
-    * L'utilisateur complete la selection et la sauvegarde des objets puis clique sur "Suivant"
 
 ##  Scenario: Etape 3 - Exporter les donnees (Recapitulatif)
 ##    Then La section "Informations sur mon bordereau" s'affiche avec : Nom, Modele, Type, Date d'envoi, Receveur, Message
@@ -18,7 +17,7 @@ Feature: Export des donnees (Etape 3) & Fiche bordereau
 ##    When L'utilisateur clique sur le bouton "Exporter les donnees"
 ##    Then Un menu deroulant s'affiche avec les deux formats d'export :
 ##      | EXCEL |
-##     | PDF   |
+##      | PDF   |
 
 ##  Scenario: Exporter en Excel - Choix des colonnes
 ##    When L'utilisateur selectionne le format "EXCEL"
@@ -26,9 +25,9 @@ Feature: Export des donnees (Etape 3) & Fiche bordereau
 ##    * Le bouton "Selectionner tout" s'affiche en haut a droite
 ##    * Le bouton "EXCEL" s'affiche en bas pour lancer l'export
 
-##  Scenario: Export Excel - Telechargement du fichier
-##    When L'utilisateur choisit ses colonnes et clique sur le bouton "EXCEL"
-##    Then Le fichier au format Excel se telecharge correctement sur le poste de l'utilisateur
+Scenario: Export Excel - Telechargement du fichier
+    When L'utilisateur clique sur le bouton d'export "EXCEL"
+    Then Le fichier au format "Excel" se télécharge correctement
 
 ##  Scenario: Fiche bordereau apres "Terminer"
 ##    When L'utilisateur clique sur le bouton "Terminer"

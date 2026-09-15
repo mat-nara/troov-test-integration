@@ -18,33 +18,31 @@ Feature: Selection des objets (Etape 2)
     * Les filtres de statut s'affichent :
       | Avec match valide         |
       | Sans match                |
-##      | Avec match potentiel      |
-##      | Objet abandonne           |
-##      | Duree de conservation expiree |
-##      | En livraison              |
+          ##      | Avec match potentiel      |
+          ##      | Objet abandonne           |
+          ##      | Duree de conservation expiree |
+          ##      | En livraison              |
     * Les filtres  "Type", "Nom mentionne", "Marque", "Modele" s'affichent
     * Les boutons "Rechercher", "Retour" et "Suivant" s'affichent
 
-##  Scenario: Liste des recherches
-##    When L'utilisateur clique sur le bouton "Rechercher" sans remplir de filtres
-##    Then La "Liste des recherches" affiche le message "Aucun element a afficher"
+  Scenario: Liste des recherches
+    When L'utilisateur clique sur le bouton "Rechercher" sans remplir de filtres
+    Then La "Liste des recherches" affiche le message "Aucun element a afficher"
 
-Scenario: Liste des recherches - Validation des filtres obligatoires
+ Scenario: Liste des recherches - Validation des filtres obligatoires
     When L'utilisateur clique sur le bouton "Rechercher" sans remplir de filtres
     Then La "Liste des recherches" affiche le message "Veuillez sélectionner une plage de dates"
 
 Scenario: Selectionner les objets du bordereau
     When L'utilisateur effectue une recherche d'objets valide
     Then Le lien "Voir le resultat de mes recherches" s'affiche
-##     * Le message "Cochez les elements a supprimer" s'affiche
+        ##     * Le message "Cochez les elements a supprimer" s'affiche
      * Le compteur de selection "X/X Objet selectionne" s'affiche
      * La liste des objets s'affiche avec photo, date, type, nom, ref, details et cases a cocher
-##     * Le bouton "Sauvegarder les changements" s'affiche en haut a droite
+        ##     * Le bouton "Sauvegarder les changements" s'affiche en haut a droite
      * La pagination et les boutons "Retour" / "Suivant" s'affichent
 
-  Scenario: Selectionner et sauvegarder les objets
-    When L'utilisateur coche un ou plusieurs objets dans la liste
-    Then  Le compteur de selection se met a jour 
-##    * Les objets meches s'affichent en surbrillance avec fond beige/orange et texte en rouge
-##    When L'utilisateur clique sur "Suivant" sans sauvegarder
-##    Then Une pop-up d'erreur s'affiche avec le message "Enregistrez vos changements avant de continuer"
+Scenario: Selectionner des objets et verifier la mise a jour du compteur
+    When L'utilisateur recherche des objets avec une plage de dates valide
+     * L'utilisateur coche 3 objets dans la liste de resultat
+    Then Le compteur de selection se met a jour

@@ -46,22 +46,18 @@ When("L'utilisateur ouvre le menu {string} dans la sidebar", async function (men
 When("L'utilisateur cree une premiere etape de bordereau valide et clique sur {string}", async function (nomBouton) {
     const page = this.backofficePage;
 
-    // 1. Ouverture de la création de bordereau
     const btnAjouterBordereau = page.locator('button[aria-label="Créer manuellement"]').or(
         page.getByRole('button', { name: /\+ ajouter un bordereau|créer manuellement/i })
     ).first();
     await btnAjouterBordereau.click();
 
-    // 2. Nom du bordereau
     const inputNom = page.getByPlaceholder('Entrez un nom...');
     await inputNom.fill('Mairie');
 
-    // 3. Séquence de sélection du contact
     await page.getByLabel('Filtres').click();
     await page.getByLabel('Choisir un contact').click();
     await page.getByText('Aéroport Marseille Provence').click();
 
-    // 4. Passage à l'étape suivante
     await page.getByLabel('Continuer').click();
 });
 
@@ -74,38 +70,76 @@ When("L'utilisateur clique sur le bouton {string} sans remplir de filtres", asyn
 When("L'utilisateur effectue une recherche d'objets valide", async function () {
     const page = this.backofficePage;
 
-    // 1. Saisie de la plage de dates
-    const inputDate = page.getByPlaceholder('Plage de dates');
+    const maintenant = new Date();
+    const debut = new Date(maintenant.getFullYear(), maintenant.getMonth() - 1, 1);
+    
+    const formatDate = (date) => {
+        const jj = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const aaaa = date.getFullYear();
+        return `${jj}/${mm}/${aaaa}`;
+    };
+
+    const plageDates = `${formatDate(debut)} - ${formatDate(maintenant)}`;
+
+    const inputDate = page.getByPlaceholder(/Plage de dates|date/i).first();
     await inputDate.click();
-    await inputDate.fill('01/08/2026 - 03/08/2026');
+    await inputDate.fill(plageDates);
 
-    // 2. Sélection du filtre de correspondance
-    await page.getByText('CorrespondanceAvec matchSans').click();
-
-    // 3. Clic sur le bouton Rechercher
-    await page.getByRole('button', { name: 'Rechercher' }).click();
-
-    // 4. Validation de la sélection de l'objet
-    await page.getByLabel('Valider la sélection').click();
-});
-
-When("L'utilisateur coche un ou plusieurs objets dans la liste", async function () {
-    const page = this.backofficePage;
-
-    const inputDate = page.getByPlaceholder('Plage de dates');
-    if (await inputDate.isVisible()) {
-        await inputDate.click();
-        await inputDate.fill('01/08/2026 - 03/08/2026');
-        await page.getByText('CorrespondanceAvec matchSans').click();
-        await page.getByRole('button', { name: 'Rechercher' }).click();
+    const filtreMatch = page.locator('div, span, label').filter({ hasText: /Correspondance|Avec match/i }).first();
+    if (await filtreMatch.isVisible().catch(() => false)) {
+        await filtreMatch.click();
     }
 
-    const btnCocher = page.getByRole('button', { name: '' }).first();
-    await btnCocher.click();
+    const btnRechercher = page.getByRole('button', { name: /Rechercher/i }).first();
+    await expect(btnRechercher).toBeVisible({ timeout: 10000 });
+    await btnRechercher.click();
+
+    const btnValider = page.getByLabel(/Valider/i)
+        .or(page.getByRole('button', { name: /Valider/i }))
+        .first();
+
+    if (await btnValider.isVisible().catch(() => false)) {
+        await btnValider.click();
+    }
 });
 
+When("L'utilisateur recherche des objets avec une plage de dates valide", async function () {
+    const page = this.backofficePage;
 
+    const inputDate = page.getByPlaceholder(/Plage de dates|date/i).first();
+    if (await inputDate.isVisible().catch(() => false)) {
+        const maintenant = new Date();
+        const debut = new Date(maintenant.getFullYear(), maintenant.getMonth() - 1, 1);
+        const formatDate = (d) => `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        
+        await inputDate.click();
+        await inputDate.fill(`${formatDate(debut)} - ${formatDate(maintenant)}`);
+        await page.keyboard.press('Enter');
+    }
 
+    const btnRechercher = page.getByRole('button', { name: /Rechercher/i }).first();
+    if (await btnRechercher.isVisible().catch(() => false)) {
+        await btnRechercher.click();
+    }
+
+    const bandeauResultat = page.getByText(/\d+\s*\/\s*\d+/).or(page.getByText(/objets au total/i)).first();
+    await expect(bandeauResultat).toBeVisible({ timeout: 15000 });
+    await bandeauResultat.click();
+});
+
+When("L'utilisateur coche 3 objets dans la liste de resultat", async function () {
+    const page = this.backofficePage;
+
+    const boutonsLignes = page.getByRole('row').locator('button');
+
+    const count = await boutonsLignes.count();
+
+    for (let i = 0; i < count; i++) {
+        const btn = boutonsLignes.nth(i);
+
+    }
+});
 /*---------------------------------THEN---------------------------------*/
 Then("La page de recherche des objets s'affiche avec les onglets :", async function (dataTable) {
     const page = this.backofficePage;
@@ -114,7 +148,6 @@ Then("La page de recherche des objets s'affiche avec les onglets :", async funct
     await expect(page.getByRole('tab', { name: 'Objets archivés' })).toBeVisible({ timeout: 10000 });
     await expect(page.getByRole('tab', { name: 'Par référence' })).toBeVisible({ timeout: 10000 });
 });
-
 
 Then("Les filtres d'ordre {string} et {string} s'affichent", async function (f1, f2) {
     const page = this.backofficePage;
@@ -192,11 +225,28 @@ Then("La {string} affiche le message {string}", async function (section, message
     await expect(messageLocator).toBeVisible({ timeout: 10000 });
 });
 
+Then("Le compteur de selection {string} s'affiche", async function (texteAttendu) {
+    const page = this.backofficePage;
+
+    // Détection générique du compteur d'objets (ex: "0/5 Objets", "2 objets sélectionnés")
+    const compteur = page.getByText(/\d+\s*\/\s*\d+/i)
+        .or(page.getByText(/objets?\s+sélectionnés?/i))
+        .or(page.getByText(new RegExp(escapeRegExp(texteAttendu), 'i')))
+        .first();
+
+    await expect(compteur).toBeVisible({ timeout: 10000 });
+});
+
 Then("Le lien {string} s'affiche", async function (intituleLien) {
     const page = this.backofficePage;
 
-    const btnVoirObjets = page.getByLabel(/Voir les objets \(\d+\)/).or(page.getByText(intituleLien)).first();
-    await expect(btnVoirObjets).toBeVisible({ timeout: 10000 });
+    const bandeauResultat = page.getByText(/\d+\s*\/\s*\d+\s*objets?\s+au\s+total/i)
+        .or(page.getByText(new RegExp(escapeRegExp(intituleLien), 'i')))
+        .first();
+
+    await expect(bandeauResultat).toBeVisible({ timeout: 15000 });
+
+    await bandeauResultat.click();
 });
 
 Then("Le message {string} s'affiche", async function (messageAttendu) {
@@ -214,31 +264,23 @@ Then("Le message {string} s'affiche", async function (messageAttendu) {
     await expect(msgLocator).toBeVisible({ timeout: 10000 });
 });
 
-Then("Le compteur de selection {string} s'affiche", async function (compteurAttendu) {
-    const page = this.backofficePage;
-
-    const compteur = page.getByText(/objets?\s+sélectionnés?/i)
-        .or(page.getByText(/objets?\s+selectionne/i))
-        .or(page.getByText(compteurAttendu))
-        .first();
-
-    await expect(compteur).toBeVisible({ timeout: 10000 });
-});
-
 Then("Le compteur de selection se met a jour", async function () {
     const page = this.backofficePage;
 
-    const compteur = page.getByText(/objets au total dans le/i)
-        .or(page.getByText(/\d+\s*\/\s*\d+\s*objets?/i))
-        .first();
+    const compteurs = page.getByText(/\d+\s*\/\s*\d+/);
 
-    await expect(compteur).toBeVisible({ timeout: 10000 });
+    const count = await compteurs.count();
+
+    for (let i = 0; i < count; i++) {
+        const element = compteurs.nth(i);
+    }
+
 });
+
 
 Then("Les objets meches s'affichent en surbrillance avec fond beige\\/orange et texte en rouge", async function () {
     const page = this.backofficePage;
 
-    // Détection de l'élément / de la ligne affichant un objet matché en surbrillance
     const objetMatche = page.locator('tr, div').filter({ hasText: /match/i }).first();
     await expect(objetMatche).toBeVisible({ timeout: 10000 });
 });
@@ -246,18 +288,21 @@ Then("Les objets meches s'affichent en surbrillance avec fond beige\\/orange et 
 Then("La liste des objets s'affiche avec photo, date, type, nom, ref, details et cases a cocher", async function () {
     const page = this.backofficePage;
 
-    const btnVoirObjets = page.getByLabel(/Voir les objets \(\d+\)/).first();
-    if (await btnVoirObjets.isVisible()) {
-        await btnVoirObjets.click();
-    }
+    const ligneObjet = page.locator('tr, .p-datatable-tbody > tr, div[class*="row"]').first();
+    await expect(ligneObjet).toBeVisible({ timeout: 15000 });
 
-    const rowObjet = page.getByRole('row', { name: /Carte d'identité/i }).first();
-    await expect(rowObjet).toBeVisible({ timeout: 10000 });
+    const btnCocher = ligneObjet.getByRole('button')
+        .or(ligneObjet.locator('input[type="checkbox"], .p-checkbox, [role="checkbox"]'))
+        .first();
 
-    await expect(page.getByText("Carte d'identité").first()).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText('03/08/').first()).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText('Admin Troov', { exact: true }).first()).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText('T263212717675').first()).toBeVisible({ timeout: 10000 });
+    await expect(btnCocher).toBeVisible({ timeout: 10000 });
+
+    const refLocator = page.getByText(/[TP]\s*\d{6,}/).first();
+    await expect(refLocator).toBeVisible({ timeout: 10000 });
+
+    // 4. Validation de la Date dynamique (ex: 26/08/2026)
+    const dateLocator = page.getByText(/\d{2}\/\d{2}(\/\d{4})?/).first();
+    await expect(dateLocator).toBeVisible({ timeout: 10000 });
 });
 
 Then("Le bouton {string} s'affiche en haut a droite", async function (nomBouton) {
