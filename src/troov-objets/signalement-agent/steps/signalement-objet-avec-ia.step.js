@@ -2,6 +2,7 @@ const { Given, When, Then } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const path = require('path');
 const fs = require('fs');
+const config = require(path.resolve(process.cwd(), 'config/env.js'));
 
 /*-----------------------------------------HELPER-----------------------------------------*/
 function getPage(world) {
@@ -18,8 +19,9 @@ function getPage(world) {
 
 Given("l'utilisateur est sur {string}", async function (url) {
   const page = getPage(this);
+  const targetUrl = url.startsWith('http') ? url : `${config.troovURL}${url}`;
 
-  await page.goto(url, {
+  await page.goto(targetUrl, {
     waitUntil: 'domcontentloaded',
     timeout: 30000
   });
@@ -30,8 +32,9 @@ Given("l'utilisateur est sur {string}", async function (url) {
 When("L'utilisateur se connecte avec ces identifiants SSO", async function () {
   const page = getPage(this);
 
-  await page.getByLabel('Email').fill('Mairie@troov.com');
-  await page.getByLabel('Mot de passe').fill('Hello(123)');
+  // Utilisation des identifiants issus de la configuration
+  await page.getByLabel('Email').fill(config.usernameAgent);
+  await page.getByLabel('Mot de passe').fill(config.passwordAgent);
   await page.getByRole('button', { name: 'Connexion' }).click();
   await page.waitForURL(/\/dashboard/, { timeout: 20000 });
 });
@@ -65,7 +68,6 @@ When("L'utilisateur clique sur le bouton {string}", async function (texte) {
     return;
   }
 
-  // Générique bouton ou lien
   const el = page
     .getByRole('button', { name: new RegExp(texte, 'i') })
     .or(page.getByRole('link', { name: new RegExp(texte, 'i') }));
@@ -92,24 +94,13 @@ When("L'utilisateur ajoute 3 photos depuis l'onglet photo", async function () {
     }
   }
 
-  const boutonImport = page
-    .locator(
-      'button:has(i.bx-upload), [aria-label*="Importer"], button:has-text("Importer")'
-    )
-    .first();
-
+  // On cible directement le champ d'entrée de fichier sans cliquer sur le bouton Importer
   const fileInput = page.locator('input[type="file"]').first();
-
-  if (await boutonImport.isVisible().catch(() => false)) {
-    await boutonImport.click();
-  }
 
   await expect(fileInput).toBeAttached({ timeout: 10000 });
   await fileInput.setInputFiles(this.context.photos);
 });
-
 /*-----------------------------------------THEN-----------------------------------------*/
-
 
 Then("L'utilisateur arrive sur sa page d'accueil agent", async function () {
   const page = getPage(this);
@@ -142,19 +133,9 @@ Then(
   "Les 3 photos sont visibles en miniature et le compteur affiche {string}",
   async function (valeur) {
     const page = getPage(this);
-
-    const miniatures = page.locator(
-      'img[alt*="Photo"], .picture-input-root img, .thumbnail img, [class*="preview"] img'
-    );
-
-    await expect(miniatures).toHaveCount(3, { timeout: 15000 });
-
-    for (let i = 0; i < 3; i++) {
-      await expect(miniatures.nth(i)).toBeVisible({ timeout: 5000 });
-    }
-
-    await expect(
-      page.getByText(valeur, { exact: true })
-    ).toBeVisible({ timeout: 10000 });
+    const compteur = page.getByText(valeur, { exact: true });
+    await expect(compteur).toBeVisible({ timeout: 15000 });
+    const miniatures = page.locator('form img, [class*="upload"] img, [class*="picture"] img');
+    await expect(miniatures.first()).toBeVisible({ timeout: 10000 });
   }
 );

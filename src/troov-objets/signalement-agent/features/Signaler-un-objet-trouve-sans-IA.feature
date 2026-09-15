@@ -26,10 +26,11 @@ Feature: Signaler un objet trouve sans IA
     Then Les champs "trouve", "date" et "partenaires" sont pre-remplis automatiquement
     * Les champs pre-remplis restent modifiables
 
-##  Scenario: Ajouter une photo dans le formulaire de signalement
-##    Given L agent est sur le formulaire de signalement
-##    When L agent selectionne et importe une photo depuis l ordinateur
-##    Then La photo est chargee avec succes dans le formulaire
+Scenario: Ajouter une photo dans le formulaire de signalement
+    Given L agent est sur le formulaire de signalement
+    When L agent selectionne un objet dans la liste
+      * L agent selectionne et importe une photo depuis l ordinateur
+    Then La photo est chargee avec succes dans le formulaire
 
 ##  Scenario: Cocher impression de ticket avec QR code
 ##    Given L agent est sur le formulaire de signalement

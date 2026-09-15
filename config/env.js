@@ -11,6 +11,10 @@ if (!process.env.BROWSER) {
   throw new Error('BROWSER environment variable is not set.');
 }
 
+
+
+
+
 module.exports =  {
   troovCafUserArrivalURL: process.env.TROOV_CAF_USER_ARRIVAL_URL || 'https://lib.dev.caf.troovrdv.com/troovrdv-front/cnaf/enrollment', 
   troovCafUserBackofficeURL: process.env.TROOV_CAF_BACKOFFICE_URL || 'https://dev.caf.troovrdv.com/fr/login', 
@@ -34,4 +38,9 @@ module.exports =  {
   troovPublicUserBackofficeURL: process.env.TROOV_PUBLIC_BACKOFFICE_URL || 'https://localhost:3000/fr/login', 
   troovPublicUserBackofficeUsername: process.env.TROOV_PUBLIC_BACKOFFICE_USERNAME || 'ethel_sanford@gmail.com', 
   troovPublicUserBackofficePassword: process.env.TROOV_PUBLIC_BACKOFFICE_PASSWORD || 'T&C-Oe4cMol4e!', 
+  
+  // Nouveaux éléments ajoutés / mis à jour
+  troovURL: process.env.TROOV_URL || 'http://localhost:3000',
+  usernameAgent: process.env.TROOV_AGENT_USERNAME || 'Mairie@troov.com',
+  passwordAgent: process.env.TROOV_AGENT_PASSWORD || 'Hello(123)',
 };

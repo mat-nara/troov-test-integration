@@ -1,11 +1,17 @@
 const { Given, When, Then } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
+const path = require('path');
+
+// Chargement de la configuration
+const config = require(path.resolve(process.cwd(), 'config/env.js'));
 
 /*-----------------------------------------GIVEN-----------------------------------------*/
 
 Given("l'utilisateur est sur {string}", async function (url) {
   const page = this.backofficePage;
-  await page.goto(url, {
+  const targetUrl = url.startsWith('http') ? url : `${config.troovURL}${url}`;
+  
+  await page.goto(targetUrl, {
     waitUntil: 'domcontentloaded',
     timeout: 30000
   });
@@ -30,8 +36,9 @@ Given("L'utilisateur se trouve sur la page \"Mes objets\"", async function () {
 
 When("L'utilisateur se connecte avec ces identifiants SSO", async function () {
   const page = this.backofficePage;
-  await page.getByLabel('Email').fill('Mairie@troov.com');
-  await page.getByLabel('Mot de passe').fill('Hello(123)');
+  await page.getByLabel('Email').fill(config.usernameAgent);
+  await page.getByLabel('Mot de passe').fill(config.passwordAgent);
+  
   await page.getByRole('button', { name: /connexion/i }).click();
   await page.waitForURL(/\/dashboard/, { timeout: 20000 });
 });
@@ -44,8 +51,6 @@ When("L'utilisateur clique sur l'objet", async function () {
   await expect(premiereLigne).toBeVisible({
     timeout: 15000
   });
-  // On clique sur la cellule de l'objet
-  // pour eviter la checkbox.
   await premiereLigne
     .locator('td')
     .nth(1)
@@ -125,8 +130,6 @@ Then("La fiche de l'objet s'affiche", async function () {
 
 Then("La fiche de l'objet s'ouvre", async function () {
   const page = this.backofficePage;
-  // On verifie un element propre au mode edition
-  // (le bouton "Modifier la fiche" a deja disparu a ce stade).
   const boutonCouleur = page.getByRole('button', {
     name: /gris|noir/i
   }).first();
@@ -151,8 +154,6 @@ Then("Les modifications de l'objet sont possibles", async function () {
 
 Then("Les modifications de l'objet sont enregistrees", async function () {
   const page = this.backofficePage;
-  // Verification que le bouton Enregistrer n'est plus disponible
-  // apres la sauvegarde.
   const boutonEnregistrer = page.getByLabel('Enregistrer');
   await expect(boutonEnregistrer).not.toBeVisible({
     timeout: 10000

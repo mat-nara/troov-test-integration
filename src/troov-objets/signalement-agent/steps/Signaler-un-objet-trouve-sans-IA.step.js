@@ -212,7 +212,7 @@ When('L\'utilisateur se connecte avec ces identifiants SSO', async function () {
 
 
 When('L agent clique sur le bouton {string}', async function (buttonName) {
-  // Cas spécifique "Signaler un objet"
+
   if (/signaler un objet/i.test(buttonName)) {
     const link = this.page.locator('a.alert-item-btn', {
       hasText: /Signaler un objet/i
@@ -220,8 +220,6 @@ When('L agent clique sur le bouton {string}', async function (buttonName) {
 
     await expect(link).toBeVisible({ timeout: 10000 });
     await expect(link).toBeEnabled();
-
-    // Attendre la navigation en même temps que le clic
     await Promise.all([
       this.page.waitForURL(/\/items\/add/, { timeout: 15000 }),
       link.click()
@@ -351,64 +349,25 @@ When('L agent remplit les champs optionnels du formulaire', async function () {
     );
   }
 });
+When('L agent selectionne un objet dans la liste', async function () {
+  const categoryBags = this.page.locator('#category-picker__category__bags');
+  await expect(categoryBags).toBeVisible({ timeout: 10000 });
+  await categoryBags.click();
 
-When('L agent selectionne et importe une photo depuis l ordinateur', async function () {
-
-  const fileNames = [
-    'cartable 1.jpg',
-    'cartable 2.jpg',
-    'cartable 3.jpg'
-  ];
-
-  const imagePaths = fileNames.map(
-    fileName =>
-      path.resolve(
-        __dirname,
-        '../fixtures',
-        fileName
-      )
-  );
-
-  for (const imagePath of imagePaths) {
-
-    if (!fs.existsSync(imagePath)) {
-      throw new Error(
-        `Fichier introuvable : ${imagePath}`
-      );
-    }
-  }
-
-  const importImages = this.page.getByText(
-    'Importer des images',
-    {
-      exact: true
-    }
-  );
-
-  await expect(importImages).toBeVisible({
-    timeout: 10000
-  });
-
-  await importImages.click();
-
-  // Chercher le input file
-  const fileInput = this.page.locator(
-    'input[type="file"]'
-  );
-
-  await expect(fileInput).toBeAttached({
-    timeout: 10000
-  });
-
-  await fileInput.setInputFiles(
-    imagePaths
-  );
-
-  console.log(
-    '✓ Photos importées avec succès'
-  );
+  const itemTypeBag = this.page.locator('#category-picker__item-type__bag');
+  await expect(itemTypeBag).toBeVisible({ timeout: 10000 });
+  await itemTypeBag.click();
 });
 
+When('L agent selectionne et importe une photo depuis l ordinateur', async function () {
+  const fileNames = ['cartable 1.jpg', 'cartable 2.jpg', 'cartable 3.jpg'];
+  const imagePaths = fileNames.map(file => path.resolve(__dirname, '../fixtures', file));
+
+  // Une fois l'objet cliqué, l'input file devient disponible dans le DOM
+  const fileInput = this.page.locator('.picture-input-root input[type="file"]');
+  await fileInput.waitFor({ state: 'attached', timeout: 10000 });
+  await fileInput.setInputFiles(imagePaths);
+});
 
 /*----------------------------------THEN------------------------------*/
 
@@ -418,7 +377,6 @@ Then('L\'utilisateur arrive sur sa page d\'accueil agent', async function () {
     /\/dashboard/
   );
 });
-
 
 Then('La page de signalement s affiche', async function () {
   await expect(this.page).toHaveURL(/\/items\/add/, {

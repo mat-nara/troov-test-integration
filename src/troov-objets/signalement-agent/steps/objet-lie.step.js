@@ -3,6 +3,9 @@ const { expect } = require('@playwright/test');
 const path = require('path');
 const fs = require('fs');
 
+// Chargement dynamique de la configuration depuis config/env.js
+const config = require(path.resolve(process.cwd(), 'config/env.js'));
+
 /*-----------------------------------------HELPER-----------------------------------------*/
 function getPage(world) {
   const page = world.page || world.backofficePage;
@@ -18,17 +21,24 @@ function getPage(world) {
 
 Given("l'utilisateur est sur {string}", async function (url) {
   const page = getPage(this);
-  await page.goto(url, {
+  
+  // Utilise l'URL passée en paramètre ou la combine avec l'URL de base de la config
+  const targetUrl = url.startsWith('http') ? url : `${config.troovURL}${url}`;
+  
+  await page.goto(targetUrl, {
     waitUntil: 'domcontentloaded',
     timeout: 30000
   });
 });
 
 /*-----------------------------------------WHEN-----------------------------------------*/
+
 When("L'utilisateur se connecte avec ces identifiants SSO", async function () {
   const page = getPage(this);
-  await page.getByLabel('Email').fill('Mairie@troov.com');
-  await page.getByLabel('Mot de passe').fill('Hello(123)');
+  
+  // Remplacement des identifiants statiques par ceux de la config
+  await page.getByLabel('Email').fill(config.usernameAgent);
+  await page.getByLabel('Mot de passe').fill(config.passwordAgent);
   await page.getByRole('button', { name: 'Connexion' }).click();
   await page.waitForURL(/\/dashboard/, { timeout: 20000 });
 });
@@ -49,15 +59,15 @@ When("L'utilisateur clique sur le bouton {string}", async function (texte) {
     return;
   }
 
-if (/lier un nouvel objet/i.test(texte)) {
-  const btnLier = page.getByRole('button', {
-    name: /Lier un nouvel objet à?a? cette/i
-  });
-  await btnLier.scrollIntoViewIfNeeded();
-  await expect(btnLier).toBeEnabled({ timeout: 20000 });
-  await btnLier.click();
-  return;
-}
+  if (/lier un nouvel objet/i.test(texte)) {
+    const btnLier = page.getByRole('button', {
+      name: /Lier un nouvel objet à?a? cette/i
+    });
+    await btnLier.scrollIntoViewIfNeeded();
+    await expect(btnLier).toBeEnabled({ timeout: 20000 });
+    await btnLier.click();
+    return;
+  }
 
   const el = page
     .getByRole('button', { name: new RegExp(texte, 'i') })
@@ -150,7 +160,6 @@ When("L'utilisateur remplit le formulaire de signalement principal", async funct
     if (await optionR1.isVisible().catch(() => false)) {
       await optionR1.click();
     } else if (await optionR1.count() > 0) {
-      // Element present dans le DOM mais cache → force
       await optionR1.click({ force: true });
     }
   }
@@ -237,11 +246,12 @@ When("L'utilisateur ajoute un objet lie dans le formulaire", async function () {
   await expect(btnEnregistrer).toBeEnabled();
   await btnEnregistrer.click();
 
-  // 12. Succes
+  // Succès
   await expect(
     page.getByText(/Objet li[eé] cr[eé][eé]? avec succ[eè]s/i)
   ).toBeVisible({ timeout: 15000 });
 });
+
 When("L'utilisateur ajoute une photo pour faire appel a l'IA", async function () {
   const page = getPage(this);
 
@@ -271,7 +281,6 @@ Then("L'utilisateur arrive sur sa page d'accueil agent", async function () {
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 15000 });
 });
 
-
 Then(
   "Une pop-in s'ouvre proposant un formulaire identique au signalement de base",
   async function () {
@@ -280,7 +289,6 @@ Then(
       page.getByRole('heading', { name: /Ajouter un nouvel objet li[eé]/i })
     ).toBeVisible({ timeout: 10000 });
 
-    // Formulaire identique au signalement de base (categories visibles)
     await expect(
       page.getByRole('img', { name: /Carte d['']identit[eé]/i })
     ).toBeVisible({ timeout: 10000 });
@@ -292,9 +300,15 @@ Then(
   async function () {
     const page = getPage(this);
 
-    await expect(
-      page.getByPlaceholder(/Indiquez la date de naissance/i)
-    ).not.toHaveValue('', { timeout: 15000 });
+    // Cibler la modal ouverte
+    const popin = page.getByRole('dialog', {
+      name: /Ajouter un nouvel objet li[eé]/i
+    });
+
+    const dateInput = popin.getByPlaceholder(/Indiquez la date de naissance/i);
+
+    await expect(dateInput).toBeVisible({ timeout: 20000 });
+    await expect(dateInput).not.toHaveValue('', { timeout: 15000 });
   }
 );
 

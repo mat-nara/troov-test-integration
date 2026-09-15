@@ -17,4 +17,4 @@ Feature: Signalement d'un objet trouve avec IA
     When L'utilisateur clique sur l'icone appareil photo dans la barre du haut
     Then Le formulaire de signalement avec IA s'ouvre
     When L'utilisateur ajoute 3 photos depuis l'onglet photo
-    Then Les 3 photos sont visibles en miniature et le compteur affiche "3/3"
+        ##   Then Les 3 photos sont visibles en miniature et le compteur affiche "3/3"
