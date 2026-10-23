@@ -411,6 +411,18 @@ const testList = [
 		feature: "src/troov-objets/signalement-usager-objets-perdu/features/signalement-usager-objets-perdu.feature",
 		step: "src/troov-objets/signalement-usager-objets-perdu/steps/signalement-usager-objets-perdu.step.js"
 	},
+
+
+/*********************************************tests-meilsearch***********************************************/
+	/********************************************************************************************************/
+	/*  						theme-A-couleur 								*/
+	/********************************************************************************************************/
+		// A1-couleur-tres-differente
+{
+    profileName: "A1-couleur-tres-differente",
+    feature: "src/tests-meilisearch/theme-A-couleur/A1-couleur-tres-differente/features/A1-couleur-tres-differente.feature",
+    step: "src/tests-meilisearch/theme-A-couleur/A1-couleur-tres-differente/steps/A1-couleur-tres-differente.steps.js"
+},
 ];
 
 

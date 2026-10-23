@@ -36,9 +36,6 @@ function generateRandomNIR() {
     }
     const departement = randomDepartement();
 
-    // Commune : 2 ou 3 chiffres
-    // const commune = Math.random() < 0.5 ? String(Math.floor(Math.random() * 100)).padStart(2, '0') : String(Math.floor(Math.random() * 1000)).padStart(3, '0'); 
-    // Commune (fixé a 3 chiffres)
     const commune = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
 
 
