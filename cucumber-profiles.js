@@ -415,13 +415,22 @@ const testList = [
 
 /*********************************************tests-meilsearch***********************************************/
 	/********************************************************************************************************/
+
+
 	/*  						theme-A-couleur 								*/
 	/********************************************************************************************************/
-		// A1-couleur-tres-differente
+			// A1-couleur-tres-differente
 {
     profileName: "A1-couleur-tres-differente",
     feature: "src/tests-meilisearch/theme-A-couleur/A1-couleur-tres-differente/features/A1-couleur-tres-differente.feature",
     step: "src/tests-meilisearch/theme-A-couleur/A1-couleur-tres-differente/steps/A1-couleur-tres-differente.steps.js"
+},
+
+	  		// A2-couleur-proche
+{
+    profileName: "A2-Couleur-proche",
+    feature: "src/tests-meilisearch/theme-A-couleur/A2-Couleur-proche/features/Couleur-proche.feature",
+    step: "src/tests-meilisearch/theme-A-couleur/A2-Couleur-proche/steps/Couleur-proche.step.js"
 },
 ];
 
