@@ -432,6 +432,14 @@ const testList = [
     feature: "src/tests-meilisearch/theme-A-couleur/A2-Couleur-proche/features/Couleur-proche.feature",
     step: "src/tests-meilisearch/theme-A-couleur/A2-Couleur-proche/steps/Couleur-proche.step.js"
 },
+
+// A3- Même couleur - détail contradictoire
+
+{
+    profileName: "A3-Meme-couleur-detail-contradictoire",
+    feature: "src/tests-meilisearch/theme-A-couleur/Meme-couleur-detail-contradictoire/features/Meme-couleur-detail-contradictoire.feature",
+    step: "src/tests-meilisearch/theme-A-couleur/Meme-couleur-detail-contradictoire/steps/Meme-couleur-detail-contradictoire.step.js"
+},
 ];
 
 

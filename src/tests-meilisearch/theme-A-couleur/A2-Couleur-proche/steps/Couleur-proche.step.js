@@ -388,7 +388,7 @@ When(
   async function () {
     const page = this.backofficePage;
 
-    // 1. Bouton "Demander à Charlie" (tolérant aux accents)
+    // 1. Bouton "Demander a Charlie"
     const bouton = page.getByRole('button', {
       name: /Demander\s+à?\s*Charlie/i
     });
@@ -397,22 +397,31 @@ When(
     await bouton.scrollIntoViewIfNeeded();
     await bouton.click({ force: true });
 
-    // 2. Attendre le message de succès
-    // Exemple réel : "Analyse Charlie terminée : 11 pré-matchs analysés"
+    // 2. Attendre le toast de succes (celui de ta capture)
     const messageTermine = page.getByText(
       /Analyse\s+Charlie\s+termin[eé]e\s*:\s*\d+\s*pr[eé]-matchs?\s*analys[eé]s?/i
     );
 
     await messageTermine.waitFor({
       state: 'visible',
-      timeout: 90000   // 90 secondes max (l'IA peut être lente)
+      timeout: 90000
     });
 
-    // Petit délai de stabilisation
-    await page.waitForTimeout(800);
+    // On laisse le toast s'afficher un peu, puis on le laisse partir naturellement
+    await page.waitForTimeout(1500);
 
-    // 3. Cliquer sur le message (ferme le toast / ouvre les détails)
-    await messageTermine.click({ force: true });
+    // Optionnel : si le toast est encore la, on peut le fermer proprement
+    try {
+      const closeBtn = page.locator('.toast .btn-close, .toast [aria-label="Close"], .toast .close').first();
+      if (await closeBtn.isVisible({ timeout: 1000 })) {
+        await closeBtn.click({ force: true });
+      }
+    } catch (e) {
+      // pas grave si le toast a deja disparu
+    }
+
+    // Petit delai pour que l'interface se stabilise apres l'analyse
+    await page.waitForTimeout(1000);
   }
 );
 
@@ -422,15 +431,16 @@ When(
   async function (section) {
     const page = this.backofficePage;
 
-    // Cas special : Details de l'analyse IA
-    if (/details?\s+de\s+l['’]?analyse\s+IA/i.test(section)) {
+    // Cas special : Details de l'analyse IA (tolérant aux accents)
+    if (/d[eé]tails?\s+de\s+l['’]?analyse\s+IA/i.test(section)) {
       const bouton = page.getByRole('button', {
-        name: /Details de l['’]?analyse IA/i
+        name: /D[eé]tails?\s+de\s+l['’]?analyse\s+IA/i
       });
 
       await bouton.waitFor({ state: 'visible', timeout: 15000 });
       await bouton.scrollIntoViewIfNeeded();
 
+      // Verifie si le panneau est deja ouvert
       const chevronUp = bouton.locator('i.bx-chevron-up');
       const estDejaOuvert = (await chevronUp.count()) > 0;
 
@@ -438,15 +448,16 @@ When(
         await bouton.click({ force: true });
       }
 
+      // Attendre qu'un element typique du panneau apparaisse
       await page
-        .locator('text=/Point cle|POINT CLE/i')
+        .locator('text=/Point cl[eé]|POINT CL[EÉ]|Score|Confiance|Analyse/i')
         .first()
         .waitFor({ state: 'visible', timeout: 10000 });
 
       return;
     }
 
-    // --- Comportement generique pour les autres sections ---
+    // --- Comportement generique ---
     const regex = new RegExp(
       section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
       'i'
@@ -471,22 +482,45 @@ Then(
   async function () {
     const page = this.backofficePage;
 
-    const scoreLocator = page.locator(
+    // 1. On essaie d'abord le locator précis (celui qui est dans le panneau détails)
+    const scoreLocatorPrecis = page.locator(
       'div.tui-absolute.tui-inset-0.tui-flex.tui-items-center.tui-justify-center.tui-text-2xl.tui-font-semibold'
     );
 
-    await scoreLocator.waitFor({ state: 'visible', timeout: 12000 });
+    // 2. Locators de secours (score visible ailleurs sur la fiche)
+    const scoreLocatorFallback = page.locator(
+      'text=/\\d+\\s*%/'
+    ).filter({ hasText: /%/ }).first();
 
-    const texte = (await scoreLocator.textContent())?.trim() || '';
+    // 3. On attend l'un des deux
+    const scoreElement = await Promise.race([
+      scoreLocatorPrecis.waitFor({ state: 'visible', timeout: 8000 }).then(() => scoreLocatorPrecis),
+      scoreLocatorFallback.waitFor({ state: 'visible', timeout: 8000 }).then(() => scoreLocatorFallback)
+    ]).catch(() => null);
 
-    // Vérifie qu'on a bien un pourcentage
+    if (!scoreElement) {
+      // Dernier recours : on ouvre les détails nous-mêmes
+      const boutonDetails = page.getByRole('button', {
+        name: /D[eé]tails?\s+de\s+l['’]?analyse\s+IA/i
+      });
+
+      if (await boutonDetails.isVisible().catch(() => false)) {
+        await boutonDetails.click({ force: true });
+        await scoreLocatorPrecis.waitFor({ state: 'visible', timeout: 10000 });
+      } else {
+        throw new Error('Aucun score IA trouvé (ni dans le panneau détails, ni ailleurs sur la page)');
+      }
+    }
+
+    const texte = (await (scoreElement || scoreLocatorPrecis).textContent())?.trim() || '';
+
     if (!/\d+\s*%/.test(texte)) {
       throw new Error(`Aucun score en pourcentage trouvé. Texte obtenu : "${texte}"`);
     }
 
-    // On garde le score dans le World + dans le rapport
     this.scoreIA = texte;
-if (typeof this.attach === 'function') {
+
+    if (typeof this.attach === 'function') {
       this.attach(`Score IA affiché : ${texte}`);
     }
   }

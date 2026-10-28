@@ -256,9 +256,7 @@ Given(
     const password = process.env.TROOV_AGENT_PASSWORD;
 
     if (!email || !password) {
-      throw new Error(
-        'TROOV_AGENT_USERNAME et TROOV_AGENT_PASSWORD doivent être définis dans le .env'
-      );
+      throw new Error('TROOV_AGENT_USERNAME et TROOV_AGENT_PASSWORD doivent être définis dans le .env');
     }
 
     const page = this.backofficePage;
@@ -283,9 +281,7 @@ When(
     const data = dataTable.rowsHash();
     const page = this.backofficePage;
 
-    await page.click(
-      'a.prftch[href*="/dashboard/"][href*="/items/add"]'
-    );
+    await page.click('a.prftch[href*="/dashboard/"][href*="/items/add"]');
 
     // Le back-office ne possède pas de champ adresse.
     await remplirChampsObjet(page, data);
@@ -304,9 +300,7 @@ When(
     const password = process.env.TROOV_PUBLIC_FORM_PASSWORD;
 
     if (!email || !password) {
-      throw new Error(
-        'TROOV_PUBLIC_FORM_USERNAME et TROOV_PUBLIC_FORM_PASSWORD doivent être définis dans le .env'
-      );
+      throw new Error('TROOV_PUBLIC_FORM_USERNAME et TROOV_PUBLIC_FORM_PASSWORD doivent être définis dans le .env');
     }
 
     this.usagerPage = await this.context.newPage();
@@ -341,9 +335,7 @@ When(
       const dashboardId = process.env.TROOV_PUBLIC_DASHBOARD_ID || (page.url().match(/\/dashboard\/([a-f0-9]+)/i) || [])[1];
 
       if (!dashboardId) {
-        throw new Error(
-          `Lien "Signaler un objet" introuvable et dashboardId inconnu. URL : ${page.url()}`
-        );
+        throw new Error( `Lien "Signaler un objet" introuvable et dashboardId inconnu. URL : ${page.url()}`);
       }
 
       await page.goto(`${BASE_URL}/dashboard/${dashboardId}/items/add`,{ waitUntil: 'domcontentloaded' });
@@ -353,9 +345,7 @@ When(
     try {
       await page
         .locator('[data-cy="address-picker"] input')
-        .waitFor({
-          state: 'visible',
-          timeout: 15000
+        .waitFor({state: 'visible', timeout: 15000
         });
     } catch (error) {
       throw new Error(
@@ -411,10 +401,7 @@ When(
       /Analyse Charlie terminée\s*:\s*\d+\s*pré-matchs?\s*analysés?/i
     );
 
-    await messageTermine.waitFor({
-      state: 'visible',
-      timeout: 90000   // 90 s – l’IA peut être lente
-    });
+    await messageTermine.waitFor({ state: 'visible',timeout: 90000});
 
     // Petit délai de stabilisation
     await page.waitForTimeout(800);
