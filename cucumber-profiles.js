@@ -440,6 +440,14 @@ const testList = [
     feature: "src/tests-meilisearch/theme-A-couleur/Meme-couleur-detail-contradictoire/features/Meme-couleur-detail-contradictoire.feature",
     step: "src/tests-meilisearch/theme-A-couleur/Meme-couleur-detail-contradictoire/steps/Meme-couleur-detail-contradictoire.step.js"
 },
+
+// A4- Couleur avec motif - motifs differents
+
+{
+    profileName: "A4-Couleur-avec-motif-motifs-differents",
+    feature: "src/tests-meilisearch/theme-A-couleur/Couleur-Avec-motif-motifs-differents/features/Couleur-avec-motif-motifs-differents.feature",
+    step: "src/tests-meilisearch/theme-A-couleur/Couleur-Avec-motif-motifs-differents/steps/Couleur-avec-motif-motifs-differents.step.js"
+},
 ];
 
 
