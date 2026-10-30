@@ -417,37 +417,47 @@ const testList = [
 	/********************************************************************************************************/
 
 
-	/*  						theme-A-couleur 								*/
-	/********************************************************************************************************/
+
+	/**************************************THEME COULEUR*********************************************/
 			// A1-couleur-tres-differente
 {
-    profileName: "A1-couleur-tres-differente",
-    feature: "src/tests-meilisearch/theme-A-couleur/A1-couleur-tres-differente/features/A1-couleur-tres-differente.feature",
-    step: "src/tests-meilisearch/theme-A-couleur/A1-couleur-tres-differente/steps/A1-couleur-tres-differente.steps.js"
+    profileName: "couleur-tres-differente",
+    feature: "src/tests-meilisearch/couleur/couleur-tres-differente/features/couleur-tres-differente.feature",
+    step: "src/tests-meilisearch/couleur/couleur-tres-differente/steps/couleur-tres-differente.steps.js"
 },
 
-	  		// A2-couleur-proche
+	  // A2-couleur-proche
 {
-    profileName: "A2-Couleur-proche",
-    feature: "src/tests-meilisearch/theme-A-couleur/A2-Couleur-proche/features/Couleur-proche.feature",
-    step: "src/tests-meilisearch/theme-A-couleur/A2-Couleur-proche/steps/Couleur-proche.step.js"
+    profileName: "Couleur-proche",
+    feature: "src/tests-meilisearch/couleur/Couleur-proche/features/Couleur-proche.feature",
+    step: "src/tests-meilisearch/couleur/Couleur-proche/steps/Couleur-proche.step.js"
 },
 
 // A3- Même couleur - détail contradictoire
-
 {
-    profileName: "A3-Meme-couleur-detail-contradictoire",
-    feature: "src/tests-meilisearch/theme-A-couleur/Meme-couleur-detail-contradictoire/features/Meme-couleur-detail-contradictoire.feature",
-    step: "src/tests-meilisearch/theme-A-couleur/Meme-couleur-detail-contradictoire/steps/Meme-couleur-detail-contradictoire.step.js"
+    profileName: "Meme-couleur-detail-contradictoire",
+    feature: "src/tests-meilisearch/couleur/Meme-couleur-detail-contradictoire/features/Meme-couleur-detail-contradictoire.feature",
+    step: "src/tests-meilisearch/couleur/Meme-couleur-detail-contradictoire/steps/Meme-couleur-detail-contradictoire.step.js"
 },
+
 
 // A4- Couleur avec motif - motifs differents
-
 {
-    profileName: "A4-Couleur-avec-motif-motifs-differents",
-    feature: "src/tests-meilisearch/theme-A-couleur/Couleur-Avec-motif-motifs-differents/features/Couleur-avec-motif-motifs-differents.feature",
-    step: "src/tests-meilisearch/theme-A-couleur/Couleur-Avec-motif-motifs-differents/steps/Couleur-avec-motif-motifs-differents.step.js"
+    profileName: "Couleur-avec-motif-motifs-differents",
+    feature: "src/tests-meilisearch/couleur/Couleur-Avec-motif-motifs-differents/features/Couleur-avec-motif-motifs-differents.feature",
+    step: "src/tests-meilisearch/couleur/Couleur-Avec-motif-motifs-differents/steps/Couleur-avec-motif-motifs-differents.step.js"
 },
+
+
+	/**************************************THEME ETAT DE L'OBJET*********************************************/
+
+//B1 - Neuf vs Abîmé — sans détail
+{
+    profileName: "Neuf-vs-Abine-Sans-detail",
+    feature: "src/tests-meilisearch/Etat-objet/Neuf-vs-Abime-Sans-detail/features/Neuf-vs-Abime-Sans-detail.feature",
+    step: "src/tests-meilisearch/Etat-objet/Neuf-vs-Abime-Sans-detail/steps/Neuf-vs-Abime-Sans-detail.step.js"
+},
+
 ];
 
 
