@@ -21,10 +21,9 @@ Feature: A4 - Couleur Avec motif - motifs differents
       | Etat      | Satisfaisant           |
       | Detail    | motif rayures bleues   |
 
-##  Scenario: 3 - Le matching traite le couple Avec motif / motifs differents
-##    Given l'agent "Charlie" est en service et connecte sur le back-office Troov de l'equipe "Disney" (demo.troov.com)
-##    When L'utilisateur attend 15 secondes
-##    * L'utilisateur ouvre la fiche du match cote back office
-##    * L'utilisateur demande a Charlie d'analyser si le badge est grise
-    ##  * L'utilisateur ouvre "Details de l'analyse IA"
-##    Then Un score IA est affiche
+  Scenario: 3 - Le matching traite le couple Avec motif / motifs differents
+    Given l'agent "Charlie" est en service et connecte sur le back-office Troov de l'equipe "Disney" (demo.troov.com)
+    When L'utilisateur attend 15 secondes
+    * L'utilisateur ouvre la fiche du match cote back office
+    * L'utilisateur demande a Charlie d'analyser si le badge est grise
+    Then Un score IA est affiche

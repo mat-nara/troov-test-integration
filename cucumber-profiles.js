@@ -458,6 +458,42 @@ const testList = [
     step: "src/tests-meilisearch/Etat-objet/Neuf-vs-Abime-Sans-detail/steps/Neuf-vs-Abime-Sans-detail.step.js"
 },
 
+//B2 - Neuf vs Abîmé — avec détail
+{
+    profileName: "Neuf-vs-Abine-Avec-detail",
+    feature: "src/tests-meilisearch/Etat-objet/Neuf-vs-Abime-Avec-detail/features/Neuf-vs-Abime-Avec-detail.feature",
+    step: "src/tests-meilisearch/Etat-objet/Neuf-vs-Abime-Avec-detail/steps/Neuf-vs-Abime-Avec-detail.step.js"
+},
+
+//B3 - Abîmé côté agent vs Neuf côté usager (sens inverse)
+{
+    profileName: "Abime-Agent-vs-Neuf-Usager",
+    feature: "src/tests-meilisearch/Etat-objet/Abime-Agent-vs-Neuf-Usager/features/Abime-Agent-vs-Neuf-Usager.feature",
+    step: "src/tests-meilisearch/Etat-objet/Abime-Agent-vs-Neuf-Usager/steps/Abime-Agent-vs-Neuf-Usager.step.js"
+},
+
+//B4 - Satisfaisant vs Abîmé (nuance fine)
+{
+    profileName: "Satisfaisant-vs-Abime",
+    feature: "src/tests-meilisearch/Etat-objet/Satisfaisant-vs-Abime/features/Satisfaisant-vs-Abime.feature",
+    step: "src/tests-meilisearch/Etat-objet/Satisfaisant-vs-Abime/steps/Satisfaisant-vs-Abime.step.js"
+},
+
+	/**************************************THEME PRENOM-NOM*********************************************/
+
+//C1 Prénom identique, nom différent
+{
+    profileName: "Prenom-Identique",
+    feature: "src/tests-meilisearch/Prenom-Nom/Prenom-Identique/features/Prenom-Identique.feature",
+    step: "src/tests-meilisearch/Prenom-Nom/Prenom-Identique/steps/Prenom-Identique.step.js"
+},
+
+//C2 Faute de frappe sur le nom
+{
+    profileName: "Faute-frappe-nom",
+    feature: "src/tests-meilisearch/Prenom-Nom/Faute-frappe-nom/features/Faute-frappe-nom.feature",
+    step: "src/tests-meilisearch/Prenom-Nom/Faute-frappe-nom/steps/Faute-frappe-nom.step.js"
+},
 ];
 
 

@@ -126,15 +126,17 @@ function obtenirCouleur(couleur) {
 async function selectionnerMarque(page, marque, maxTentatives = 4) {
   const select = page.locator('[data-cy="brand"]');
   await select.waitFor({ state: 'visible', timeout: 10000 });
+  await select.scrollIntoViewIfNeeded();
+
+  const input = select.locator('input.multiselect__input');
+  const options = select.locator('.multiselect__option');
+  const affichage = select.locator('.multiselect__single');
 
   const echapper = t => t.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regexContient = new RegExp(echapper(marque), 'i');
   const regexExact = new RegExp(`^\\s*${echapper(marque)}\\s*$`, 'i');
 
-  const affichage = select.locator('.multiselect__single');
-  const input = select.locator('input.multiselect__input');
-  const options = select.locator('.multiselect__option');
-
+  // Deja selectionne ?
   if ((await affichage.count()) > 0) {
     const texte = ((await affichage.first().textContent({ timeout: 2000 }).catch(() => '')) || '').trim();
     if (regexExact.test(texte)) return;
@@ -142,41 +144,71 @@ async function selectionnerMarque(page, marque, maxTentatives = 4) {
 
   for (let i = 1; i <= maxTentatives; i++) {
     try {
-      await page.locator('[data-cy="brand"]:not(.multiselect--disabled)').waitFor({ state: 'attached', timeout: 8000 });
+      // Ouvrir le multiselect
+      await select.locator('.multiselect__tags').click({ timeout: 5000 }).catch(() => {});
+      await page.waitForTimeout(300);
 
-      const estOuvert = () => select.evaluate(el => el.classList.contains('multiselect--active'));
-
-      if (!(await estOuvert())) {
-        await select.locator('.multiselect__tags').click({ timeout: 5000 }).catch(() => {});
+      const estOuvert = await select.evaluate(el => el.classList.contains('multiselect--active'));
+      if (!estOuvert) {
+        await select.locator('.multiselect__select').click({ force: true });
         await page.waitForTimeout(300);
       }
-      if (!(await estOuvert())) {
-        await select.locator('.multiselect__select').click({ timeout: 5000, force: true });
-        await page.waitForTimeout(300);
-      }
-      if (!(await estOuvert())) throw new Error('Liste des marques non ouverte');
 
+      // Saisir la marque
       await input.focus();
       await page.keyboard.press('Control+A');
       await page.keyboard.press('Backspace');
       await page.keyboard.type(marque, { delay: 80 });
+      await page.waitForTimeout(500);
 
-      await options.filter({ hasText: regexContient }).first().waitFor({ state: 'visible', timeout: 8000 });
+      // 1. Essayer une option existante
+      const optionExacte = options.filter({ hasText: regexExact });
+      const optionContient = options.filter({ hasText: regexContient });
 
-      const exacte = options.filter({ hasText: regexExact });
-      const option = (await exacte.count()) > 0 ? exacte.first() : options.filter({ hasText: regexContient }).first();
-      await option.click();
+      if ((await optionExacte.count()) > 0) {
+        await optionExacte.first().click();
+      } else if ((await optionContient.count()) > 0) {
+        await optionContient.first().click();
+      } else {
+        // 2. Marque absente de la liste → saisie libre
+        //    - Enter pour valider le texte tape
+        //    - ou cliquer sur "Autre" s'il existe
+        const boutonAutre = page.locator('.multiselect__option').filter({ hasText: /Autre/i }).first();
+        if (await boutonAutre.isVisible().catch(() => false)) {
+          await boutonAutre.click();
+          await page.waitForTimeout(300);
+          // Si un champ libre s'ouvre apres "Autre"
+          const inputLibre = page.locator('input[placeholder*="marque" i], input[name*="brand" i], .multiselect__input').first();
+          if (await inputLibre.isVisible().catch(() => false)) {
+            await inputLibre.fill(marque);
+            await page.keyboard.press('Enter');
+          }
+        } else {
+          // Validation directe par Enter (tag / create option)
+          await page.keyboard.press('Enter');
+        }
+      }
 
-      await affichage.filter({ hasText: regexContient }).waitFor({ state: 'visible', timeout: 5000 });
-      return;
-    } catch {
+      await page.waitForTimeout(400);
+
+      // Verifier que quelque chose est affiche
+      const texteFinal = ((await affichage.first().textContent({ timeout: 3000 }).catch(() => '')) || '').trim();
+      if (texteFinal && (regexContient.test(texteFinal) || texteFinal.length > 0)) {
+        return;
+      }
+
+      // Si le single n'existe pas, parfois la valeur est dans un tag
+      const tag = select.locator('.multiselect__tag, .multiselect__single');
+      if ((await tag.count()) > 0) return;
+
+    } catch (e) {
       await page.keyboard.press('Escape').catch(() => {});
       await page.waitForTimeout(800);
     }
   }
-  throw new Error(`Marque "${marque}" : selection impossible apres ${maxTentatives} tentatives`);
-}
 
+  throw new Error(`Marque "${marque}" : selection / saisie impossible apres ${maxTentatives} tentatives`);
+}
 
 //fonction pour selectionner l'etat
 
@@ -239,6 +271,40 @@ async function remplirAdresse(page, texte = 'Paris', optionTexte = 'Paris, Franc
 }
 
 
+
+//fonction pour la remplissage Document
+async function remplirChampsDocument(page, data) {
+  // 1. Categorie
+  await page.getByText(/Papiers et documents officiels/i).first().click();
+  await page.waitForTimeout(400);
+
+  // 2. Sous-categorie (Carte d'identite OU Passeport)
+  const sousCat = data['Sous-categorie'] || 'Carte d\'identite';
+  await page.getByText(new RegExp(sousCat.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')).first().click();
+  await page.waitForTimeout(400);
+
+  // 3. Prenom
+  if (data['Prenom']) {
+    const prenom = page.locator('#input_firstnameitem_types_fields');
+    await prenom.waitFor({ state: 'visible', timeout: 10000 });
+    await prenom.fill(data['Prenom']);
+  }
+
+  // 4. Nom
+  if (data['Nom']) {
+    const nom = page.locator('#input_lastnameitem_types_fields');
+    await nom.waitFor({ state: 'visible', timeout: 10000 });
+    await nom.fill(data['Nom']);
+  }
+
+  // 5. Date de naissance
+  if (data['Date de naissance']) {
+    const dateNaissance = page.locator('#input_birthdateitem_types_fields');
+    await dateNaissance.waitFor({ state: 'visible', timeout: 10000 });
+    await dateNaissance.fill(data['Date de naissance']);
+  }
+}
+
 //fonction pour remplissage de l'objet
 
 async function remplirChampsObjet(page, data) {
@@ -291,6 +357,7 @@ async function remplirChampsObjet(page, data) {
 }
 
 
+
 //ouverture du formulaire
 
 async function validerFormulaire(page) {
@@ -338,38 +405,60 @@ async function ouvrirFicheMatch(page, ligneMatch, maxTentatives = 6) {
   );
 }
 
-
-//fonction pour l'analyse du Charlie
-
-/*async function demanderAnalyseCharlie(page) {
-  // Cible le bouton de plusieurs facons pour etre robuste
-  const bouton = page
-    .locator('button')
-    .filter({ hasText: /Demander.*Charlie/i })
-    .first();
-
-  await bouton.waitFor({ state: 'visible', timeout: 20000 });
-  await bouton.scrollIntoViewIfNeeded();
-  await page.waitForTimeout(500);
-
-  // Clique force (evite les problemes d'overlay / animation)
-  await bouton.click({ force: true });
-
-  // Attendre le toast de fin d'analyse
-  await page
-    .getByText(/Analyse\s+Charlie\s+termin/i)
-    .waitFor({ state: 'visible', timeout: 90000 });
-
-  await page.waitForTimeout(1500);
-
-  // Fermer le toast s'il est encore la
-  const closeBtn = page.locator('.toast .btn-close, .toast [aria-label="Close"], .toast .close').first();
-  if (await closeBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
-    await closeBtn.click({ force: true }).catch(() => {});
+/*fonction pour ouvrir le fiche du match pour objet 'Carte d'Identité'*/
+async function ouvrirFicheMatchDocument(page, prenom, maxTentatives = 10) {
+  if (page.isClosed()) {
+    throw new Error('backofficePage est deja fermee');
   }
 
-  await page.waitForTimeout(1000);
-}*/
+  // 1. Aller une seule fois sur Mes objets
+  const menu = page.locator('a.side-nav-link-ref', { hasText: 'Mes objets' }).first();
+  await menu.waitFor({ state: 'visible', timeout: 15000 });
+  await menu.click();
+  await page.waitForTimeout(1500);
+
+  const lignes = page
+    .locator('tr.tui-cursor-pointer')
+    .filter({ hasText: new RegExp(prenom, 'i') })
+    .filter({ has: page.getByRole('img', { name: /Match potentiel/i }) });
+
+  for (let i = 1; i <= maxTentatives; i++) {
+    if (page.isClosed()) {
+      throw new Error(`Page fermee a la tentative ${i}/${maxTentatives}`);
+    }
+
+    // 2. Chercher la ligne sans naviguer
+    const visible = await lignes.first()
+      .waitFor({ state: 'visible', timeout: 3000 })
+      .then(() => true)
+      .catch(() => false);
+
+    if (visible) {
+      await lignes.first().locator('td').nth(1).click({ force: true });
+      return;
+    }
+
+    // 3. Refresh leger (reload), pas un gros goto avec query params
+    try {
+      await page.reload({ waitUntil: 'domcontentloaded', timeout: 20000 });
+      await page.waitForTimeout(2000);
+    } catch (e) {
+      // Si le serveur reset, on attend et on reessaie sans throw immediat
+      console.warn(`Reload echoue (tentative ${i}): ${e.message}`);
+      await page.waitForTimeout(3000);
+    }
+  }
+
+  if (!page.isClosed()) {
+    const textes = await page.locator('tr.tui-cursor-pointer').allTextContents().catch(() => []);
+    console.log('Lignes visibles:', textes);
+  }
+
+  throw new Error(
+    `Aucune ligne Match potentiel avec prenom "${prenom}" apres ${maxTentatives} tentatives.`
+  );
+}
+
 
 async function demanderAnalyseCharlie(page) {
   const bouton = page.locator('button').filter({ hasText: /Demander.*Charlie/i }).first();
@@ -453,6 +542,8 @@ async function verifierScoreIA(page, world) {
   }
 }
 
+
+
 module.exports = {
-  generateRandomNIR, generateRandomPhone, connexionAlfa, obtenirCouleur, selectionnerMarque, selectionnerEtat, remplirAdresse, remplirChampsObjet, validerFormulaire, ouvrirFicheMatch, demanderAnalyseCharlie, ouvrirSection, verifierScoreIA
+  generateRandomNIR, generateRandomPhone, connexionAlfa, obtenirCouleur, selectionnerMarque, selectionnerEtat, remplirAdresse,remplirChampsDocument, remplirChampsObjet, validerFormulaire, ouvrirFicheMatch, ouvrirFicheMatchDocument, demanderAnalyseCharlie, ouvrirSection, verifierScoreIA
 };

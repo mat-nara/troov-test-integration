@@ -1,4 +1,4 @@
-Feature: B1 - Neuf vs Abime - sans detail
+Feature: Neuf vs Abime - sans detail
 
   Scenario: 1 - L'agent cree une valise cabine Samsonite rouge neuve trouvee
     Given l'agent "Charlie" est en service et connecte sur le back-office Troov de l'equipe "Disney" (demo.troov.com)
@@ -26,5 +26,4 @@ Feature: B1 - Neuf vs Abime - sans detail
     When L'utilisateur attend 15 secondes
     * L'utilisateur ouvre la fiche du match cote back office
     * L'utilisateur demande a Charlie d'analyser si le badge est grise
-    ##  * L'utilisateur ouvre "Details de l'analyse IA"
     Then Un score IA est affiche
