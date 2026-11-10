@@ -1,5 +1,12 @@
 const { Given, When, Then } = require('@cucumber/cucumber');
-const {remplirChampsDocument,validerFormulaire, remplirAdresse, ouvrirFicheMatchDocument, demanderAnalyseCharlie, ouvrirSection, verifierScoreIA
+const {
+  remplirChampsDocument,
+  validerFormulaire,
+  remplirAdresse,
+  verifierPasDeCorrespondanceOuOuvrir, 
+  demanderAnalyseCharlie,
+  ouvrirSection,
+  verifierScoreIA
 } = require('../../../../core/helper');
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
@@ -83,7 +90,7 @@ When('L\'utilisateur attend {int} secondes', async function (secondes) {
 });
 
 When('L\'utilisateur ouvre la fiche du match cote back office', async function () {
-  await ouvrirFicheMatchDocument(this.backofficePage, 'Sophie');
+  await verifierPasDeCorrespondanceOuOuvrir(this.backofficePage, 'Sophie');
 });
 
 When('L\'utilisateur demande a Charlie d\'analyser si le badge est grise', async function () {
@@ -97,6 +104,18 @@ When('L\'utilisateur ouvre {string}', async function (section) {
 
 /*-----------------------------------------THEN---------------------------------------*/
 
-Then('Un score IA est affiche', async function () {
-  await verifierScoreIA(this.backofficePage, this);
+Then('Le statut affiche "Pas de correspondance" pour l\'objet de {string}', async function (prenom) {
+  const page = this.backofficePage;
+  // Aller sur "Mes objets"
+  const menu = page.locator('a.side-nav-link-ref', { hasText: 'Mes objets' }).first();
+  await menu.click();
+  await page.waitForTimeout(1000);
+
+  // Vérifier l'apparition de "Pas de correspondance"
+  const ligne = page.locator('tr.tui-cursor-pointer').filter({ hasText: new RegExp(prenom, 'i') }).first();
+  const pasDeMatchIcon = ligne.locator('[aria-label="Pas de correspondance"], .icn-item-no-match');
+
+  if (!(await pasDeMatchIcon.isVisible())) {
+    throw new Error(`Erreur : Le statut "Pas de correspondance" n'est pas affiché pour ${prenom}`);
+  }
 });

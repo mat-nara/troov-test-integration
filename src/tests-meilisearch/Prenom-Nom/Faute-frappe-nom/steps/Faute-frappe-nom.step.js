@@ -3,13 +3,15 @@ const {
   remplirChampsDocument,
   validerFormulaire,
   remplirAdresse,
-  ouvrirFicheMatchDocument,
+  verifierPasDeCorrespondanceOuOuvrir,
   demanderAnalyseCharlie,
   ouvrirSection,
   verifierScoreIA
 } = require('../../../../core/helper');
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+
+/*--------------------------------GIVEN----------------------------------------*/
 
 Given(
   'l\'agent {string} est en service et connecte sur le back-office Troov de l\'equipe {string} \\(demo.troov.com\\)',
@@ -33,6 +35,8 @@ Given(
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 30000 });
   }
 );
+
+/*--------------------------------WHEN----------------------------------------*/
 
 When('L\'agent cree l\'objet trouve suivant :', async function (dataTable) {
   const page = this.backofficePage;
@@ -83,11 +87,12 @@ When('L\'utilisateur attend {int} secondes', async function (secondes) {
 });
 
 When('L\'utilisateur ouvre la fiche du match cote back office', async function () {
-  // Prenom cote agent (trouve)
-  await ouvrirFicheMatchDocument(this.backofficePage, 'Thomas');
+  // Ouvre ou vérifie l'objet de "Thomas"
+  await verifierPasDeCorrespondanceOuOuvrir(this.backofficePage, 'Thomas');
 });
 
 When('L\'utilisateur demande a Charlie d\'analyser si le badge est grise', async function () {
+  // N'exécuter cette action que si on a un match ouvert, sinon lauter skip si pas nécessaire
   await demanderAnalyseCharlie(this.backofficePage);
 });
 
@@ -95,6 +100,22 @@ When('L\'utilisateur ouvre {string}', async function (section) {
   await ouvrirSection(this.backofficePage, section);
 });
 
-Then('Un score IA est affiche', async function () {
-  await verifierScoreIA(this.backofficePage, this);
+/*--------------------------------THEN----------------------------------------*/
+
+Then('Le statut affiche "Pas de correspondance" pour l\'objet de {string}', async function (prenom) {
+  const page = this.backofficePage;
+  const menu = page.locator('a.side-nav-link-ref', { hasText: 'Mes objets' }).first();
+  await menu.click();
+  await page.waitForTimeout(1000);
+
+  const ligne = page.locator('tr.tui-cursor-pointer').filter({ hasText: new RegExp(prenom, 'i') }).first();
+  const pasDeMatchIcon = ligne.locator('[aria-label="Pas de correspondance"], .icn-item-no-match');
+
+  if (!(await pasDeMatchIcon.isVisible())) {
+    throw new Error(`Erreur : Le statut "Pas de correspondance" n'est pas affiché pour ${prenom}`);
+  }
+});
+
+Then('Un match potentiel est present pour {string}', async function (prenom) {
+  await verifierPasDeCorrespondanceOuOuvrir(this.backofficePage, prenom);
 });

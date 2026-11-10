@@ -494,6 +494,81 @@ const testList = [
     feature: "src/tests-meilisearch/Prenom-Nom/Faute-frappe-nom/features/Faute-frappe-nom.feature",
     step: "src/tests-meilisearch/Prenom-Nom/Faute-frappe-nom/steps/Faute-frappe-nom.step.js"
 },
+
+//C3 Nom Vide 
+{
+    profileName: "Nom-vide",
+    feature: "src/tests-meilisearch/Prenom-Nom/Nom-vide/features/Nom-vide.feature",
+    step: "src/tests-meilisearch/Prenom-Nom/Nom-vide/steps/Nom-vide.step.js"
+},
+
+//C4 Prenom Different 
+{
+    profileName: "Prenom-different",
+    feature: "src/tests-meilisearch/Prenom-Nom/Prenom-different/features/Prenom-different.feature",
+    step: "src/tests-meilisearch/Prenom-Nom/Prenom-different/steps/Prenom-different.step.js"
+},
+
+
+	/**************************************THEME MARQUE*********************************************/
+
+//D1 Marque Absent
+{
+    profileName: "Marque-absente",
+    feature: "src/tests-meilisearch/Marque/Marque-absente/features/Marque-absente-usager.feature",
+    step: "src/tests-meilisearch/Marque/Marque-absente/steps/Marque-absente-usager.step.js"
+},
+
+//D2 Marque Absent pour deux côté 
+{
+    profileName: "Marque-absente-deux-cote",
+    feature: "src/tests-meilisearch/Marque/Marque-absente-deux-cote/features/Marque-absente-deux-cotes.feature",
+    step: "src/tests-meilisearch/Marque/Marque-absente-deux-cote/steps/Marque-absente-deux-cotes.step.js"
+},
+
+//D3 Même marque, modèles différents
+{
+    profileName: "Meme-marque",
+    feature: "src/tests-meilisearch/Marque/Meme-marque/features/Meme-marque-modeles-differents.feature",
+    step: "src/tests-meilisearch/Marque/Meme-marque/steps/Meme-marque-modeles-differents.step.js"
+},
+
+//D4 Marque différente, reste identique
+{
+    profileName: "Marque-differente",
+    feature: "src/tests-meilisearch/Marque/Marque-differente/features/Marque-differente.feature",
+    step: "src/tests-meilisearch/Marque/Marque-differente/steps/Marque-differente.step.js"
+},
+
+	/**************************************THEME ELECTRONIQUE*********************************************/
+
+//E1 — Même modèle, fond d'écran différent
+{
+    profileName: "Meme-modele-fond-ecran-different",
+    feature: "src/tests-meilisearch/Electronique/Meme-modele-fond-ecran-different/features/Meme-modele-fond-ecran-different.feature",
+    step: "src/tests-meilisearch/Electronique/Meme-modele-fond-ecran-different/steps/Meme-modele-fond-ecran-different.step.js"
+},
+
+//E2 — Même modèle, coque très différente
+{
+    profileName: "Meme-modele-coque-differente",
+    feature: "src/tests-meilisearch/Electronique/Meme-modele-coque-differente/features/Meme-modele-coque-differente.feature",
+    step: "src/tests-meilisearch/Electronique/Meme-modele-coque-differente/steps/Meme-modele-coque-differente.step.js"
+},
+
+//E3 — Même modèle, état très différent + détail
+{
+    profileName: "Meme-modele-etat-different",
+    feature: "src/tests-meilisearch/Electronique/Meme-modele-etat-different/features/Meme-modele-etat-different.feature",
+    step: "src/tests-meilisearch/Electronique/Meme-modele-etat-different/steps/Meme-modele-etat-different.step.js"
+},
+
+//E4 — Description générale identique, détails contradictoires
+{
+    profileName: "Meme-modele-details-contradictoires",
+    feature: "src/tests-meilisearch/Electronique/Meme-modele-details-contradictoires/features/Meme-modele-details-contradictoires.feature",
+    step: "src/tests-meilisearch/Electronique/Meme-modele-details-contradictoires/steps/Meme-modele-details-contradictoires.step.js"
+},
 ];
 
 

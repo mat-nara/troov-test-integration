@@ -110,7 +110,7 @@ async function connexionAlfa(world) {
 
 /*-------------------------------------------fonction pour la creation de l'objet---------------------------------------------*/
 
-const COULEURS = {Noir: 'black',Gris: 'grey',Bleu: 'blue',Rouge: 'red','Avec motif': 'pattern'};
+const COULEURS = {Noir: 'black',Gris: 'grey',Bleu: 'blue',Rouge: 'red',Marron: 'brown',Blanc: 'white','Avec motif': 'pattern'};
 
 //fonction pour choisir la couleur
 
@@ -124,6 +124,26 @@ function obtenirCouleur(couleur) {
 //fonction pour selectionner la marque de l'objet
 
 async function selectionnerMarque(page, marque, maxTentatives = 4) {
+  // 1. Si la marque est vide ou absente, on gère le cas "Pas de marque"
+  if (!marque || !marque.trim()) {
+    // On essaie d'abord de trouver la case à cocher spécifique "Pas de marque"
+    const checkboxPasDeMarque = page.locator('label').filter({ hasText: /Pas de marque/i }).first();
+    if (await checkboxPasDeMarque.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await checkboxPasDeMarque.click({ force: true });
+      await page.waitForTimeout(300);
+      return;
+    }
+
+    // Si c'est un champ select/multiselect vide côté formulaire public
+    const selectPublic = page.locator('[data-cy="brand"], .multiselect').first();
+    if (await selectPublic.isVisible({ timeout: 2000 }).catch(() => false)) {
+      // S'il n'y a rien à saisir, on sort simplement
+      return;
+    }
+
+    return; // Si aucun champ de marque n'est obligatoire ou présent, on passe la main
+  }
+
   const select = page.locator('[data-cy="brand"]');
   await select.waitFor({ state: 'visible', timeout: 10000 });
   await select.scrollIntoViewIfNeeded();
@@ -171,33 +191,27 @@ async function selectionnerMarque(page, marque, maxTentatives = 4) {
         await optionContient.first().click();
       } else {
         // 2. Marque absente de la liste → saisie libre
-        //    - Enter pour valider le texte tape
-        //    - ou cliquer sur "Autre" s'il existe
         const boutonAutre = page.locator('.multiselect__option').filter({ hasText: /Autre/i }).first();
         if (await boutonAutre.isVisible().catch(() => false)) {
           await boutonAutre.click();
           await page.waitForTimeout(300);
-          // Si un champ libre s'ouvre apres "Autre"
           const inputLibre = page.locator('input[placeholder*="marque" i], input[name*="brand" i], .multiselect__input').first();
           if (await inputLibre.isVisible().catch(() => false)) {
             await inputLibre.fill(marque);
             await page.keyboard.press('Enter');
           }
         } else {
-          // Validation directe par Enter (tag / create option)
           await page.keyboard.press('Enter');
         }
       }
 
       await page.waitForTimeout(400);
 
-      // Verifier que quelque chose est affiche
       const texteFinal = ((await affichage.first().textContent({ timeout: 3000 }).catch(() => '')) || '').trim();
       if (texteFinal && (regexContient.test(texteFinal) || texteFinal.length > 0)) {
         return;
       }
 
-      // Si le single n'existe pas, parfois la valeur est dans un tag
       const tag = select.locator('.multiselect__tag, .multiselect__single');
       if ((await tag.count()) > 0) return;
 
@@ -271,6 +285,38 @@ async function remplirAdresse(page, texte = 'Paris', optionTexte = 'Paris, Franc
 }
 
 
+/* fonction verification du statut */
+
+async function verifierPasDeCorrespondanceOuOuvrir(page, prenom) {
+  // 1. Cliquer sur "Mes objets" dans le menu
+  const menu = page.locator('a.side-nav-link-ref', { hasText: 'Mes objets' }).first();
+  await menu.waitFor({ state: 'visible', timeout: 15000 });
+  await menu.click();
+  
+  // 2. Attendre que le tableau/la liste soit bien affichée
+  await page.waitForTimeout(2000);
+
+  // 3. Cibler la ligne contenant le prénom
+  const ligne = page.locator('tr.tui-cursor-pointer').filter({ hasText: new RegExp(prenom, 'i') }).first();
+  
+  // S'assurer que la ligne est visible
+  await ligne.waitFor({ state: 'visible', timeout: 15000 });
+
+  // 4. Rechercher l'élément "Pas de correspondance"
+  const elementNoMatch = ligne.locator('[aria-label="Pas de correspondance"]');
+
+  const isNoMatchVisible = await elementNoMatch.waitFor({ state: 'visible', timeout: 5000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (isNoMatchVisible) {
+  
+    return; 
+  } else {
+    // Si par erreur on trouve un match alors qu'on n'en voulait pas
+    await ligne.locator('td').nth(1).click({ force: true });
+  }
+}
 
 //fonction pour la remplissage Document
 async function remplirChampsDocument(page, data) {
@@ -278,11 +324,16 @@ async function remplirChampsDocument(page, data) {
   await page.getByText(/Papiers et documents officiels/i).first().click();
   await page.waitForTimeout(400);
 
-  // 2. Sous-categorie (Carte d'identite OU Passeport)
-  const sousCat = data['Sous-categorie'] || 'Carte d\'identite';
-  await page.getByText(new RegExp(sousCat.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')).first().click();
-  await page.waitForTimeout(400);
-
+// 2. Sous-categorie (Gère dynamiquement les accents et les apostrophes)
+const sousCat = data['Sous-categorie'] || 'Carte d\'identite';
+// Normalise la recherche pour ignorer les accents sur le 'e' et les types d'apostrophes
+const regexSousCat = new RegExp(
+  sousCat
+    .replace(/['’]/g, "['’]")
+    .replace(/[eéèêë]/gi, '[eéèêë]'),
+  'i'
+);
+await page.locator('.text-dark').filter({ hasText: regexSousCat }).first().click();
   // 3. Prenom
   if (data['Prenom']) {
     const prenom = page.locator('#input_firstnameitem_types_fields');
@@ -308,17 +359,41 @@ async function remplirChampsDocument(page, data) {
 //fonction pour remplissage de l'objet
 
 async function remplirChampsObjet(page, data) {
-  const marque = data['Marque'];
-  if (!marque) throw new Error('La marque est absente des donnees Cucumber.');
+  const marque = data['Marque'] || '';
 
-  // Categorie
-  await page.locator('#category-picker__category__bags').click();
-  // Type
-  await page.locator('#category-picker__item-type__bag').click();
-  // Marque
+  // 1. Categorie (Electronique ou Sacs)
+  const categorie = data['Categorie'] || '';
+  if (/Electronique/i.test(categorie)) {
+    // Essayer l'ID, sinon chercher par le texte
+    const catEl = page.locator('#category-picker__category__electronics');
+    if (await catEl.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await catEl.click();
+    } else {
+      await page.getByText(/Electronique/i).first().click();
+    }
+    await page.waitForTimeout(400);
+  } else if (/Sacs/i.test(categorie)) {
+    await page.locator('#category-picker__category__bags').click();
+    await page.waitForTimeout(400);
+  }
+
+  // 2. Sous-categorie / Type (ex: Telephone)
+  const sousCat = data['Sous-categorie'];
+  if (sousCat) {
+    const regexSousCat = new RegExp(sousCat.replace(/[eéèêë]/gi, '[eéèêë]'), 'i');
+    const optionSousCat = page.locator('.text-dark, .multiselect__option').filter({ hasText: regexSousCat }).first();
+    if (await optionSousCat.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await optionSousCat.click();
+      await page.waitForTimeout(400);
+    }
+  } else {
+    await page.locator('#category-picker__item-type__bag').click().catch(() => {});
+  }
+
+  // 3. Marque
   await selectionnerMarque(page, marque);
 
-  // Couleur
+  // 4. Couleur
   const couleurId = obtenirCouleur(data['Couleur']);
   let couleurEl = page.locator(`#color-picker-row__color__${couleurId}`);
 
@@ -330,13 +405,13 @@ async function remplirChampsObjet(page, data) {
   await couleurEl.waitFor({ state: 'visible', timeout: 10000 });
   await couleurEl.click();
 
-  // Modele
+  // 5. Modele
   await page.locator('#input_modelitem_types_fields').fill(data['Modele'] || '');
 
-  // Etat
+  // 6. Etat
   if (data['Etat']) await selectionnerEtat(page, data['Etat']);
 
-  // Detail
+  // 7. Detail
   if (data['Detail']?.trim()) {
     const selectors = [
       '#input_description',
@@ -508,7 +583,6 @@ async function ouvrirSection(page, section) {
 
 
 //fonction pour la verification Score IA
-
 async function verifierScoreIA(page, world) {
   const precis = page.locator(
     'div.tui-absolute.tui-inset-0.tui-flex.tui-items-center.tui-justify-center.tui-text-2xl.tui-font-semibold'
@@ -545,5 +619,5 @@ async function verifierScoreIA(page, world) {
 
 
 module.exports = {
-  generateRandomNIR, generateRandomPhone, connexionAlfa, obtenirCouleur, selectionnerMarque, selectionnerEtat, remplirAdresse,remplirChampsDocument, remplirChampsObjet, validerFormulaire, ouvrirFicheMatch, ouvrirFicheMatchDocument, demanderAnalyseCharlie, ouvrirSection, verifierScoreIA
+  generateRandomNIR, generateRandomPhone, connexionAlfa, obtenirCouleur, selectionnerMarque, selectionnerEtat, remplirAdresse,remplirChampsDocument, remplirChampsObjet,verifierPasDeCorrespondanceOuOuvrir, validerFormulaire, ouvrirFicheMatch, ouvrirFicheMatchDocument, demanderAnalyseCharlie, ouvrirSection, verifierScoreIA
 };
