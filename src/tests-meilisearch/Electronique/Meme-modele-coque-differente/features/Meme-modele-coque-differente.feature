@@ -3,9 +3,9 @@ Feature: E2 - Meme modele, coque tres différente
   Scenario: 1 - L'agent cree un iPhone 15 Apple blanc trouve avec details
     Given l'agent "Charlie" est en service et connecte sur le back-office Troov de l'equipe "Disney" (demo.troov.com)
     When L'agent cree l'objet trouve suivant :
-      | Champ          | Valeur                       |
-      | Categorie      | Electronique                 |
-      | Sous-categorie | Telephone                    |
+     | Champ          | Valeur                       |
+     | Categorie      | Electronique                 |
+     | Sous-categorie | Telephone                    |
       | Marque         | Apple                        |
       | Modele         | iPhone 15                    |
       | Couleur        | Blanc                        |
